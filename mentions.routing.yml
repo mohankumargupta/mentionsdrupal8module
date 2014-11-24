@@ -1,5 +1,5 @@
 mentions.admin:
-  path: '/admin/config/mentions2'
+  path: '/admin/config/mentions'
   defaults:
     _form: '\Drupal\mentions\Form\MentionsConfigForm'
     _title: 'Mentions Configuration'
