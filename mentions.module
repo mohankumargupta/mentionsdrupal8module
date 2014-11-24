@@ -4,3 +4,65 @@
 * A description of what your module does.
 */
 /*another comment*/
+/**
+ * @file
+ * Contains database schema for the Mentions module.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function mentions_schema() {
+  $schema['mentions'] = array(
+    'fields' => array(
+      'mid' => array(
+        'description' => 'The primary identifier for a mention.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'entity_type' => array(
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'entity_id' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'user' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'author' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'created' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'changed' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
+    'indexes' => array(
+      'mid' => array(
+        'mid',
+      ),
+    ),
+    'primary key' => array('mid'),
+  );
+
+  return $schema;
+}
