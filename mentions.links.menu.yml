@@ -1,0 +1,6 @@
+mentions.admin:
+  title: Mentions
+  route_name: mentions2.admin
+  parent: system.admin_config_content
+  description: Configure symbols used in Mentions filter
+  weight: 20
