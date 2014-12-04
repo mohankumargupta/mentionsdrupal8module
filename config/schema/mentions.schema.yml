@@ -1,0 +1,23 @@
+mentions.mentions:
+  type: mapping
+  label: 'Mentions Configuration'
+  mapping:
+    input:
+      type: sequence
+      sequence:
+        - type: string
+          label: 'prefix'
+
+        - type: string
+          label: 'suffix'
+    output:
+      type: sequence
+      sequence:
+        - type: string
+          label: 'prefix'
+        - type: string
+          label: 'suffix'
+        - type: string
+          label: 'text'
+        - type: string
+          label: 'link'

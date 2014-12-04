@@ -1,0 +1,9 @@
+input:
+  prefix: '[@'
+  suffix: ']'
+output:
+  prefix: '@'
+  suffix: ' '
+  text: '[user:name]'
+  link: 'user/[user:uid]'
+

@@ -13,6 +13,10 @@
  * Implements hook_schema().
  */
 function mentions_schema() {
+
+
+  /*
+
   $schema['mentions'] = array(
     'fields' => array(
       'mid' => array(
@@ -65,4 +69,8 @@ function mentions_schema() {
   );
 
   return $schema;
+
+  **/
+
 }
+
