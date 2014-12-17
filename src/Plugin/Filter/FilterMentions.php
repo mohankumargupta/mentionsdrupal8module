@@ -47,7 +47,9 @@ class FilterMentions extends FilterBase{
     public function _filter_mentions($text, $filter) {
         foreach ($this->mentions_get_mentions($text) as $match) {
             //$text = str_replace($match['text'], theme('mentions', array('user' => $match['user'])), $text);
-            $text = str_replace($match['text'], array(), $text);
+            $mentions = array('#theme'=>'mentions', '#user' => $match['user']);
+            $mentions2 = drupal_render($mentions);
+            $text = str_replace($match['text'], $mentions2, $text);
         }
         return $text;
     }

@@ -8,6 +8,9 @@
  * @file
  * Contains database schema for the Mentions module.
  */
+use Drupal\Core\Url;
+
+
 
 /**
  * Implements hook_schema().
@@ -71,6 +74,42 @@ function mentions_schema() {
   return $schema;
 
   **/
+
+}
+
+function mentions_theme() {
+  return array(
+    'mentions' => array(
+      'render element' => 'link'
+    )
+  );
+
+}
+
+function template_preprocess_mentions(&$variables) {
+  $settings = \Drupal::config('mentions.mentions');
+  $output_settings = $settings->get('output');
+  $user = $variables['user'];
+
+  foreach (array('text', 'link') as $type) {
+    if (!empty($output_settings[$type])) {
+      //$type = token_replace($output_settings[$type], array('user' => $user));
+      $what = \Drupal::token()->replace($output_settings[$type], array('user' => $user));
+      if ($type == 'text')
+        $text = $what;
+     else
+       $link = $what;
+    }
+  }
+
+
+  $userpageurl = Url::fromUri('base://' . $link);
+    $variables['userid'] = $user->id();
+    $variables['link'] = \Drupal::l($output_settings['prefix'] . $text . $output_settings['suffix'], $userpageurl, array(
+        'attributes' => array(
+            'class' => 'mentions mentions-' . $user->id(),
+            'title' => $text,
+        )));
 
 }
 
