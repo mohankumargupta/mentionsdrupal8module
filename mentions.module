@@ -80,7 +80,7 @@ function mentions_schema() {
 function mentions_theme() {
   return array(
     'mentions' => array(
-      'render element' => 'link'
+      'render element' => 'userintext'
     )
   );
 
@@ -89,7 +89,7 @@ function mentions_theme() {
 function template_preprocess_mentions(&$variables) {
   $settings = \Drupal::config('mentions.mentions');
   $output_settings = $settings->get('output');
-  $user = $variables['user'];
+  $user = $variables['userintext']['#user'];
 
   foreach (array('text', 'link') as $type) {
     if (!empty($output_settings[$type])) {
