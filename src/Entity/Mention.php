@@ -11,24 +11,29 @@ use Drupal\mentions\MentionInterface;
  *   id = "mention",
  *   label = @Translation("Mention"),
  *   base_table = "mention",
- *   data_table = "mention_data",
  *   entity_keys = {
- *     "id" = "entity_id",
+ *     "id" = "mid",
  *     "uuid" = "uid"
  *   }
  * )
  */
 
-class Mention extends ContentEntityBase implements MentionInterface {
+class Mention extends ContentEntityBase {
 
 
   /**
    * {@inheritdoc}
    */
   public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
-    $fields['entity_id'] = BaseFieldDefinition::create('integer')
+    $fields['mid'] = BaseFieldDefinition::create('integer')
       ->setLabel(t('Mention ID'))
-      ->setDescription(t('The mention ID.'))
+      ->setDescription(t('The primary identifier for a mention.'))
+      ->setReadOnly(TRUE)
+      ->setSetting('unsigned', TRUE);
+
+    $fields['entity_id'] = BaseFieldDefinition::create('integer')
+      ->setLabel(t('Entity ID'))
+      ->setDescription(t('Entity ID'))
       ->setReadOnly(TRUE)
       ->setSetting('unsigned', TRUE);
 
@@ -41,19 +46,17 @@ class Mention extends ContentEntityBase implements MentionInterface {
     $fields['auid'] = BaseFieldDefinition::create('entity_reference')
       ->setLabel(t('User ID'))
       ->setDescription(t('The author ID of the mention'))
-      ->setTranslatable(TRUE)
       ->setSetting('target_type', 'user')
       ->setDefaultValue(0);
 
     $fields['created'] = BaseFieldDefinition::create('created')
       ->setLabel(t('Created'))
-      ->setDescription(t('The time that the mention was created.'))
-      ->setTranslatable(TRUE);
+      ->setDescription(t('The time that the mention was created.'));
 
     $fields['entity_type'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Entity type'))
       ->setDescription(t('The entity type to which this mention is attached.'))
-      ->setSetting('max_length', EntityTypeInterface::ID_MAX_LENGTH);
+      ->setSetting('max_length', 32);
 
     return $fields;
   }
