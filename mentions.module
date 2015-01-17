@@ -12,70 +12,7 @@ use Drupal\Core\Url;
 
 
 
-/**
- * Implements hook_schema().
- */
-function mentions_schema() {
 
-
-  /*
-
-  $schema['mentions'] = array(
-    'fields' => array(
-      'mid' => array(
-        'description' => 'The primary identifier for a mention.',
-        'type' => 'serial',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-      ),
-      'entity_type' => array(
-        'type' => 'varchar',
-        'length' => 32,
-        'not null' => TRUE,
-        'default' => '',
-      ),
-      'entity_id' => array(
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-      'user' => array(
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-      'author' => array(
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-      'created' => array(
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-      'changed' => array(
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-    ),
-    'indexes' => array(
-      'mid' => array(
-        'mid',
-      ),
-    ),
-    'primary key' => array('mid'),
-  );
-
-  return $schema;
-
-  **/
-
-}
 
 function mentions_theme() {
   return array(
@@ -113,3 +50,9 @@ function template_preprocess_mentions(&$variables) {
 
 }
 
+/**
+ *  Implements hook_entity_insert().
+ */
+function mentions_entity_insert(Drupal\Core\Entity\EntityInterface $entity) {
+
+}
