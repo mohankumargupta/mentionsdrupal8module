@@ -9,7 +9,8 @@
  * Contains database schema for the Mentions module.
  */
 use Drupal\Core\Url;
-use Drupal\mentions\Entity\Mention;
+use Drupal\mentions\Entity;
+use Drupal\field;
 
 
 function mentions_theme() {
@@ -53,8 +54,12 @@ function template_preprocess_mentions(&$variables) {
  */
 function mentions_entity_insert(Drupal\Core\Entity\EntityInterface $entity) {
 
+  $id = $entity->id();
+  $type = $entity->getEntityType();
+  $instances = \Drupal::service('field.info')->getInstances($type);
+
   if ($entity->getEntityTypeId() == 'mention') return;
 
   $mention = entity_create('mention', array('auid'=> 1));
-$mention->save();
+  $mention->save();
 }
