@@ -13,6 +13,7 @@ use Drupal\mentions\Entity;
 use Drupal\field;
 
 
+
 function mentions_theme() {
   return array(
     'mentions' => array(
@@ -54,11 +55,27 @@ function template_preprocess_mentions(&$variables) {
  */
 function mentions_entity_insert(Drupal\Core\Entity\EntityInterface $entity) {
 
+  $typeid = $entity->getEntityTypeId();
+  if ($entity->getEntityTypeId() != 'node' ) return;
+
   $id = $entity->id();
   $type = $entity->getEntityType();
-  $instances = \Drupal::service('field.info')->getInstances($type);
+  $field_definitions = $entity->getFieldDefinitions();
+  $fields_with_text = array();
+  foreach($field_definitions as $field_definition ) {
+    if ($field_definition instanceof field\Entity\FieldConfig) {
+      array_push($fields_with_text, $field_definition->field_name);
+    }
+  }
 
-  if ($entity->getEntityTypeId() == 'mention') return;
+
+  foreach($fields_with_text as $textfield) {
+    $boo = $entity->get($textfield);
+    $value = $boo->value;
+  }
+  //$body_field_definition = $entity->getFieldDefinition('body');
+  //$body_field_type = $body_field_definition->field_type;
+
 
   $mention = entity_create('mention', array('auid'=> 1));
   $mention->save();
