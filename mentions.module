@@ -57,8 +57,6 @@ function mentions_entity_insert(Drupal\Core\Entity\EntityInterface $entity) {
 
   $typeid = $entity->getEntityTypeId();
   if ($entity->getEntityTypeId() != 'node' ) return;
-
-  $id = $entity->id();
   $type = $entity->getEntityType();
   $field_definitions = $entity->getFieldDefinitions();
   $fields_with_text = array();
@@ -74,12 +72,87 @@ function mentions_entity_insert(Drupal\Core\Entity\EntityInterface $entity) {
     $value = $boo->value;
     $filter_mentions = new \Drupal\mentions\Plugin\Filter\FilterMentions(array(),'',null);
     $mentions = $filter_mentions->mentions_get_mentions($value);
-
+    if (!empty($mentions)) {
+      mentions_crud_update($type, $mentions, $entity->id(), $entity->uuid());
+    }
   }
   //$body_field_definition = $entity->getFieldDefinition('body');
   //$body_field_type = $body_field_definition->field_type;
 
 
-  $mention = entity_create('mention', array('auid'=> 1));
-  $mention->save();
+
+}
+
+/*
+function mentions_crud_update($entity_type, $mentions, $entity_id, $author) {
+  // Build array of old mentions.
+  $old_users = array();
+  $result    = db_select('mentions', 'm')
+    ->fields('m')
+    ->condition('entity_type', $entity_type, '=')
+    ->condition('entity_id', $entity_id, '=')
+    ->execute();
+  while ($mention = $result->fetchobject()) {
+    $old_users[$mention->uid] = $mention->mid;
+  }
+
+  // Build array of new mentions.
+  $new_users = array();
+  foreach ($mentions as $mention) {
+    if (!in_array($mention['user']->uid, $new_users)) {
+      $new_users[] = $mention['user']->uid;
+    }
+  }
+
+  // Add new mentions.
+  foreach (array_diff($new_users, array_keys($old_users)) as $uid) {
+    $mention = array(
+      'entity_type' => $entity_type,
+      'entity_id'   => $entity_id,
+      'uid'         => $uid,
+      'auid'        => $author,
+      'created'     => REQUEST_TIME,
+    );
+    drupal_write_record('mentions', $mention);
+    module_invoke_all('mentions_insert', (object) $mention);
+  }
+
+  // Update existing mentions.
+  foreach (array_intersect($new_users, array_keys($old_users)) as $uid) {
+    $mention          = mentions_load($old_users[$uid]);
+    $mention->changed = REQUEST_TIME;
+    drupal_write_record('mentions', $mention, array('mid'));
+    module_invoke_all('mentions_update', $mention);
+  }
+
+  // Delete old mentions.
+  foreach (array_diff(array_keys($old_users), $new_users) as $uid) {
+    $mention = mentions_load($old_users[$uid]);
+    module_invoke_all('mentions_delete', $mention);
+    db_delete('mentions')->condition('mid', $mention->mid)->execute();
+  }
+}
+ */
+
+function mentions_crud_update($type, $mentions, $id, $author) {
+  $old_users = array();
+  // Build array of new mentions.
+  $new_users = array();
+  foreach ($mentions as $mention) {
+    if (!in_array($mention['user']->uid, $new_users)) {
+      $new_users[] = $mention['user']->uid;
+    }
+  }
+
+  foreach (array_diff($new_users, array_keys($old_users)) as $uid) {
+    $userid = $uid->getValue();
+    $userid = $userid[0]['value'];
+    $mention = entity_create('mention', array(
+        'entity_type' => $type->getProvider(),
+        'entity_id' => $id,
+        'uid' => $userid,
+        'auid' => $author,
+      ));
+    $mention->save();
+  }
 }
