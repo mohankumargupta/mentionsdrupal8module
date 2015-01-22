@@ -136,18 +136,20 @@ function mentions_crud_update($entity_type, $mentions, $entity_id, $author) {
  */
 
 function mentions_crud_update($type, $mentions, $id, $author) {
-  $old_users = array();
+  $type = $type->getProvider();
+  //$old_users = array();
   // Build array of new mentions.
   $new_users = array();
   foreach ($mentions as $mention) {
-    if (!in_array($mention['user']->uid, $new_users)) {
+  //  if (!in_array($mention['user']->uid, $old_users)) {
       $new_users[] = $mention['user']->uid;
-    }
+  //  }
   }
 
-  foreach (array_diff($new_users, array_keys($old_users)) as $uid) {
+  //foreach (array_diff($new_users, array_keys($old_users)) as $uid) {
+  foreach ($new_users as $uid) {
     $userid = $uid->getValue();
-    $type = $type->getProvider();
+
     $userid = $userid[0]['value'];
     $mention = entity_create('mention', array(
         'entity_type' => $type,

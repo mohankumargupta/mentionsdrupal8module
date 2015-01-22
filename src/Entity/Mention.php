@@ -12,7 +12,7 @@ use Drupal\mentions\MentionInterface;
  *   label = @Translation("Mention"),
  *   base_table = "mention",
  *   entity_keys = {
- *     "id" = "mid",
+ *     "id" = "mid"
  *   }
  * )
  */
@@ -37,7 +37,7 @@ class Mention extends ContentEntityBase {
       ->setSetting('unsigned', TRUE);
 
 
-    $fields['uid'] = BaseFieldDefinition::create('uuid')
+    $fields['uid'] = BaseFieldDefinition::create('integer')
       ->setLabel(t('UUID'))
       ->setDescription(t('Mention UUID.'))
       ->setReadOnly(TRUE);
