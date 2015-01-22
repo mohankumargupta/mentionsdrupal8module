@@ -84,6 +84,22 @@ function mentions_entity_insert(Drupal\Core\Entity\EntityInterface $entity) {
 
 }
 
+function mentions_entity_update(Drupal\Core\Entity\EntityInterface $entity) {
+  mentions_entity_insert($entity);
+}
+
+/**
+ *  Implements hook_entity_delete().
+ */
+function mentions_entity_delete(Drupal\Core\Entity\EntityInterface $entity)
+{
+  $mention_ids = \Drupal::entityQuery('mention')
+           ->condition('entity_id', $entity->id())
+           ->execute();
+
+  entity_delete_multiple('mention', $mention_ids);
+}
+
 /*
 function mentions_crud_update($entity_type, $mentions, $entity_id, $author) {
   // Build array of old mentions.
