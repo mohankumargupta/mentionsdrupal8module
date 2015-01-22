@@ -13,7 +13,6 @@ use Drupal\mentions\MentionInterface;
  *   base_table = "mention",
  *   entity_keys = {
  *     "id" = "mid",
- *     "uuid" = "uid"
  *   }
  * )
  */

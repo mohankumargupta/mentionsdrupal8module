@@ -73,7 +73,8 @@ function mentions_entity_insert(Drupal\Core\Entity\EntityInterface $entity) {
     $filter_mentions = new \Drupal\mentions\Plugin\Filter\FilterMentions(array(),'',null);
     $mentions = $filter_mentions->mentions_get_mentions($value);
     if (!empty($mentions)) {
-      mentions_crud_update($type, $mentions, $entity->id(), $entity->uuid());
+      $auid = \Drupal::currentUser()->id();
+      mentions_crud_update($type, $mentions, $entity->id(), $auid);
     }
   }
   //$body_field_definition = $entity->getFieldDefinition('body');
@@ -146,9 +147,10 @@ function mentions_crud_update($type, $mentions, $id, $author) {
 
   foreach (array_diff($new_users, array_keys($old_users)) as $uid) {
     $userid = $uid->getValue();
+    $type = $type->getProvider();
     $userid = $userid[0]['value'];
     $mention = entity_create('mention', array(
-        'entity_type' => $type->getProvider(),
+        'entity_type' => $type,
         'entity_id' => $id,
         'uid' => $userid,
         'auid' => $author,
