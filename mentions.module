@@ -55,9 +55,8 @@ function template_preprocess_mentions(&$variables) {
  */
 function mentions_entity_insert(Drupal\Core\Entity\EntityInterface $entity) {
 
-  $typeid = $entity->getEntityTypeId();
   if ($entity->getEntityTypeId() != 'node' ) return;
-  $type = $entity->getEntityType();
+  $type = $entity->getEntityType()->getProvider();
   $field_definitions = $entity->getFieldDefinitions();
   $fields_with_text = array();
   foreach($field_definitions as $field_definition ) {
@@ -95,6 +94,7 @@ function mentions_entity_delete(Drupal\Core\Entity\EntityInterface $entity)
 {
   $mention_ids = \Drupal::entityQuery('mention')
            ->condition('entity_id', $entity->id())
+           ->condition('entity_type', $entity->getEntityType()->getProvider())
            ->execute();
 
   entity_delete_multiple('mention', $mention_ids);
@@ -152,25 +152,35 @@ function mentions_crud_update($entity_type, $mentions, $entity_id, $author) {
  */
 
 function mentions_crud_update($type, $mentions, $id, $author) {
-  $type = $type->getProvider();
-  //$old_users = array();
+  //Build old array of mentions
+  $old_users = array();
+  $mention_ids = \Drupal::entityQuery('mention')
+                 ->condition('entity_type',$type)
+                 ->condition('entity_id', $id)
+                 ->execute();
+  foreach($mention_ids as $mention) {
+    $entity = entity_load('mention', $mention);
+    $old_users[] = $entity->get('uid')->getValue()[0]['value'];
+  }
+
+
   // Build array of new mentions.
   $new_users = array();
   foreach ($mentions as $mention) {
-  //  if (!in_array($mention['user']->uid, $old_users)) {
-      $new_users[] = $mention['user']->uid;
-  //  }
+      $new_users[] = $mention['user']->id();
   }
 
-  //foreach (array_diff($new_users, array_keys($old_users)) as $uid) {
-  foreach ($new_users as $uid) {
-    $userid = $uid->getValue();
+  //$brand_new_mentions = array_diff($new_users,$old_users);
 
-    $userid = $userid[0]['value'];
+  foreach (array_diff($new_users, $old_users) as $uid) {
+  //foreach ($new_users as $uid) {
+    //$user_id = $uid->getValue();
+
+    //$user_id = $user_id[0]['value'];
     $mention = entity_create('mention', array(
         'entity_type' => $type,
         'entity_id' => $id,
-        'uid' => $userid,
+        'uid' => $uid,
         'auid' => $author,
       ));
     $mention->save();
