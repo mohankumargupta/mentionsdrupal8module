@@ -17,7 +17,7 @@ use Drupal\filter\Plugin\FilterBase;
  * @package Drupal\mentions\Plugin\Filter
  *
  * @Filter(
- * id = "filter_mentions",
+ * id = "FilterMentions",
  * title = @Translation("Mentions Filter"),
  * type = Drupal\filter\Plugin\FilterInterface::TYPE_HTML_RESTRICTOR,
  * weight = -10
