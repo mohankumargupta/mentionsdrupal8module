@@ -10,6 +10,7 @@ use Drupal\views\EntityViewsDataInterface;
  */
 class MentionsViewsData extends EntityViewsData {
 
+
   public function getViewsData() {
     $data = array();
 
