@@ -10,6 +10,9 @@ use Drupal\mentions\MentionInterface;
  * @ContentEntityType(
  *   id = "mentions",
  *   label = @Translation("Mentions"),
+ *   handlers = {
+ *     "views_data" = Drupal\mentions\MentionsViewsData
+ *   },
  *   base_table = "mentions",
  *   entity_keys = {
  *     "id" = "mid"
