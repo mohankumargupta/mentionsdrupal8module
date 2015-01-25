@@ -92,12 +92,12 @@ function mentions_entity_update(Drupal\Core\Entity\EntityInterface $entity) {
  */
 function mentions_entity_delete(Drupal\Core\Entity\EntityInterface $entity)
 {
-  $mention_ids = \Drupal::entityQuery('mention')
+  $mention_ids = \Drupal::entityQuery('mentions')
            ->condition('entity_id', $entity->id())
            ->condition('entity_type', $entity->getEntityType()->getProvider())
            ->execute();
 
-  entity_delete_multiple('mention', $mention_ids);
+  entity_delete_multiple('mentions', $mention_ids);
 }
 
 /*
@@ -154,12 +154,12 @@ function mentions_crud_update($entity_type, $mentions, $entity_id, $author) {
 function mentions_crud_update($type, $mentions, $id, $author) {
   //Build old array of mentions
   $old_users = array();
-  $mention_ids = \Drupal::entityQuery('mention')
+  $mention_ids = \Drupal::entityQuery('mentions')
                  ->condition('entity_type',$type)
                  ->condition('entity_id', $id)
                  ->execute();
   foreach($mention_ids as $mention) {
-    $entity = entity_load('mention', $mention);
+    $entity = entity_load('mentions', $mention);
     $old_users[] = $entity->get('uid')->getValue()[0]['value'];
   }
 
@@ -177,7 +177,7 @@ function mentions_crud_update($type, $mentions, $id, $author) {
     //$user_id = $uid->getValue();
 
     //$user_id = $user_id[0]['value'];
-    $mention = entity_create('mention', array(
+    $mention = entity_create('mentions', array(
         'entity_type' => $type,
         'entity_id' => $id,
         'uid' => $uid,

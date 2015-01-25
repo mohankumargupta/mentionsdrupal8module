@@ -8,16 +8,16 @@ use Drupal\mentions\MentionInterface;
 /**
  *
  * @ContentEntityType(
- *   id = "mention",
- *   label = @Translation("Mention"),
- *   base_table = "mention",
+ *   id = "mentions",
+ *   label = @Translation("Mentions"),
+ *   base_table = "mentions",
  *   entity_keys = {
  *     "id" = "mid"
  *   }
  * )
  */
 
-class Mention extends ContentEntityBase {
+class Mentions extends ContentEntityBase {
 
 
   /**
