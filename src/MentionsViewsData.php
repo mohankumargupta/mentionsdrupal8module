@@ -37,6 +37,23 @@ class MentionsViewsData extends EntityViewsData {
 
     ];
 
+    $data['mentions']['title'] = [
+        'title' => t('Title'),
+        'help' => t('Title of entity containing mention'),
+        'real field' => 'mid',
+        'field' => [
+            'id' => 'mentions_title'
+        ],
+        'relationship' => [
+            'base' => 'node_field_data',
+            'base field' => 'title',
+            'relationship field' => 'nid',
+            'title' => t('Mention Title'),
+            'help' => t('Mention Title'),
+            'id' => 'standard',
+            'label' => t('Mention Title'),
+        ]
+    ];
 
     $data['mentions']['auid'] = [
         'title' => t('Author user id'),
@@ -82,8 +99,8 @@ class MentionsViewsData extends EntityViewsData {
     ];
 
     $data['mentions']['created'] = [
-      'title' => t('Last Flagged Time'),
-      'help' => t('Display latest time the content was flagged by a user.'),
+      'title' => t('Created Time'),
+      'help' => t('Created time'),
       'field' => [
         'id' => 'date',
       ],
