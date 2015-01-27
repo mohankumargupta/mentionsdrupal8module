@@ -11,7 +11,7 @@ use Drupal\mentions\MentionInterface;
  *   id = "mentions",
  *   label = @Translation("Mentions"),
  *   handlers = {
- *     "views_data" = Drupal\mentions\MentionsViewsData
+ *     "views_data" = "Drupal\mentions\MentionsViewsData"
  *   },
  *   base_table = "mentions",
  *   entity_keys = {
