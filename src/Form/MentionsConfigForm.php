@@ -42,6 +42,14 @@ class MentionsConfigForm extends ConfigFormBase {
     );
   }
 
+  protected function getEditableConfigNames() {
+    return [
+      'mentions.mentions',
+    ];
+  }
+
+
+
   /**
    * Returns a unique string identifying the form.
    *
