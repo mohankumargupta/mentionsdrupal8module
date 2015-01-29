@@ -25,17 +25,23 @@ class MentionsViewsData extends EntityViewsData {
     $data['mentions']['mid'] = [
       'title' => t('Mention ID'),
       'help' => t('Mention ID'),
-      'filter' => [
-        'id' => 'numeric'
-      ],
-      'argument' => [
-        'id' => 'numeric'
-      ],
       'field' => [
         'id' => 'numeric'
       ]
 
     ];
+
+    $data['mentions']['entity_type'] = [
+        'title' => t('Entity type'),
+          'help' => t('Entity type of entity that contains mention'),
+          'field' => [
+              'id' => 'standard'
+          ],
+          'filter' => [
+              'id' => 'standard'
+          ]
+
+      ];
 
     $data['mentions']['title'] = [
         'title' => t('Title'),
@@ -78,7 +84,7 @@ class MentionsViewsData extends EntityViewsData {
 
 
     $data['mentions']['uid'] = [
-      'title' => t('User uid'),
+      'title' => t('Mentioned user uid'),
       'help' => t('The user that is mentioned'),
       'relationship' => [
         'base' => 'users',
@@ -99,15 +105,12 @@ class MentionsViewsData extends EntityViewsData {
     ];
 
     $data['mentions']['created'] = [
-      'title' => t('Created Time'),
-      'help' => t('Created time'),
+      'title' => t('Date'),
+      'help' => t('Date'),
       'field' => [
         'id' => 'date',
       ],
       'sort' => [
-        'id' => 'date',
-      ],
-      'filter' => [
         'id' => 'date',
       ],
       'argument' => [
@@ -116,14 +119,26 @@ class MentionsViewsData extends EntityViewsData {
     ];
 
     $data['mentions']['entity_id'] = [
-      'title' => t('Entity ID of entity containing mention'),
+      'title' => t('Entity id'),
       'help' => t('The unique ID of the object that contains mention'),
+      'field' => [
+        'id' => 'standard'
+      ],
       'sort' => [
         'id' => 'standard',
       ],
       'argument' => [
         'id' => 'numeric',
       ],
+    ];
+
+    $data['mentions']['link'] = [
+        'title' => t('Link'),
+        'real field' => 'mid',
+        'help' => t('Link to entity that contains mention'),
+        'field' => [
+            'id' => 'mentions_link'
+        ]
     ];
 
     return $data;
