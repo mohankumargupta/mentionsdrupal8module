@@ -6,11 +6,11 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class MentionsUpdate implements EventSubscriberInterface {
   static function getSubscribedEvents() {
-    $events['mentions.insert'][] = array('onMentionsInsert', 0);
+    $events['mentions.update'][] = array('onMentionsUpdate', 0);
         return $events;
     }
 
-  public function onMentionsInsert($event) {
+  public function onMentionsUpdate($event) {
   // do stuff
   }
 

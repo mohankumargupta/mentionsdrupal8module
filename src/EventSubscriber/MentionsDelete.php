@@ -7,11 +7,11 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class MentionsDelete implements EventSubscriberInterface {
 
     static function getSubscribedEvents() {
-        $events['mentions.insert'][] = array('onMentionsInsert', 0);
+        $events['mentions.delete'][] = array('onMentionsDelete', 0);
         return $events;
     }
 
-    public function onMentionsInsert($event) {
+    public function onMentionsDelete($event) {
     // do stuff
     }
 
