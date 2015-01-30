@@ -1,0 +1,13 @@
+services:
+  mentions.mentions_insert:
+    class: Drupal\mentions\EventSubscriber\MentionsInsert
+    tags:
+      - { name: event_subscriber }
+  mentions.mentions_update:
+    class: Drupal\mentions\EventSubscriber\MentionsUpdate
+    tags:
+      - { name: event_subscriber }
+  mentions.mentions_delete:
+    class: Drupal\mentions\EventSubscriber\MentionsDelete
+    tags:
+      - { name: event_subscriber }

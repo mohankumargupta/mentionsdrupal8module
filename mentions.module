@@ -11,6 +11,7 @@
 use Drupal\Core\Url;
 use Drupal\mentions\Entity;
 use Drupal\field;
+use Symfony\Component\EventDispatcher;
 
 
 
@@ -78,7 +79,8 @@ function mentions_entity_insert(Drupal\Core\Entity\EntityInterface $entity) {
   }
   //$body_field_definition = $entity->getFieldDefinition('body');
   //$body_field_type = $body_field_definition->field_type;
-
+  $event_dispatcher = \Drupal::service('event_dispatcher');
+  $event_dispatcher->dispatch('mentions.insert', new Event());
 
 
 }
