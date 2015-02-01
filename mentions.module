@@ -12,7 +12,7 @@ use Drupal\Core\Url;
 use Drupal\mentions\Entity;
 use Drupal\field;
 use Symfony\Component\EventDispatcher;
-
+use Symfony\Component\EventDispatcher\Event;
 
 
 function mentions_theme() {
