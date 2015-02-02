@@ -157,13 +157,16 @@ function mentions_crud_update($entity_type, $mentions, $entity_id, $author) {
 function mentions_crud_update($type, $mentions, $id, $author) {
   //Build old array of mentions
   $old_users = array();
+  $old_mids = array();
   $mention_ids = \Drupal::entityQuery('mentions')
                  ->condition('entity_type',$type)
                  ->condition('entity_id', $id)
                  ->execute();
   foreach($mention_ids as $mention) {
     $entity = entity_load('mentions', $mention);
-    $old_users[] = $entity->get('uid')->getValue()[0]['value'];
+    $old_user = $entity->get('uid')->getValue()[0]['value'];
+    $old_users[] = $old_user;
+    $old_mids[$old_user] = $mention;
   }
 
 
@@ -187,7 +190,7 @@ function mentions_crud_update($type, $mentions, $id, $author) {
         'entity_type' => $type,
         'entity_id' => $id,
         'uid' => $uid,
-        'auid' => $author,
+        'auid' => $author
       ));
     $mention->save();
 
@@ -195,12 +198,16 @@ function mentions_crud_update($type, $mentions, $id, $author) {
   }
 
   //Update existing mentions
-  foreach (array_insersect($new_users, $old_users) as $uid) {
+  foreach (array_intersect($new_users, $old_users) as $uid) {
+    $entity = entity_load('mentions', $old_mids[$uid]);
+    $entity->set('created', REQUEST_TIME);
     $event_dispatcher->dispatch('mentions.update', new Event());
   }
 
   //Delete old mentions
-  foreach (array_dif($old_users, $new_users) as $uid) {
+  foreach (array_diff($old_users, $new_users) as $uid) {
+    $entity = entity_load('mentions', $old_mids[$uid]);
+    $entity->delete();
     $event_dispatcher->dispatch('mentions.delete', new Event());
   }
 
