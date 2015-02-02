@@ -55,6 +55,14 @@ function template_preprocess_mentions(&$variables) {
  *  Implements hook_entity_insert().
  */
 function mentions_entity_insert(Drupal\Core\Entity\EntityInterface $entity) {
+  mentions_insert_or_update($entity, false);
+}
+
+function mentions_entity_update(Drupal\Core\Entity\EntityInterface $entity) {
+  mentions_insert_or_update($entity, true);
+}
+
+function mentions_insert_or_update(Drupal\Core\Entity\EntityInterface $entity, $update) {
 
   if ($entity->getEntityTypeId() != 'node' ) return;
   $type = $entity->getEntityType()->getProvider();
@@ -77,17 +85,10 @@ function mentions_entity_insert(Drupal\Core\Entity\EntityInterface $entity) {
       mentions_crud_update($type, $mentions, $entity->id(), $auid);
     }
   }
-  //$body_field_definition = $entity->getFieldDefinition('body');
-  //$body_field_type = $body_field_definition->field_type;
-  $event_dispatcher = \Drupal::service('event_dispatcher');
-  $event_dispatcher->dispatch('mentions.insert', new Event());
 
 
 }
 
-function mentions_entity_update(Drupal\Core\Entity\EntityInterface $entity) {
-  mentions_entity_insert($entity);
-}
 
 /**
  *  Implements hook_entity_delete().
@@ -174,6 +175,9 @@ function mentions_crud_update($type, $mentions, $id, $author) {
 
   //$brand_new_mentions = array_diff($new_users,$old_users);
 
+  $event_dispatcher = \Drupal::service('event_dispatcher');
+
+  //Add new mentions
   foreach (array_diff($new_users, $old_users) as $uid) {
   //foreach ($new_users as $uid) {
     //$user_id = $uid->getValue();
@@ -186,5 +190,18 @@ function mentions_crud_update($type, $mentions, $id, $author) {
         'auid' => $author,
       ));
     $mention->save();
+
+    $event_dispatcher->dispatch('mentions.insert', new Event());
   }
+
+  //Update existing mentions
+  foreach (array_insersect($new_users, $old_users) as $uid) {
+    $event_dispatcher->dispatch('mentions.update', new Event());
+  }
+
+  //Delete old mentions
+  foreach (array_dif($old_users, $new_users) as $uid) {
+    $event_dispatcher->dispatch('mentions.delete', new Event());
+  }
+
 }
