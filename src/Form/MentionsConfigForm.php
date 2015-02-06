@@ -150,12 +150,13 @@ class MentionsConfigForm extends ConfigFormBase
             }
 
             //$actions =  array('boo1', 'boo2');
+            $config_mentions_events = $this->config->get('mentions_events');
 
             $form['mentions']['mentions_events']['insert'] = array(
                 '#type' => 'select',
                 '#title' => $this->t('When a mention is inserted'),
                 '#empty_value' => '',
-                '#default_value' => '--NONE--',
+                '#default_value' => $config_mentions_events['insert'],
                 '#options' => $actions,
                 '#description' => $this->t('When a mention is inserted, the following action is executed.'),
             );
@@ -164,7 +165,7 @@ class MentionsConfigForm extends ConfigFormBase
                 '#type' => 'select',
                 '#title' => $this->t('When a mention is updated'),
                 '#empty_value' => '',
-                '#default_value' => '--NONE--',
+                '#default_value' => $config_mentions_events['update'],
                 '#options' => $actions,
                 '#description' => $this->t('When a mention is updated, the following action is executed.'),
             );
@@ -173,7 +174,7 @@ class MentionsConfigForm extends ConfigFormBase
                 '#type' => 'select',
                 '#title' => $this->t('When a mention is deleted'),
                 '#empty_value' => '',
-                '#default_value' => '--NONE--',
+                '#default_value' => $config_mentions_events['delete'],
                 '#options' => $actions,
                 '#description' => $this->t('When a mention is deleted, the following action is executed.'),
             );

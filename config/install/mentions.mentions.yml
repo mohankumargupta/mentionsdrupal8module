@@ -6,4 +6,6 @@ output:
   suffix: ' '
   text: '[user:name]'
   link: 'user/[user:uid]'
-
+mentions:
+  id: ''
+  name: '- NONE -'
