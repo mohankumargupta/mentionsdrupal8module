@@ -16,135 +16,198 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Utility\Token;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class MentionsConfigForm extends ConfigFormBase {
+class MentionsConfigForm extends ConfigFormBase
+{
 
-  protected $token;
-  protected $config;
+    protected $token;
+    protected $config;
 
-  /**
-   * Class constructor
-   */
-  public function __construct(Token $token, ConfigFactory $config) {
-    $this->token = $token;
-    $this->config = $config->get('mentions.mentions');
-  }
-
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    // Instantiates this form class.
-    return new static(
-    // Load the service required to construct this class.
-      $container->get('token'),
-      $container->get('config.factory')
-    );
-  }
-
-  protected function getEditableConfigNames() {
-    return [
-      'mentions.mentions',
-    ];
-  }
+    /**
+     * Class constructor
+     */
+    public function __construct(Token $token, ConfigFactory $config)
+    {
+        $this->token = $token;
+        $this->config = $config->get('mentions.mentions');
+    }
 
 
+    /**
+     * {@inheritdoc}
+     */
+    public static function create(ContainerInterface $container)
+    {
+        // Instantiates this form class.
+        return new static(
+        // Load the service required to construct this class.
+            $container->get('token'),
+            $container->get('config.factory')
+        );
+    }
 
-  /**
-   * Returns a unique string identifying the form.
-   *
-   * @return string
-   *   The unique string identifying the form.
-   */
-  public function getFormId() {
-    return "mentionsconfigform";
-  }
+    protected function getEditableConfigNames()
+    {
+        return [
+            'mentions.mentions',
+        ];
+    }
 
 
-  /**
-   * {@inheritdoc}
-   */
-  public function buildForm(array $form, FormStateInterface $form_state) {
-    $form = parent::buildForm($form,$form_state);
+    /**
+     * Returns a unique string identifying the form.
+     *
+     * @return string
+     *   The unique string identifying the form.
+     */
+    public function getFormId()
+    {
+        return "mentionsconfigform";
+    }
 
-    $userid = $this->token->replace('[user:uid]', array('user'=> user_load_by_name('admin')));
 
-    $form['mentions'] = array(
-      '#type' => 'container',
-      '#tree' => TRUE,
-    );
+    /**
+     * {@inheritdoc}
+     */
+    public function buildForm(array $form, FormStateInterface $form_state)
+    {
+        $form = parent::buildForm($form, $form_state);
 
-    $form['mentions']['input'] = array(
-      '#type' => 'fieldset',
-      '#title' => t('Input'),
-    );
+        $userid = $this->token->replace('[user:uid]', array('user' => user_load_by_name('admin')));
 
-    $form['mentions']['input']['prefix'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Prefix'),
-      '#default_value' => $this->config->get('input.prefix'),
-      '#size' => 2,
-    );
+        $form['mentions'] = array(
+            '#type' => 'container',
+            '#tree' => TRUE,
+        );
 
-    $form['mentions']['input']['suffix'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Suffix'),
-      '#default_value' => $this->config->get('input.suffix'),
-      '#size' => 2,
-    );
+        $form['mentions']['input'] = array(
+            '#type' => 'fieldset',
+            '#title' => t('Input'),
+        );
 
-    $form['mentions']['output'] = array(
-      '#type' => 'fieldset',
-      '#title' => t('Output'),
-    );
+        $form['mentions']['input']['prefix'] = array(
+            '#type' => 'textfield',
+            '#title' => t('Prefix'),
+            '#default_value' => $this->config->get('input.prefix'),
+            '#size' => 2,
+        );
 
-    $form['mentions']['output']['prefix'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Prefix'),
-      '#default_value' => $this->config->get('output.prefix'),
-      '#size' => 2,
-    );
+        $form['mentions']['input']['suffix'] = array(
+            '#type' => 'textfield',
+            '#title' => t('Suffix'),
+            '#default_value' => $this->config->get('input.suffix'),
+            '#size' => 2,
+        );
 
-    $form['mentions']['output']['suffix'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Suffix'),
-      '#default_value' => $this->config->get('output.suffix'),
-      '#size' => 2,
-    );
+        $form['mentions']['output'] = array(
+            '#type' => 'fieldset',
+            '#title' => t('Output'),
+        );
 
-    $form['mentions']['output']['text'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Text'),
-      '#default_value' => '[user:name]',
-      '#description' => t('The text for the replacement link. Can use tokens.'),
-      '#size' => 20,
-    );
+        $form['mentions']['output']['prefix'] = array(
+            '#type' => 'textfield',
+            '#title' => t('Prefix'),
+            '#default_value' => $this->config->get('output.prefix'),
+            '#size' => 2,
+        );
 
-    $form['mentions']['output']['link'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Link'),
-      '#default_value' => 'user/[user:uid]',
-      '#description' => t('The destination for the replacement link. Can use tokens.'),
-      '#size' => 20,
-    );
+        $form['mentions']['output']['suffix'] = array(
+            '#type' => 'textfield',
+            '#title' => t('Suffix'),
+            '#default_value' => $this->config->get('output.suffix'),
+            '#size' => 2,
+        );
 
-    return $form;
-  }
+        $form['mentions']['output']['text'] = array(
+            '#type' => 'textfield',
+            '#title' => t('Text'),
+            '#default_value' => '[user:name]',
+            '#description' => t('The text for the replacement link. Can use tokens.'),
+            '#size' => 20,
+        );
 
-  /**
-   * {@inheritdoc}
-   */
-  public function submitForm(array &$form, FormStateInterface $form_state) {
-    parent::submitForm($form, $form_state);
-    //$this->config->merge($form_state->getValue('mentions'));
-    //$this->config->save();
-    $updated_config = $this->configFactory()->getEditable('mentions.mentions')->merge($form_state->getValue('mentions'));
-    $updated_config->save();
-  }
+        $form['mentions']['output']['link'] = array(
+            '#type' => 'textfield',
+            '#title' => t('Link'),
+            '#default_value' => 'user/[user:uid]',
+            '#description' => t('The destination for the replacement link. Can use tokens.'),
+            '#size' => 20,
+        );
 
-  public function validateForm(array &$form, FormStateInterface $form_state) {
-    // Validation is optional.
-    //parent::validateForm($form,$form_state);
-  }
+
+        $form['mentions']['mentions_events'] = array(
+            '#type' => 'details',
+            '#title' => t('Mentions Events'),
+            '#open' => true
+        );
+        $isActionModuleEnabled = \Drupal::moduleHandler()->moduleExists('action');
+        if ($isActionModuleEnabled) {
+
+            $actionManager = \Drupal::service('plugin.manager.action');
+            $definitions = $actionManager->getDefinitions();
+            $actions = array();
+            foreach($definitions as $action_definition) {
+                $actions[$action_definition['id']] = $action_definition['label']->render();
+            }
+
+            //$actions =  array('boo1', 'boo2');
+
+            $form['mentions']['mentions_events']['insert'] = array(
+                '#type' => 'select',
+                '#title' => $this->t('When a mention is inserted'),
+                '#empty_value' => '',
+                '#default_value' => '--NONE--',
+                '#options' => $actions,
+                '#description' => $this->t('When a mention is inserted, the following action is executed.'),
+            );
+
+            $form['mentions']['mentions_events']['update'] = array(
+                '#type' => 'select',
+                '#title' => $this->t('When a mention is updated'),
+                '#empty_value' => '',
+                '#default_value' => '--NONE--',
+                '#options' => $actions,
+                '#description' => $this->t('When a mention is updated, the following action is executed.'),
+            );
+
+            $form['mentions']['mentions_events']['delete'] = array(
+                '#type' => 'select',
+                '#title' => $this->t('When a mention is deleted'),
+                '#empty_value' => '',
+                '#default_value' => '--NONE--',
+                '#options' => $actions,
+                '#description' => $this->t('When a mention is deleted, the following action is executed.'),
+            );
+        }
+
+        else {
+            $form['mentions']['mentions_events']['action_module_not_enabled'] = array(
+                '#type' => 'label',
+                '#title' => t('When the actions module is enabled, actions can be performed when mentions are inserted, updated or deleted.')
+            );
+        }
+
+
+
+
+        return $form;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function submitForm(array &$form, FormStateInterface $form_state)
+    {
+        parent::submitForm($form, $form_state);
+        //$this->config->merge($form_state->getValue('mentions'));
+        //$this->config->save();
+        $updated_config = $this->configFactory()->getEditable('mentions.mentions')->merge($form_state->getValue('mentions'));
+        $updated_config->save();
+    }
+
+    public function validateForm(array &$form, FormStateInterface $form_state)
+    {
+        // Validation is optional.
+        //parent::validateForm($form,$form_state);
+    }
 
 }
