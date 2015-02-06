@@ -80,7 +80,7 @@ function mentions_insert_or_update(Drupal\Core\Entity\EntityInterface $entity, $
     $value = $boo->value;
     $filter_mentions = new \Drupal\mentions\Plugin\Filter\FilterMentions(array(),'',null);
     $mentions = $filter_mentions->mentions_get_mentions($value);
-    if (!empty($mentions)) {
+    if (!empty($mentions) || $update) {
       $auid = \Drupal::currentUser()->id();
       mentions_crud_update($type, $mentions, $entity->id(), $auid);
     }
@@ -201,6 +201,7 @@ function mentions_crud_update($type, $mentions, $id, $author) {
   foreach (array_intersect($new_users, $old_users) as $uid) {
     $entity = entity_load('mentions', $old_mids[$uid]);
     $entity->set('created', REQUEST_TIME);
+    $entity->save();
     $event_dispatcher->dispatch('mentions.update', new Event());
   }
 
