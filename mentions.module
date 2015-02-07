@@ -74,8 +74,9 @@ function mentions_insert_or_update(Drupal\Core\Entity\EntityInterface $entity, $
   $type = $entity->getEntityType()->getProvider();
   $field_definitions = $entity->getFieldDefinitions();
   $fields_with_text = array();
+  $supported_field_types = array('text_with_summary', 'string');
   foreach ($field_definitions as $field_definition) {
-    if ($field_definition instanceof field\Entity\FieldConfig) {
+    if ($field_definition instanceof field\Entity\FieldConfig && isset($field_definition->field_type) && in_array($field_definition->field_type, $supported_field_types)) {
       array_push($fields_with_text, $field_definition->field_name);
     }
   }

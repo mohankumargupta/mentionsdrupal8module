@@ -21,11 +21,11 @@ mentions.mentions:
           label: 'text'
         - type: string
           label: 'link'
-    mentions_events:
-       type: mapping
-       label: 'Events'
-       mapping:
-         -type: string
-          label: 'id'
-         -type: string
-          label: 'name'
+    #mentions_events:
+    #   type: sequence
+    #   label: 'Events'
+    #   sequence:
+    #     -type: string
+    #      label: 'id'
+    #     -type: string
+    #      label: 'name'
