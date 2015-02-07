@@ -6,10 +6,13 @@ use Drupal\views\EntityViewsData;
 use Drupal\views\EntityViewsDataInterface;
 
 /**
- * Provides the views data for the mentions entity type
+ * Provides the views data for the mentions entity type.
  */
 class MentionsViewsData extends EntityViewsData {
 
+  /**
+  * @{inheritdoc}
+  */
   public function getViewsData() {
     $data = array();
 

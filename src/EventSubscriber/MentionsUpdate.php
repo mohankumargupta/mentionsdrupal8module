@@ -4,11 +4,17 @@ namespace Drupal\mentions\EventSubscriber;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
+/**
+ * MentionsUpdate handles event 'mentions.update'.
+ */
 class MentionsUpdate implements EventSubscriberInterface {
-  static function getSubscribedEvents() {
+  /**
+   * @{inheritdoc}
+   */
+  public static function getSubscribedEvents() {
     $events['mentions.update'][] = array('onMentionsUpdate', 0);
-        return $events;
-    }
+    return $events;
+  }
 
   public function onMentionsUpdate($event) {
   // do stuff

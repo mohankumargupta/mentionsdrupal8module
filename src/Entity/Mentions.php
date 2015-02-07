@@ -4,8 +4,10 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\mentions\MentionInterface;
-
 /**
+ *
+ * @file
+ * Mentions Entity.
  *
  * @ContentEntityType(
  *   id = "mentions",
@@ -19,10 +21,7 @@ use Drupal\mentions\MentionInterface;
  *   }
  * )
  */
-
 class Mentions extends ContentEntityBase {
-
-
   /**
    * {@inheritdoc}
    */

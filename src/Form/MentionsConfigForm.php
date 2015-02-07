@@ -16,36 +16,38 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Utility\Token;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
+/**
+ * MentionsConfigForm
+ */
 class MentionsConfigForm extends ConfigFormBase
 {
+  protected $token;
+  protected $config;
 
-    protected $token;
-    protected $config;
+  /**
+   * Constructor.
+   */
+  public function __construct(Token $token, ConfigFactory $config) {
+    $this->token = $token;
+    $this->config = $config->get('mentions.mentions');
+  }
 
-    /**
-     * Class constructor
-     */
-    public function __construct(Token $token, ConfigFactory $config)
-    {
-        $this->token = $token;
-        $this->config = $config->get('mentions.mentions');
-    }
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    // Instantiates this form class.
+    return new static(
+       // Load the service required to construct this class.
+       $container->get('token'),
+       $container->get('config.factory')
+    );
+  }
 
-
-    /**
-     * {@inheritdoc}
-     */
-    public static function create(ContainerInterface $container)
-    {
-        // Instantiates this form class.
-        return new static(
-        // Load the service required to construct this class.
-            $container->get('token'),
-            $container->get('config.factory')
-        );
-    }
-
-    protected function getEditableConfigNames()
+  /**
+   * @{inheritdoc}
+   */
+  protected function getEditableConfigNames()
     {
         return [
             'mentions.mentions',
@@ -199,8 +201,6 @@ class MentionsConfigForm extends ConfigFormBase
     public function submitForm(array &$form, FormStateInterface $form_state)
     {
         parent::submitForm($form, $form_state);
-        //$this->config->merge($form_state->getValue('mentions'));
-        //$this->config->save();
         $updated_config = $this->configFactory()->getEditable('mentions.mentions')->merge($form_state->getValue('mentions'));
         $updated_config->save();
     }
