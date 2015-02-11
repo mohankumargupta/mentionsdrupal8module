@@ -5,6 +5,7 @@ use Drupal\mentions\Entity;
 use Drupal\field;
 use Symfony\Component\EventDispatcher;
 use Symfony\Component\EventDispatcher\Event;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @file
@@ -27,19 +28,22 @@ function template_preprocess_mentions(&$variables) {
   $output_settings = $settings->get('output');
   $user = $variables['userintext']['#user'];
 
+  global $base_url;
+  global $base_root;
   foreach (array('text', 'link') as $type) {
     if (!empty($output_settings[$type])) {
-      $what = \Drupal::token()->replace($output_settings[$type], array('user' => $user));
+      $content = \Drupal::token()->replace($output_settings[$type], array('user' => $user));
       if ($type == 'text') {
-        $text = $what;
+        $text = $content;
       }
       else {
-        $link = $what;
+        $link = $base_root . '/' .$content;
       }
     }
   }
 
-  $userpageurl = Url::fromUri('base://' . $link);
+  $userpageurl = Url::fromUri($link);
+  //$userpageurl = Url::fromUri('base://' . $link);
   $variables['userid'] = $user->id();
   $variables['link'] = \Drupal::l($output_settings['prefix'] . $text . $output_settings['suffix'], $userpageurl, array(
       'attributes' => array(
