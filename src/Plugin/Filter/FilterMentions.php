@@ -84,7 +84,7 @@ class FilterMentions extends FilterBase{
             foreach ($matches as $match) {
                 if (Unicode::substr($match[2], 0, 1) == '#') {
                     //$user = user_load(drupal_substr($match[2], 1));
-                    $user = \Drupal::entityManager()->getStorage('user')->load(drupal_substr($match[2], 1));
+                    $user = \Drupal::entityManager()->getStorage('user')->load(Unicode::substr($match[2], 1));
                 }
                 elseif ($match[1] == '#') {
                     //$user = user_load($match[2]);
