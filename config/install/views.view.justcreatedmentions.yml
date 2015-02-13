@@ -446,7 +446,7 @@ display:
       display_extenders: {  }
       field_langcode: '***LANGUAGE_language_content***'
       field_langcode_add_to_query: null
-      path: user/%/mentions
+      path: mentions/user/%
       menu:
         type: tab
         title: Mentions
