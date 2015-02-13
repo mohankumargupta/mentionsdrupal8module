@@ -37,15 +37,15 @@ function template_preprocess_mentions(&$variables) {
         $text = $content;
       }
       else {
-        $link = $base_root . '/' .$content;
+        $link = $content;
       }
     }
   }
 
-  $userpageurl = Url::fromUri($link);
-  //$userpageurl = Url::fromUri('base://' . $link);
+  //$userpageurl = Url::fromUri($link);
+  $user_page_url = Url::fromUri('base:' . $link);
   $variables['userid'] = $user->id();
-  $variables['link'] = \Drupal::l($output_settings['prefix'] . $text . $output_settings['suffix'], $userpageurl, array(
+  $variables['link'] = \Drupal::l($output_settings['prefix'] . $text . $output_settings['suffix'], $user_page_url, array(
       'attributes' => array(
         'class' => 'mentions mentions-' . $user->id(),
         'title' => $text,
