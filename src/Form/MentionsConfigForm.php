@@ -141,14 +141,21 @@ class MentionsConfigForm extends ConfigFormBase
             '#title' => t('Mentions Events'),
             '#open' => true
         );
+
+
+
         $isActionModuleEnabled = \Drupal::moduleHandler()->moduleExists('action');
         if ($isActionModuleEnabled) {
 
             $actionManager = \Drupal::service('plugin.manager.action');
-            $definitions = $actionManager->getDefinitions();
+            //$definitions = $actionManager->getDefinitions();
+            $entity_manager = \Drupal::service('entity.manager');
+            $action_definitions = $entity_manager->getListBuilder('action')->load();
             $actions = array();
-            foreach($definitions as $action_definition) {
-                $actions[$action_definition['id']] = $action_definition['label']->render();
+            foreach($action_definitions as $action_definition) {
+                if ($action_definition->getType() == 'system') {
+                  $actions[$action_definition->id()] = $action_definition->label();
+                }
             }
 
             //$actions =  array('boo1', 'boo2');
