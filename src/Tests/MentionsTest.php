@@ -1,0 +1,86 @@
+<?php
+
+namespace Drupal\mentions\Tests;
+/**
+ * @file
+ * Contains simpletests for the Mentions module.
+ */
+
+use Drupal\simpletest\WebTestBase;
+
+/**
+ * Test Mentions filter and tracking.
+ *
+ * @group mentions
+ */
+class MentionsTest extends WebTestBase {
+    protected $admin_user;
+
+    /**
+     * Implementation of setUp().
+     */
+    function setUp() {
+        // Install required modules.
+        $modules = array_merge(func_get_args(), array('mentions', 'views'));
+        call_user_func_array(array($this, 'parent::setUp'), $modules);
+
+        // Create and login user.
+        $this->admin_user = $this->drupalCreateUser(array('access administration pages',  'administer modules'));
+        $this->drupalLogin($this->admin_user);
+
+        // Enable the Mentions filter for the Filtered HTML Input format.
+        $this->drupalPost('admin/settings/filters/1', array('filters[mentions/0]' => 1), t('Save configuration'));
+
+        // Enable comments on Page node type.
+        $this->drupalPost('admin/content/node-type/page', array('comment' => 2, 'comment_preview' => 0), t('Save content type'));
+    }
+
+    /**
+     * Get Node ID (nid).
+     */
+    function getNodeID() {
+        $matches = array();
+        preg_match('/node\/([0-9]+)/', $this->getUrl(), $matches);
+        return isset($matches[1]) ? $matches[1] : FALSE;
+    }
+
+    function testMentions() {
+        // Check [@username] Mentions in Nodes are filtered.
+        $edit = array(
+            'title' => $this->randomName(),
+            'body' => 'node-'. theme('mentions_input', $this->admin_user->name, TRUE)
+        );
+        $this->drupalPost('node/add/page', $edit, t('Save'));
+        $this->assertRaw('node-'. theme('mentions', $this->admin_user), t('[@username] Mention in Node was filtered.'), 'Mentions');
+
+        // Check [@username] Mentions in Comments are filtered.
+        $nid = $this->getNodeID();
+        $edit = array(
+            'subject' => $this->randomName(),
+            'comment' => 'comment-'. theme('mentions_input', $this->admin_user->name, TRUE)
+        );
+        $this->drupalPost('comment/reply/'. $nid, $edit, t('Save'));
+        $this->assertRaw('comment-'. theme('mentions', $this->admin_user), t('[@username] Mention in Comment was filtered.'), 'Mentions');
+
+        // Check [@#uid] Mentions in Nodes are filtered.
+        $edit = array(
+            'title' => $this->randomName(),
+            'body' => 'node-'. theme('mentions_input', '#'. $this->admin_user->uid, TRUE)
+        );
+        $this->drupalPost('node/add/page', $edit, t('Save'));
+        $this->assertRaw('node-'. theme('mentions', $this->admin_user), t('[@#uid] Mention in Node was filtered.'), 'Mentions');
+
+        // Check [@#uid] Mentions in Comments are filtered.
+        $nid = $this->getNodeID();
+        $edit = array(
+            'subject' => $this->randomName(),
+            'comment' => 'comment-'. theme('mentions_input', '#'. $this->admin_user->uid, TRUE)
+        );
+        $this->drupalPost('comment/reply/'. $nid, $edit, t('Save'));
+        $this->assertRaw('comment-'. theme('mentions', $this->admin_user), t('[@#uid] Mention in Comment was filtered.'), 'Mentions');
+
+        // Check Mentions are listed on user's Mentions page.
+        $this->drupalGet('user/'. $this->admin_user->uid .'/mentions');
+        $this->assertRaw(theme('mentions', $this->admin_user), t('Mentions are listed on user\'s Mention page.'), 'Mentions');
+    }
+}
