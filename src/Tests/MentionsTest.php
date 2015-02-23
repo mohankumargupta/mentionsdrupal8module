@@ -6,6 +6,7 @@ namespace Drupal\mentions\Tests;
  * Contains simpletests for the Mentions module.
  */
 
+use Drupal\filter\Entity\FilterFormat;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -14,26 +15,27 @@ use Drupal\simpletest\WebTestBase;
  * @group mentions
  */
 class MentionsTest extends WebTestBase {
-    protected $admin_user;
+  protected $admin_user;
+  protected $authUser = array();
 
-    /**
-     * Implementation of setUp().
-     */
-    function setUp() {
-        // Install required modules.
-        $modules = array_merge(func_get_args(), array('mentions', 'views'));
-        call_user_func_array(array($this, 'parent::setUp'), $modules);
+  /**
+   * Implementation of setUp().
+   */
+  public function setUp() {
+    // Install required modules.
+    $modules = array_merge(func_get_args(), array('mentions', 'views'));
+    call_user_func_array(array($this, 'parent::setUp'), $modules);
 
-        // Create and login user.
-        $this->admin_user = $this->drupalCreateUser(array('access administration pages',  'administer modules'));
-        $this->drupalLogin($this->admin_user);
+    // Create and login user.
+    $this->admin_user = $this->drupalCreateUser(array('access administration pages', 'administer modules'));
+    $this->drupalLogin($this->admin_user);
 
-        // Enable the Mentions filter for the Filtered HTML Input format.
-        $this->drupalPost('admin/settings/filters/1', array('filters[mentions/0]' => 1), t('Save configuration'));
+    // Enable the Mentions filter for the Filtered HTML Input format.
+    $this->drupalPost('admin/config/content/formats/manage/basic_html', array('filters[filter_mentions][status]' => TRUE), t('Save configuration'));
 
-        // Enable comments on Page node type.
-        $this->drupalPost('admin/content/node-type/page', array('comment' => 2, 'comment_preview' => 0), t('Save content type'));
-    }
+    // Enable comments on Page node type.
+    //$this->drupalPost('admin/content/node-type/page', array('comment' => 2, 'comment_preview' => 0), t('Save content type'));
+  }
 
     /**
      * Get Node ID (nid).
@@ -44,43 +46,129 @@ class MentionsTest extends WebTestBase {
         return isset($matches[1]) ? $matches[1] : FALSE;
     }
 
-    function testMentions() {
-        // Check [@username] Mentions in Nodes are filtered.
-        $edit = array(
-            'title' => $this->randomName(),
-            'body' => 'node-'. theme('mentions_input', $this->admin_user->name, TRUE)
-        );
-        $this->drupalPost('node/add/page', $edit, t('Save'));
-        $this->assertRaw('node-'. theme('mentions', $this->admin_user), t('[@username] Mention in Node was filtered.'), 'Mentions');
 
-        // Check [@username] Mentions in Comments are filtered.
-        $nid = $this->getNodeID();
-        $edit = array(
-            'subject' => $this->randomName(),
-            'comment' => 'comment-'. theme('mentions_input', $this->admin_user->name, TRUE)
-        );
-        $this->drupalPost('comment/reply/'. $nid, $edit, t('Save'));
-        $this->assertRaw('comment-'. theme('mentions', $this->admin_user), t('[@username] Mention in Comment was filtered.'), 'Mentions');
+    function assertLinkByHrefAndLabel($href, $label, $index = 0, $message = '', $group = 'Other') {
+        $links   = $this->xpath('//a[contains(@href, :href)][normalize-space(text())=:label]', array(
+            ':href'  => $href,
+            ':label' => $label,
+        ));
+        $message = ($message ? $message : t('Link with href %href and label %label found.', array(
+            '%href'  => $href,
+            '%label' => $label,
+        )));
 
-        // Check [@#uid] Mentions in Nodes are filtered.
-        $edit = array(
-            'title' => $this->randomName(),
-            'body' => 'node-'. theme('mentions_input', '#'. $this->admin_user->uid, TRUE)
-        );
-        $this->drupalPost('node/add/page', $edit, t('Save'));
-        $this->assertRaw('node-'. theme('mentions', $this->admin_user), t('[@#uid] Mention in Node was filtered.'), 'Mentions');
+        return $this->assert(isset($links[$index]), $message, $group);
+    }
 
-        // Check [@#uid] Mentions in Comments are filtered.
-        $nid = $this->getNodeID();
-        $edit = array(
-            'subject' => $this->randomName(),
-            'comment' => 'comment-'. theme('mentions_input', '#'. $this->admin_user->uid, TRUE)
-        );
-        $this->drupalPost('comment/reply/'. $nid, $edit, t('Save'));
-        $this->assertRaw('comment-'. theme('mentions', $this->admin_user), t('[@#uid] Mention in Comment was filtered.'), 'Mentions');
+    function assertNoMentionExists($conditions = array(), $message = '') {
+        $query = \Drupal::entityQuery('mentions')
+                 ->condition('entity_type', $conditions['entity_type'])
+                 ->condition('entity_id', $conditions['entity_id']);
+        $node_ids = $query->execute();
+        return $this->assertFalse(!empty($node_ids), $message);
+    }
 
-        // Check Mentions are listed on user's Mentions page.
-        $this->drupalGet('user/'. $this->admin_user->uid .'/mentions');
-        $this->assertRaw(theme('mentions', $this->admin_user), t('Mentions are listed on user\'s Mention page.'), 'Mentions');
+    function assertMentionExists($conditions = array(), $message = '') {
+        $query = \Drupal::entityQuery('mentions')
+            ->condition('entity_type', $conditions['entity_type'])
+            ->condition('entity_id', $conditions['entity_id']);
+        $node_ids = $query->execute();
+        return $this->assertTrue(!empty($node_ids), $message);
+    }
+
+    /**
+     * Test core Mentions functionality.
+     */
+    function testMentionsCore() {
+        $this->drupalLogin($this->adminUser);
+
+        // Ensure Mentions filter is available.
+        $this->drupalGet('admin/config/content/formats/basic_html');
+        $this->assertFieldByName('filters[filter_mentions][status]', NULL, 'Mentions filter is available.');
+
+        // Enable Mentions filter.
+        $edit = array('filters[filter_mentions][status]' => TRUE);
+        $this->drupalPost('admin/config/content/formats/basic_html', $edit, t('Save configuration'));
+
+        // Ensure Mentions filter is enabled.
+        //$filters = filter_list_format('basic_html');
+        $base_html_format = FilterFormat::load('basic_html');
+        $filters = $base_html_format->filters();
+        $this->assertTrue($filters['filter_mentions']->status, 'Mentions filter is enabled on Filtered HTML text format.');
+
+        // Ensure Mentions filter tip is in place.
+        /*
+        $this->drupalGet('node/add/article');
+        $this->assertText(t("Converts !username and !uid into a link the user's profile page.", array(
+            '!username' => '[@username]',
+            '!uid'      => '[@#uid]',
+        )));
+        */
+
+        // Create content with a mention to admin user by username.
+
+        $settings = array(
+            'type'  => 'article',
+            'title' => $this->randomString(),
+            'body'  => array(LANGUAGE_NONE => array(array('value' => "[@{$this->adminUser->name}]"))),
+        );
+        $node     = $this->drupalCreateNode($settings);
+
+        // Ensure Mention was correctly created and is linked to user profile.
+        $this->drupalGet("node/{$node->nid}");
+        $this->assertLinkByHrefAndLabel("user/{$this->adminUser->uid}", "@{$this->adminUser->name}");
+        $this->assertMentionExists(array(
+            'entity_type' => 'node',
+            'entity_id'   => $node->nid,
+            'uid'         => $this->adminUser->uid,
+            'auid'        => $this->adminUser->uid
+        ), 'Mention by username created successfully.');
+
+        // Create content with a mention to admin user by #uid.
+        $settings = array(
+            'type'  => 'article',
+            'title' => $this->randomString(),
+            'body'  => array(LANGUAGE_NONE => array(array('value' => "[@#{$this->adminUser->uid}]")))
+        );
+        $node     = $this->drupalCreateNode($settings);
+
+        // Ensure Mention was correctly created and is linked to user profile.
+        $this->drupalGet("node/{$node->nid}");
+        $this->assertLinkByHrefAndLabel("user/{$this->adminUser->uid}", "@{$this->adminUser->name}");
+        $this->assertMentionExists(array(
+            'entity_type' => 'node',
+            'entity_id'   => $node->nid,
+            'uid'         => $this->adminUser->uid,
+            'auid'        => $this->adminUser->uid
+        ), 'Mention by UID created successfully.');
+
+        // Update Mention from admin user to auth user.
+        $edit = array('body[und][0][value]' => "[@{$this->authUser->name}]");
+        $this->drupalPost("node/$node->nid/edit", $edit, t('Save'));
+
+        // Ensure old mention removed and new mention created.
+        $this->assertNoMentionExists(array(
+            'entity_type' => 'node',
+            'entity_id'   => $node->nid,
+            'uid'         => $this->adminUser->uid,
+            'auid'        => $this->adminUser->uid
+        ), 'Old mention no longer exists.');
+        $this->assertMentionExists(array(
+            'entity_type' => 'node',
+            'entity_id'   => $node->nid,
+            'uid'         => $this->authUser->uid,
+            'auid'        => $this->adminUser->uid
+        ), 'New mention created.');
+
+        // Ensure mentions removed when node deleted.
+        $this->drupalPost("node/{$node->nid}/delete", array(), t('Delete'));
+        $this->assertNoMentionExists(array(
+            'entity_type' => 'node',
+            'entity_id'   => $node->nid,
+        ), 'Mentions on deleted node removed successfully.');
     }
 }
+
+
+
+
