@@ -22,12 +22,13 @@ class MentionsInsert implements EventSubscriberInterface {
    */
   public function onMentionsInsert($event) {
     $config = \Drupal::config('mentions.mentions');
-    $config_mentions_events = $config->get('mentions');
-    $action_id = $config_mentions_events['id'];
+    $config_mentions_events = $config->get('mentions_events');
+    $action_id = $config_mentions_events['insert'];
+    $entity_storage = \Drupal::entityManager()->getStorage('action');
+    $action = $entity_storage->load($action_id);
+    $action_plugin = $action->getPlugin();
     if (!empty($action_id)) {
-      $action_manager = \Drupal::service('plugin.manager.action');
-      $action = $action_manager->createInstance($action_id);
-      $action->execute(false);
+      $action_plugin->execute(false);
     }
 }
 

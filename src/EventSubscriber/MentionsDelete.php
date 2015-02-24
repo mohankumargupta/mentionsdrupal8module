@@ -20,7 +20,15 @@ class MentionsDelete implements EventSubscriberInterface {
    * Event handler.
    */
   public function onMentionsDelete($event) {
-    // Do stuff.
+    $config = \Drupal::config('mentions.mentions');
+    $config_mentions_events = $config->get('mentions_events');
+    $action_id = $config_mentions_events['delete'];
+    $entity_storage = \Drupal::entityManager()->getStorage('action');
+    $action = $entity_storage->load($action_id);
+    $action_plugin = $action->getPlugin();
+    if (!empty($action_id)) {
+      $action_plugin->execute(false);
+    }
   }
 
 }
