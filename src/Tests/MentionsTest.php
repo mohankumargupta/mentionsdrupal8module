@@ -31,7 +31,7 @@ class MentionsTest extends WebTestBase {
     $this->drupalLogin($this->admin_user);
 
     // Enable the Mentions filter for the Filtered HTML Input format.
-    $this->drupalPost('admin/config/content/formats/manage/basic_html', array('filters[filter_mentions][status]' => TRUE), t('Save configuration'));
+    $this->drupalPostForm('admin/config/content/formats/manage/basic_html', array('filters[filter_mentions][status]' => TRUE), t('Save configuration'));
     $this->drupalLogout();
     // Enable comments on Page node type.
     //$this->drupalPost('admin/content/node-type/page', array('comment' => 2, 'comment_preview' => 0), t('Save content type'));
@@ -89,7 +89,7 @@ class MentionsTest extends WebTestBase {
 
         // Enable Mentions filter.
         $edit = array('filters[filter_mentions][status]' => TRUE);
-        $this->drupalPost('admin/config/content/formats/basic_html', $edit, t('Save configuration'));
+        $this->drupalPostForm('admin/config/content/formats/basic_html', $edit, t('Save configuration'));
 
         // Ensure Mentions filter is enabled.
         //$filters = filter_list_format('basic_html');
@@ -145,7 +145,7 @@ class MentionsTest extends WebTestBase {
 
         // Update Mention from admin user to auth user.
         $edit = array('body[und][0][value]' => "[@{$this->authUser->name}]");
-        $this->drupalPost("node/$node->nid/edit", $edit, t('Save'));
+        $this->drupalPostForm("node/$node->nid/edit", $edit, t('Save'));
 
         // Ensure old mention removed and new mention created.
         $this->assertNoMentionExists(array(
@@ -162,7 +162,7 @@ class MentionsTest extends WebTestBase {
         ), 'New mention created.');
 
         // Ensure mentions removed when node deleted.
-        $this->drupalPost("node/{$node->nid}/delete", array(), t('Delete'));
+        $this->drupalPostForm("node/{$node->nid}/delete", array(), t('Delete'));
         $this->assertNoMentionExists(array(
             'entity_type' => 'node',
             'entity_id'   => $node->nid,
