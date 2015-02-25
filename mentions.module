@@ -111,6 +111,8 @@ function mentions_entity_delete(Drupal\Core\Entity\EntityInterface $entity) {
            ->execute();
 
   entity_delete_multiple('mentions', $mention_ids);
+  $event_dispatcher = \Drupal::service('event_dispatcher');
+  $event_dispatcher->dispatch('mentions.delete', new Event());
 }
 
 /**
