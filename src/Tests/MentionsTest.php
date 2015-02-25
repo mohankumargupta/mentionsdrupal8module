@@ -32,7 +32,7 @@ class MentionsTest extends WebTestBase {
 
     // Enable the Mentions filter for the Filtered HTML Input format.
     $this->drupalPost('admin/config/content/formats/manage/basic_html', array('filters[filter_mentions][status]' => TRUE), t('Save configuration'));
-
+    $this->drupalLogout();
     // Enable comments on Page node type.
     //$this->drupalPost('admin/content/node-type/page', array('comment' => 2, 'comment_preview' => 0), t('Save content type'));
   }
@@ -80,7 +80,8 @@ class MentionsTest extends WebTestBase {
      * Test core Mentions functionality.
      */
     function testMentionsCore() {
-        $this->drupalLogin($this->adminUser);
+      $this->admin_user = $this->drupalCreateUser(array('access administration pages', 'administer modules'));
+      $this->drupalLogin($this->admin_user);
 
         // Ensure Mentions filter is available.
         $this->drupalGet('admin/config/content/formats/basic_html');
@@ -92,7 +93,7 @@ class MentionsTest extends WebTestBase {
 
         // Ensure Mentions filter is enabled.
         //$filters = filter_list_format('basic_html');
-        $base_html_format = FilterFormat::load('basic_html');
+        $base_html_format = FilterFormat::load('filter_mentions');
         $filters = $base_html_format->filters();
         $this->assertTrue($filters['filter_mentions']->status, 'Mentions filter is enabled on Filtered HTML text format.');
 
