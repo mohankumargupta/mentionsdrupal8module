@@ -6,7 +6,6 @@
 
 namespace Drupal\mentions\Plugin\Filter;
 
-use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Unicode;
 use Drupal\filter\FilterProcessResult;
 use Drupal\filter\Plugin\FilterBase;
