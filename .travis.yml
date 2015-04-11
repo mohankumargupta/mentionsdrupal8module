@@ -1,7 +1,7 @@
 language: php
 php:
   - 5.4
-
+  
 before_script:
   # Set up the Github OAuth token.
   # Please change this if you fork this project.
