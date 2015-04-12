@@ -26,13 +26,13 @@ before_install:
   - cd web
   - drush qd mydrupal --core=drupal-8.0.x --dev --no-cache --yes --profile=standard --no-server --account-mail='a@b.com' --account-name=admin --account-pass=password --site-name=boo  
   - cd mydrupal/drupal-8.0.x
-  #- cd modules
-  #- git clone https://github.com/mohankumargupta/mentionsdrupal8module.git mentionsdrupal8module
-  #- drush en -y mentions
+  - cd modules
+  - git clone https://github.com/mohankumargupta/mentionsdrupal8module.git mentionsdrupal8module
+  - drush en -y mentions
 
 before_script:
   - pwd
 
 script:
-  - drush status
+  - drush pm-list
   - ls 
