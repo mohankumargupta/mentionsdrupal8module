@@ -1,12 +1,13 @@
 language: php
 php:
   - 5.4
-  
+
 before_script:
   # Set up the Github OAuth token.
   # Please change this if you fork this project.
   - sudo apt-get update 
   - composer self-update
+  - composer --version
   - "mkdir -p ~/.composer"
   - cp .travis.composer.config.json ~/.composer/config.json
   # Install dependencies.
