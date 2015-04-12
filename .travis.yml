@@ -19,5 +19,5 @@ before_script:
 
 script:
   # Our PHPUnit tests simply try to use classes which exist in Drupal core.
-  - ls
+  - ls -lR
   - pwd
