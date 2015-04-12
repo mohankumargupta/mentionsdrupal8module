@@ -19,7 +19,7 @@ mysql:
 before_install:
   - sudo apt-get update 
   - composer self-update
-  - apt-get install -y --force-yes php5-cgi php5-mysql
+  - sudo apt-get install -y --force-yes php5-cgi php5-mysql
   - composer global require drush/drush:dev-master
   - export PATH="$HOME/.composer/vendor/bin:$PATH"
   - mkdir web
