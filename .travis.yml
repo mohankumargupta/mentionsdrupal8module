@@ -1,23 +1,37 @@
 language: php
+
 php:
   - 5.4
+  - 5.5
 
-before_script:
-  # Set up the Github OAuth token.
-  # Please change this if you fork this project.
+matrix:
+  allow-failures:
+    - php: 5.5
+  env:
+    global:
+    - DATABSE='drupal'
+    - DB_USERNAME='root'
+    - DB_ENCODE='utf8'
+
+mysql:
+  database: $DATABASE
+  username: $DB_USERNAME
+  encoding: $DB_ENCODE
+
+
+before_install:
   - sudo apt-get update 
   - composer self-update
-  - composer --version
-  - "mkdir -p ~/.composer"
-  - cp .travis.composer.config.json ~/.composer/config.json
-  # Install dependencies.
-  - composer install --no-progress
-  # Require drupal/core.
-  - composer require drupal/core 8.0.*@dev
-  - ls
+  - apt-get install -y --force-yes php5-cgi php5-mysql
+  - composer global require drush/drush:dev-master
+  - export PATH="$HOME/.composer/vendor/bin:$PATH"
+  - mkdir web
+  - cd web
+  - drush dl drupal-8 --select
+  - drush qd --core=drupal-8.0.x --default-minor=0 --dev --no-cache --yes --profile=standard --no-server --account-mail='a@b.com' --account-name=admin --account-pass=password --site-name=boo  
+
+before_script:
   - pwd
 
 script:
-  # Our PHPUnit tests simply try to use classes which exist in Drupal core.
-  - ls -lR
   - pwd
