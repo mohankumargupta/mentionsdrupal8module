@@ -34,5 +34,5 @@ before_script:
   - pwd
 
 script:
-  - drush pm-list
+  - drush pm-list --pipe --type=module --status=enabled --no-core | grep -x mentions
   - ls 
