@@ -14,7 +14,10 @@ before_script:
   - composer install --no-progress
   # Require drupal/core.
   - composer require drupal/core 8.0.*@dev
+  - ls
+  - pwd
 
 script:
   # Our PHPUnit tests simply try to use classes which exist in Drupal core.
-  - ./vendor/bin/phpunit
+  - ls
+  - pwd
