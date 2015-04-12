@@ -24,7 +24,7 @@ before_install:
   - export PATH="$HOME/.composer/vendor/bin:$PATH"
   - mkdir web
   - cd web
-  - drush qd --core=drupal-8.0.x --dev --no-cache --yes --profile=standard --no-server --account-mail='a@b.com' --account-name=admin --account-pass=password --site-name=boo  
+  - drush qd --core=drupal-8.0.x --dev --no-cache --root . --yes --profile=standard --no-server --account-mail='a@b.com' --account-name=admin --account-pass=password --site-name=boo  
   - cd modules
   - git clone https://github.com/mohankumargupta/mentionsdrupal8module.git mentionsdrupal8module
   - drush en -y mentions
