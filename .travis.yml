@@ -24,7 +24,6 @@ before_install:
   - export PATH="$HOME/.composer/vendor/bin:$PATH"
   - mkdir web
   - cd web
-  - drush dl drupal-8 --select
   - drush qd --core=drupal-8.0.x --default-minor=0 --dev --no-cache --yes --profile=standard --no-server --account-mail='a@b.com' --account-name=admin --account-pass=password --site-name=boo  
 
 before_script:
