@@ -25,7 +25,6 @@ before_install:
   - mkdir web
   - cd web
   - drush qd --core=drupal-8.0.x --dev --no-cache --root="$HOME/web" --yes --profile=standard --no-server --account-mail='a@b.com' --account-name=admin --account-pass=password --site-name=boo  
-  - ls -lR
   - pwd
   #- cd modules
   #- git clone https://github.com/mohankumargupta/mentionsdrupal8module.git mentionsdrupal8module
@@ -36,3 +35,4 @@ before_script:
 
 script:
   - pwd
+  - ls -lR 
