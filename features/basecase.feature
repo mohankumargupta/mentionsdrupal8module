@@ -10,7 +10,7 @@
   And I check the box "filters[filter_mentions][status]"
   And I press the "Save configuration" button
   And I go to the homepage
-  Then I should see text "@admin"
+  Then I should see "@admin"
 
   @api
   Scenario: Add simple node with a mention for admin (alternate format)
@@ -22,4 +22,4 @@
   And I check the box "filters[filter_mentions][status]"
   And I press the "Save configuration" button
   And I go to the homepage
-  Then I should see text "@admin"
+  Then I should see "@admin"
