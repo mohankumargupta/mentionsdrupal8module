@@ -10,6 +10,16 @@
   And I check the box "filters[filter_mentions][status]"
   And I press the "Save configuration" button
   And I go to the homepage
-  And I follow "@admin"
-  Then I should be on "user/1"
+  Then I should see text "@admin"
 
+  @api
+  Scenario: Add simple node with a mention for admin (alternate format)
+  Given I am logged in as a user with the "administrator" role
+  And "page" content:
+  | title | promote | body    |
+  | Boo   | 1       |[@#1] |  
+  When I visit "admin/config/content/formats/manage/basic_html"
+  And I check the box "filters[filter_mentions][status]"
+  And I press the "Save configuration" button
+  And I go to the homepage
+  Then I should see text "@admin"
