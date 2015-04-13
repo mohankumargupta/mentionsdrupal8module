@@ -9,6 +9,7 @@
   When I visit "admin/config/content/formats/manage/basic_html"
   And I check the box "filters[filter_mentions][status]"
   And I press the "Save configuration" button
+  And I go to the homepage
   And I follow "@admin"
   Then I should be on "user/1"
 
