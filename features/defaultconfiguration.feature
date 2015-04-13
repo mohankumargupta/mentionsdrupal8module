@@ -10,5 +10,4 @@
   Scenario: 
   Given I am logged in as a user with the "administrator" role
   When I visit "admin/config/mentions"
-  Then the "mentions" field should contain "boo"
-  
+  Then the "mentions[input][prefix]" field should contain "boo"
