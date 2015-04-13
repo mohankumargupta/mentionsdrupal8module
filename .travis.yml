@@ -25,4 +25,4 @@ before_script:
   - cd mentions
 
 script:
-  - behat -dl
+  - behat -c ./behat.yml -dl
