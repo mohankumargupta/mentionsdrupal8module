@@ -22,7 +22,7 @@ before_install:
 before_script:
   - drush en -y mentions
   - drush pm-list --pipe --type=module --status=enabled --no-core | grep -x mentions
-  - cd mentions
+  - cd ..
 
 script:
-  - behat -c ./behat.yml -dl
+  - behat -c ./modules/mentions/behat.yml -dl
