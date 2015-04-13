@@ -5,3 +5,4 @@
   Given I am logged in as a user with the "administrator" role  
   When I visit "admin/config/content/formats/manage/basic_html"
   And I check the box "filters[filter_mentions][status]"
+  And I press the "Save configuration" button
