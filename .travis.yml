@@ -25,4 +25,5 @@ before_script:
 
 script:
   - cd ..
-  - ls -lR 
+  - pwd
+  - find . -name behat 
