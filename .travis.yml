@@ -23,7 +23,8 @@ before_script:
   - drush en -y mentions
   - drush pm-list --pipe --type=module --status=enabled --no-core | grep -x mentions
   - cd ..
-  - pwd
+  - behat -c ./modules/mentions/behat.yml -dl
+  - cp -a modules/mentions/features .
 
 script:
-  - behat -c ./modules/mentions/behat.yml -dl
+  - behat -c ./modules/mentions/behat.yml
