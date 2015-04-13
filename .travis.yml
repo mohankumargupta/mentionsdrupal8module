@@ -24,6 +24,4 @@ before_script:
   - drush pm-list --pipe --type=module --status=enabled --no-core | grep -x mentions
 
 script:
-  - cd ..
-  - pwd
-  - find . -name behat 
+  - ../core/vendor/behat/behat/bin/behat -dl 
