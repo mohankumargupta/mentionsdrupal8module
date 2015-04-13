@@ -25,6 +25,5 @@ before_script:
 
 script:
   - cd ..
-  - cd core/vendor/behat
-  - ls -lR 
-  - find . -name behat
+  - cd core/vendor
+  - ls -l
