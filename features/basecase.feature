@@ -9,6 +9,6 @@
   When I visit "admin/config/content/formats/manage/basic_html"
   And I check the box "filters[filter_mentions][status]"
   And I press the "Save configuration" button
-  And I follow "Boo"
-  Then I should see the link "@admin"
-  
+  And I follow "@admin"
+  Then I should be on "user/1"
+
