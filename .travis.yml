@@ -3,23 +3,11 @@ language: php
 php:
   - 5.4
 
-matrix:
-  env:
-    global:
-    - DATABSE='drupal'
-    - DB_USERNAME='root'
-    - DB_ENCODE='utf8'
-
-mysql:
-  database: $DATABASE
-  username: $DB_USERNAME
-  encoding: $DB_ENCODE
-
-
 before_install:
   - sudo apt-get update 
   - composer self-update
   - sudo apt-get install -y --force-yes php5-cgi php5-mysql sqlite3 php5-sqlite php5-gd 
+  - composer require drupal/drupal-extension:"~3.0"  
   - composer global require drush/drush:dev-master
   - export PATH="$HOME/.composer/vendor/bin:$PATH"
   - mkdir web
@@ -28,11 +16,11 @@ before_install:
   - cd mydrupal/drupal-8.0.x
   - cd modules
   - git clone https://github.com/mohankumargupta/mentionsdrupal8module.git mentionsdrupal8module
-  - drush en -y mentions
 
 before_script:
-  - pwd
+  - drush en -y mentions
+  - drush pm-list --pipe --type=module --status=enabled --no-core | grep -x mentions
 
 script:
-  - drush pm-list --pipe --type=module --status=enabled --no-core | grep -x mentions
-  - ls 
+  - cd $TRAVIS_BUILD_DIR
+  - pwd
