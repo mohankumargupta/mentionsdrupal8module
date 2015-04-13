@@ -13,9 +13,9 @@ before_install:
   - mkdir web
   - cd web
   - drush qd mydrupal --core=drupal-8.0.x --dev --no-cache --yes --profile=standard --no-server --account-mail='a@b.com' --account-name=admin --account-pass=password --site-name=boo  
+  - cd mydrupal/drupal-8.0.x
   - drush runserver --server=builtin 8080 --strict=0 &
   - until netstat -an 2>/dev/null | grep '8080.*LISTEN'; do sleep 0.2; done
-  - cd mydrupal/drupal-8.0.x
   - cd modules
   - git clone https://github.com/mohankumargupta/mentionsdrupal8module.git mentionsdrupal8module
 
