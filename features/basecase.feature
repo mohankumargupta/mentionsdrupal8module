@@ -1,6 +1,6 @@
   Feature: Base case
 
-  @api
+  @api @javascript
   Scenario: Add simple node with a mention for admin
   Given I am logged in as a user with the "administrator" role
   And "page" content:
@@ -12,7 +12,7 @@
   And I go to the homepage
   Then I should see "@admin"
 
-  @api
+  @api @javascript
   Scenario: Add simple node with a mention for admin (alternate format)
   Given I am logged in as a user with the "administrator" role
   And "page" content:
