@@ -5,5 +5,3 @@ Feature: Does it work
     Given I am an anonymous user
      When I am on the homepage
      Then I should be on the homepage
-
-

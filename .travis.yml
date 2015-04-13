@@ -7,7 +7,7 @@ before_install:
   - sudo apt-get update 
   - composer self-update
   - sudo apt-get install -y --force-yes php5-cgi php5-mysql sqlite3 php5-sqlite php5-gd 
-  - composer global require drupal/drupal-extension:"~3.0"  
+  - composer global require drupal/drupal-extension:"~3.0" 
   - composer global require drush/drush:dev-master
   - export PATH="$HOME/.composer/vendor/bin:$PATH"
   - mkdir web
@@ -18,6 +18,10 @@ before_install:
   - until netstat -an 2>/dev/null | grep '8080.*LISTEN'; do sleep 0.2; done
   - cd modules
   - git clone https://github.com/mohankumargupta/mentionsdrupal8module.git mentions
+  - wget "http://selenium-release.storage.googleapis.com/2.45/selenium-server-standalone-2.45.0.jar"
+  - "sh -e /etc/init.d/xvfb start"
+  - "export DISPLAY=:99.0"
+  - "java -jar selenium-server-standalone-2.45.0.jar > /dev/null &"
 
 before_script:
   - drush en -y mentions
