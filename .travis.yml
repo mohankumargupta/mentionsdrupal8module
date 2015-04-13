@@ -17,7 +17,7 @@ before_install:
   - drush runserver --server=builtin 8080 --strict=0 &
   - until netstat -an 2>/dev/null | grep '8080.*LISTEN'; do sleep 0.2; done
   - cd modules
-  - git clone https://github.com/mohankumargupta/mentionsdrupal8module.git mentionsdrupal8module
+  - git clone https://github.com/mohankumargupta/mentionsdrupal8module.git mentions
 
 before_script:
   - drush en -y mentions
