@@ -25,5 +25,5 @@ before_script:
 
 script:
   - cd ..
-  - cd core/vendor
+  - cd core/vendor/bin
   - ls -l
