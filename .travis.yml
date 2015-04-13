@@ -27,3 +27,4 @@ script:
   - cd ..
   - cd core/vendor/behat
   - ls -lR 
+  - find . -name behat
