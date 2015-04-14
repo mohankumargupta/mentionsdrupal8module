@@ -18,14 +18,18 @@
   Then I should see "admin"
 
   @api @javascript
-  Scenario: Add simple node with a mention for admin (alternate format)
-  Given I am logged in as a user with the "administrator" role
+  Scenario: Add simple node with a mention for admin
+  Given users:
+  | name            | mail    | status |
+  | Mohan Boo       | a@b.com | 1      |
   And "page" content:
-  | title | promote | body    |
-  | Boo   | 1       |[@#1] |  
+  | title | promote | body    | author      |
+  | Moo   | 1       |[@#1]    | Mohan Boo   | 
+  And I am logged in as a user with the "administrator" role
   When I visit "admin/config/content/formats/manage/basic_html"
   And I check the box "filters[filter_mentions][status]"
   And I press the "Save configuration" button
   And I wait 8 seconds
   And I go to the homepage
+  And I follow "Moo"
   Then I should see "admin"
