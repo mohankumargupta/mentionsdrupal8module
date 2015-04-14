@@ -9,6 +9,7 @@
   When I visit "admin/config/content/formats/manage/basic_html"
   And I check the box "filters[filter_mentions][status]"
   And I press the "Save configuration" button
+  And I wait 8 seconds
   And I go to the homepage
   Then I should see "@admin"
 
@@ -21,5 +22,6 @@
   When I visit "admin/config/content/formats/manage/basic_html"
   And I check the box "filters[filter_mentions][status]"
   And I press the "Save configuration" button
+  And I wait 8 seconds
   And I go to the homepage
   Then I should see "@admin"

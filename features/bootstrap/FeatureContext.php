@@ -33,4 +33,11 @@ class FeatureContext extends RawDrupalContext implements Context, SnippetAccepti
 //  }
 //
 
+/**
+ * @When I wait :waittime seconds
+ */
+public function iWaitSeconds($waittime) {
+  $this->getSession()->wait($waittime * 1000, 'typeof window.jQuery == "function"');
+}
+
 }
