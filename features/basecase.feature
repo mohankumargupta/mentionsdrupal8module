@@ -11,7 +11,7 @@
   And I press the "Save configuration" button
   And I wait 8 seconds
   And I go to the homepage
-  Then I should see "@admin"
+  Then I should see "admin"
 
   @api @javascript
   Scenario: Add simple node with a mention for admin (alternate format)
@@ -24,4 +24,4 @@
   And I press the "Save configuration" button
   And I wait 8 seconds
   And I go to the homepage
-  Then I should see "@admin"
+  Then I should see "admin"
