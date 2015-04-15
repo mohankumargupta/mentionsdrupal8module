@@ -30,6 +30,12 @@
   And I wait 8 seconds
   And I select "Text (plain, long)" from "Add a new field"
   And I fill in "Label" with "MyBody"
+  And I press "Save and continue"
+  And I wait 8 seconds
+  And I press "Save field settings"
+  And I wait 8 seconds
+  And I press "Save settings"
+  And I wait 8 seconds
   And I visit "node/add/page"
   And I wait 8 seconds
   And I fill in "Title" with "NewPage"
