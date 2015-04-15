@@ -25,9 +25,13 @@
   And I check the box "filters[filter_mentions][status]"
   And I press the "Save configuration" button
   And I wait 8 seconds
-  And I go to the homepage
-  And I follow "Boo"
-  Then I should see "admin"
+  And I visit "node/add/page"
+  And I fill in "Title" with "NewPage"
+  And I fill in "Body" with "[@admin]"
+  And I press the "Save and publish" button
+  And I wait 8 seconds
+  And I follow "NewPage"
+  Then I should see the link "@admin"
 
   @api @javascript
   Scenario: Add simple node with a mention for admin
