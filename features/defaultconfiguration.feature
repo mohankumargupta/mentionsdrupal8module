@@ -1,12 +1,6 @@
   Feature: Test configuration form
 
-  @api
-  Scenario: Can land on configuration page
-  Given I am logged in as a user with the "administrator" role
-  When I visit "admin/config/mentions"
-  Then I see the text "Input"
-
-  @api
+  @api @javascript
   Scenario: Default values for configuration page 
   Given I am logged in as a user with the "administrator" role
   When I visit "admin/config/mentions"
