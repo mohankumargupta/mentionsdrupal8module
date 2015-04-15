@@ -20,8 +20,7 @@
   And I wait 5 seconds
   And I visit "admin/config/content/formats/manage/basic_html"
   And I wait 5 seconds
-  And I visit "admin/structure/types/manage/page/fields"
-  And I press the "Add field" button
+  And I visit "admin/structure/types/manage/page/fields/add-field"
   And I wait 5 seconds
   And I select "Text (plain, long)" from "Add a new field"
   And I fill in "Label" with "MyBody"
