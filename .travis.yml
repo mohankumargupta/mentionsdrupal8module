@@ -3,6 +3,14 @@ language: php
 php:
   - 5.4
 
+env:
+  global:
+    - secure: NC1/RA8TEdFCPKZswNm6PffWtE9CNg72rDqYFcKlKmO3RVe6QeIE1+nsyoPh+Bun6rMG4LuaCArd3PMnhLQryCdX1PAlhUD3iy9zF9uhC4MBz0/pDw/WpZJaxAqCcZNilueRBhvPLQ5AUnrtYHa+r/ILp5Ekjn29LuY9UIsYwjQ=
+    - secure: SGVPdaSfetcIB6w3LumoziBxAF2Y9ERLs3/2LN41P2Gvx8WjVSj4s+TPzijhUxbSMO9eWy68emcmraTFMJ4izOJGSkvXtiqvISNufkYUmwNtxw9LUyD98W7pf7eFJ6sM7pOUDjsQj8Hebtr69c8m/67oyoi+wu5r8WuxEaUNcyI=
+
+addons:
+  sauce_connect: true  
+
 before_install:
   - sudo apt-get update 
   - composer self-update
@@ -18,10 +26,10 @@ before_install:
   - until netstat -an 2>/dev/null | grep '8080.*LISTEN'; do sleep 0.2; done
   - cd modules
   - git clone https://github.com/mohankumargupta/mentionsdrupal8module.git mentions
-  - wget "http://selenium-release.storage.googleapis.com/2.45/selenium-server-standalone-2.45.0.jar"
-  - "sh -e /etc/init.d/xvfb start"
-  - "export DISPLAY=:99.0"
-  - "java -jar selenium-server-standalone-2.45.0.jar > /dev/null &"
+  #- wget "http://selenium-release.storage.googleapis.com/2.45/selenium-server-standalone-2.45.0.jar"
+  #- "sh -e /etc/init.d/xvfb start"
+  #- "export DISPLAY=:99.0"
+  #- "java -jar selenium-server-standalone-2.45.0.jar > /dev/null &"
 
 before_script:
   - drush en -y mentions

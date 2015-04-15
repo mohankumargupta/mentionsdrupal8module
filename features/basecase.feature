@@ -1,5 +1,6 @@
   Feature: Base case
 
+
   @api @javascript
   Scenario: internal test 
   Given I am logged in as a user with the "administrator" role
