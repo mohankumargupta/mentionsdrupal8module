@@ -40,4 +40,12 @@ public function iWaitSeconds($waittime) {
   sleep($waittime);
 }
 
+/**
+ * @When I custom fill content :text into the body field
+ */
+public function fillBodyFieldWithText($text) {
+$this->getSession()->evaluateScript("document.querySelector('iframe').contentWindow.document.querySelector('body').innerHTML = '". $text ."';");
+}
+
+
 }

@@ -20,20 +20,10 @@
   And I wait 5 seconds
   And I visit "admin/config/content/formats/manage/basic_html"
   And I wait 5 seconds
-  And I visit "admin/structure/types/manage/page/fields/add-field"
-  And I wait 5 seconds
-  And I select "Text (plain, long)" from "Add a new field"
-  And I fill in "Label" with "MyBody"
-  And I press "Save and continue"
-  And I wait 5 seconds
-  And I press "Save field settings"
-  And I wait 5 seconds
-  And I press "Save settings"
-  And I wait 5 seconds
   And I visit "node/add/page"
   And I wait 5 seconds
   And I fill in "Title" with "NewPage"
-  And I fill in "MyBody" with "[@admin]"
+  And I custom fill content "[@admin]" into the body field
   And I press the "Save and publish" button
   And I wait 5 seconds
   And I visit "admin/content"
