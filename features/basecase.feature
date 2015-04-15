@@ -25,10 +25,15 @@
   And I check the box "filters[filter_mentions][status]"
   And I press the "Save configuration" button
   And I wait 8 seconds
+  And I visit "admin/structure/types/manage/page/fields"
+  And I press "Add Field" button
+  And I wait 8 seconds
+  And I select "Text (plain, long)" from "Add a new field"
+  And I fill in "Label" with "MyBody"
   And I visit "node/add/page"
   And I wait 8 seconds
   And I fill in "Title" with "NewPage"
-  And I fill in "Body" with "[@admin]"
+  And I fill in "MyBody" with "[@admin]"
   And I press the "Save and publish" button
   And I wait 8 seconds
   And I follow "NewPage"
