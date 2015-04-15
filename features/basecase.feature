@@ -36,6 +36,8 @@
   And I fill in "MyBody" with "[@admin]"
   And I press the "Save and publish" button
   And I wait 5 seconds
+  And I visit "admin/content"
+  And I wait 5 seconds
   And I follow "NewPage"
   And I wait 5 seconds
   Then I should see the link "@admin"
