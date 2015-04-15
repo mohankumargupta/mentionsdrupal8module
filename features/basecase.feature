@@ -1,6 +1,17 @@
   Feature: Base case
 
   @api @javascript
+  Scenario: internal test 
+  Given I am logged in as a user with the "administrator" role
+  When I visit "admin/config/content/formats/manage/basic_html" 
+  And I check "Mentions Filter"
+  And I press the "Save configuration" button
+  And I wait 8 seconds
+  And I wait 8 seconds
+  And I visit "admin/config/content/formats/manage/basic_html"
+  Then the "Mentions Filter" checkbox should be checked
+
+  @api @javascript
   Scenario: Add simple node with a mention for admin
   Given users:
   | name            | mail    | status |
