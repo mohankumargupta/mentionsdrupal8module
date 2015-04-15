@@ -23,6 +23,7 @@
   Then I should be on "user/1"
 
   @api @javascript
+  Scenario: Add simple node with a mention for admin (alternative format)
   Given I am logged in as a user with the "administrator" role
   When I visit "node/add/page"
   And I fill in "Title" with "NewPage2"
