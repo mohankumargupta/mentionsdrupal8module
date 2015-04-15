@@ -7,9 +7,10 @@ default:
         - Drupal\DrupalExtension\Context\MinkContext
   extensions:
     Behat\MinkExtension:
+      default_session: selenium2
       goutte: ~
-      selenium2: 
-        wd_host: http://localhost:4445/wd/hub
+      selenium2:
+        wd_host: "mohangupta:fad0e100-86a8-42b1-bd2f-6086904c6c98@ondemand.saucelabs.com/wd/hub" 
       base_url: http://localhost:8080
     Drupal\DrupalExtension:
       blackbox: ~
