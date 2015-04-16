@@ -40,5 +40,4 @@ before_script:
 
 script:
   - behat -c ./modules/mentions/behat.yml
-  - cd core  
-  - ./vendor/phpunit/phpunit/phpunit --group mentions
+  - php ./core/scripts/run-tests.sh --class '\Drupal\mentions\Tests\MentionsFilterTest'
