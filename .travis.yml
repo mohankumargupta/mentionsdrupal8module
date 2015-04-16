@@ -40,4 +40,5 @@ before_script:
 
 script:
   - behat -c ./modules/mentions/behat.yml
-  - cd core && ./vendor/bin/phpunit --group mentions
+  - cd core  
+  - ./vendor/phpunit/phpunit/phpunit --group mentions
