@@ -32,7 +32,7 @@ before_install:
   #- "java -jar selenium-server-standalone-2.45.0.jar > /dev/null &"
 
 before_script:
-  - drush en -y mentions
+  - drush en -y mentions simpletest
   - drush pm-list --pipe --type=module --status=enabled --no-core | grep -x mentions
   - cd ..
   - behat -c ./modules/mentions/behat.yml -dl

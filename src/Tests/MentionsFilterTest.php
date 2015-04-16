@@ -7,24 +7,16 @@
 
 namespace Drupal\mentions\Tests;
 
-use Drupal\Tests\KernelTestCase;
+use Drupal\simpletest\KernelTestBase;
+use Drupal\filter\FilterPluginCollection;
 
 /**
- * Tests Mentions Filter module 
+ * Test filter functionality 
  *
- * @group mentions
+ * @group Mentions
  */
 class MentionsFilterTest extends KernelTestBase {
-	  /**
-   * Modules to enable.
-   *
-   * @var array
-   */
-  public static $modules = array('system', 'filter', 'user', 'mentions');
-
-    /**
-   * @var \Drupal\filter\Plugin\FilterInterface[]
-   */
+  public static $modules = array('system', 'filter', 'user', 'views', 'views_ui', 'mentions');
   protected $filters;
 
   protected function setUp() {
@@ -34,7 +26,7 @@ class MentionsFilterTest extends KernelTestBase {
     $manager = $this->container->get('plugin.manager.filter');
     $bag = new FilterPluginCollection($manager, array());
     $this->filters = $bag->getAll();
-    print_r($this->filters);
+    //print_r(array_keys($this->filters));
   }
 
  function testMention() {

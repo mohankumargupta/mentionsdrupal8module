@@ -1,31 +1,41 @@
 mentions.mentions:
   type: mapping
-  label: 'Mentions Configuration'
+  label: 'Mentions'
   mapping:
     input:
-      type: sequence
-      sequence:
-        - type: string
-          label: 'prefix'
-
-        - type: string
-          label: 'suffix'
+      type: mapping
+      label: 'Input'
+      mapping:
+        prefix:
+          type: string
+          label: 'Prefix'
+        suffix:
+          type: string
+          label: 'Suffix'
     output:
-      type: sequence
-      sequence:
-        - type: string
-          label: 'prefix'
-        - type: string
-          label: 'suffix'
-        - type: string
-          label: 'text'
-        - type: string
-          label: 'link'
-    #mentions_events:
-    #   type: sequence
-    #   label: 'Events'
-    #   sequence:
-    #     -type: string
-    #      label: 'id'
-    #     -type: string
-    #      label: 'name'
+      type: mapping
+      label: 'Output'
+      mapping:
+        prefix:
+          type: string
+          label: 'Prefix'
+        suffix:
+          type: string
+          label: 'Suffix'  
+        text:
+          type: string
+          label: 'Text'
+        link:
+          type: string
+          label: 'Link'
+
+    mentions:
+      type: mapping
+      label: 'Mentions'
+      mapping:
+        id:
+          type: string
+          label: 'Id'
+        name:
+          type: string
+          label: 'Name'
