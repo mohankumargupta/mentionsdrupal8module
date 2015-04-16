@@ -25,11 +25,10 @@ use Drupal\Core\Entity\EntityManagerInterface;
  * )
  */
 class FilterMentions extends FilterBase implements ContainerFactoryPluginInterface{
-
-  protected $user_storage;
+  protected $entityManager;
 
   public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityManagerInterface $entity_manager) {
-    $this->user_storage = $entity_manager->getStorage('user');
+    $this->entityManager = $entity_manager;
     parent::__construct($configuration, $plugin_id, $plugin_definition);  
   }
 
@@ -39,6 +38,10 @@ class FilterMentions extends FilterBase implements ContainerFactoryPluginInterfa
       $plugin_definition,            
       $container->get('entity.manager')
     );
+  }
+
+  public function setEntityManager($entity_manager) {
+    
   }
 
     /**
@@ -95,21 +98,23 @@ class FilterMentions extends FilterBase implements ContainerFactoryPluginInterfa
         }
 
 
+       $userStorage = $this->entityManager->getStorage('user');
+
         // Find all matching strings.
         if (preg_match_all($pattern, $text, $matches, PREG_SET_ORDER)) {
             foreach ($matches as $match) {
                 if (Unicode::substr($match[2], 0, 1) == '#') {
                     //$user = user_load(drupal_substr($match[2], 1));
                     //$user = \Drupal::entityManager()->getStorage('user')->load(Unicode::substr($match[2], 1));
-                    $user = $this->user_storage->load(Unicode::substr($match[2], 1));
+                    $user = $userStorage->load(Unicode::substr($match[2], 1));
                 }
                 elseif ($match[1] == '#') {
                     //$user = user_load($match[2]);
-                    $user = $this->user_storage->load($match[2]);
+                    $user = $userStorage->load($match[2]);
                 }
                 else {
                     //$user = user_load_by_name($match[2]);
-                    $user = $this->user_storage->load($match[2]);
+                    $user = $userStorage->load($match[2]);
                 }
 
                 if (is_object($user)) {

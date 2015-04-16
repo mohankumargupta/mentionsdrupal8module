@@ -17,6 +17,7 @@ before_install:
   - sudo apt-get install -y --force-yes php5-cgi php5-mysql sqlite3 php5-sqlite php5-gd 
   - composer global require drupal/drupal-extension:"~3.0" 
   - composer global require drush/drush:dev-master
+  - composer update
   - export PATH="$HOME/.composer/vendor/bin:$PATH"
   - mkdir web
   - cd web
@@ -40,4 +41,4 @@ before_script:
 
 script:
   - behat -c ./modules/mentions/behat.yml
-
+  - cd core && ./vendor/bin/phpunit --group Mentions
