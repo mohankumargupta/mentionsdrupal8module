@@ -9,7 +9,9 @@ namespace Drupal\mentions\Plugin\Filter;
 use Drupal\Component\Utility\Unicode;
 use Drupal\filter\FilterProcessResult;
 use Drupal\filter\Plugin\FilterBase;
-
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\Entity\EntityManagerInterface;
 
 /**
  * Class FilterMentions
@@ -22,16 +24,19 @@ use Drupal\filter\Plugin\FilterBase;
  * weight = -10
  * )
  */
-class FilterMentions extends FilterBase{
+class FilterMentions extends FilterBase implements ContainerFactoryPluginInterface{
 
   protected $user_storage;
 
-  public function __construct(array $configuration, EntityManagerInterface $entity_manager) {
-    this->$user_storage = $entity_manager->getStorage('user');
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityManagerInterface $entity_manager) {
+    $this->user_storage = $entity_manager->getStorage('user');
+    parent::__construct($configuration, $plugin_id, $plugin_definition);  
   }
 
-  public static function create(ContainerInterface $container) {
-    return new static($container,
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static($configuration,
+      $plugin_id,
+      $plugin_definition,            
       $container->get('entity.manager')
     );
   }
