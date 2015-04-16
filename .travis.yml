@@ -40,4 +40,4 @@ before_script:
 
 script:
   - behat -c ./modules/mentions/behat.yml
-  - /usr/bin/php ./core/scripts/run-tests.sh  --php /usr/bin/php --url http://localhost:8080 --class '\Drupal\mentions\Tests\MentionsFilterTest'
+
