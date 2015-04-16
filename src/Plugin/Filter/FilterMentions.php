@@ -24,6 +24,18 @@ use Drupal\filter\Plugin\FilterBase;
  */
 class FilterMentions extends FilterBase{
 
+  protected $user_storage;
+
+  public function __construct(array $configuration, EntityManagerInterface $entity_manager) {
+    this->$user_storage = $entity_manager->getStorage('user');
+  }
+
+  public static function create(ContainerInterface $container) {
+    return new static($container,
+      $container->get('entity.manager')
+    );
+  }
+
     /**
      * Performs the filter processing.
      *
@@ -83,14 +95,16 @@ class FilterMentions extends FilterBase{
             foreach ($matches as $match) {
                 if (Unicode::substr($match[2], 0, 1) == '#') {
                     //$user = user_load(drupal_substr($match[2], 1));
-                    $user = \Drupal::entityManager()->getStorage('user')->load(Unicode::substr($match[2], 1));
+                    //$user = \Drupal::entityManager()->getStorage('user')->load(Unicode::substr($match[2], 1));
+                    $user = $this->user_storage->load(Unicode::substr($match[2], 1));
                 }
                 elseif ($match[1] == '#') {
                     //$user = user_load($match[2]);
-                    $user = \Drupal::entityManager()->getStorage('user')->load($match[2]);
+                    $user = $this->user_storage->load($match[2]);
                 }
                 else {
-                    $user = user_load_by_name($match[2]);
+                    //$user = user_load_by_name($match[2]);
+                    $user = $this->user_storage->load($match[2]);
                 }
 
                 if (is_object($user)) {
