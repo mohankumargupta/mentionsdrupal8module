@@ -6,19 +6,13 @@
   When I visit "admin/config/content/formats/manage/basic_html" 
   And I check "Mentions Filter"
   And I press the "Save configuration" button
-  And I wait 5 seconds
   And I visit "admin/config/content/formats/manage/basic_html"
-  And I wait 5 seconds
   And I visit "node/add/page"
-  And I wait 5 seconds
   And I fill in "Title" with "NewPage"
   And I custom fill content "[@admin]" into the body field
   And I press the "Save and publish" button
-  And I wait 5 seconds
   And I visit "admin/content"
-  And I wait 5 seconds
   And I follow "NewPage"
-  And I wait 5 seconds
   And I follow "@admin"
   Then I should be on "user/1"
 

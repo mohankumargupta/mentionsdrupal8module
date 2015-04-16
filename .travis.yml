@@ -40,3 +40,4 @@ before_script:
 
 script:
   - behat -c ./modules/mentions/behat.yml
+  - cd core && ./vendor/bin/phpunit
