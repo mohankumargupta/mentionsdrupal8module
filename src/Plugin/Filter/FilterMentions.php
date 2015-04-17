@@ -33,10 +33,12 @@ class FilterMentions extends FilterBase implements ContainerFactoryPluginInterfa
   }
 
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    $entity_manager = $container->get('entity.manager');
+    
     return new static($configuration,
       $plugin_id,
       $plugin_definition,            
-      $container->get('entity.manager')
+      $entity_manager
     );
   }
 

@@ -27,11 +27,6 @@ class MentionsFilterTest extends UnitTestCase {
 
   protected function setUp() {
     parent::setUp();
-
-    //$user = 'boo';
-
-    //$container = new ContainerBuilder();
-
     
    $view_storage = $this->getMockBuilder('Drupal\Core\Entity\EntityStorageInterface')
      ->disableOriginalConstructor()
@@ -48,17 +43,6 @@ class MentionsFilterTest extends UnitTestCase {
      ->will($this->returnValue($user_storage));
 
     $this->entityManager = $entity_manager;
-   
-    //$container->set('entity.manager', $entity_manager);
-     
-  /*
-    $this->installConfig(array('system', 'mentions'));
-
-    $manager = $this->container->get('plugin.manager.filter');
-    $bag = new FilterPluginCollection($manager, array());
-    $this->filters = $bag->getAll();
-    //print_r(array_keys($this->filters));
-    */
   }
 
  function testFilterMentionByUsername() {
