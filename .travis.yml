@@ -22,7 +22,6 @@ before_install:
   - cd web
   - drush qd mydrupal --core=drupal-8.0.x --dev --no-cache --yes --profile=standard --no-server --account-mail='a@b.com' --account-name=admin --account-pass=password --site-name=boo  
   - cd mydrupal/drupal-8.0.x
-  - cd core && composer global update && cd..
   - drush runserver --server=builtin 8080 --strict=0 &
   - until netstat -an 2>/dev/null | grep '8080.*LISTEN'; do sleep 0.2; done
   - cd modules
@@ -41,4 +40,6 @@ before_script:
 
 script:
   - behat -c ./modules/mentions/behat.yml
-  - cd core && ./vendor/bin/phpunit --group Mentions
+  - cd core
+  - cd core && composer global update
+  - ./vendor/bin/phpunit --group Mentions
