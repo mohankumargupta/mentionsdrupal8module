@@ -108,18 +108,19 @@ class FilterMentions extends FilterBase implements ContainerFactoryPluginInterfa
                 if (Unicode::substr($match[2], 0, 1) == '#') {
                     //$user = user_load(drupal_substr($match[2], 1));
                     //$user = \Drupal::entityManager()->getStorage('user')->load(Unicode::substr($match[2], 1));
-                    $user = $userStorage->load(Unicode::substr($match[2], 1));
+                    $user = $userStorage->loadByProperties(array('uid'=>Unicode::substr($match[2], 1)));
+                    $user = reset($user);
                 }
                 elseif ($match[1] == '#') {
                     //$user = user_load($match[2]);
-                    $user = $userStorage->load($match[2]);
+                    $user = $userStorage->loadByProperties(array('uid'=>$match[2]));
                 }
                 else {
                     //$user = user_load_by_name($match[2]);
-                    $user = $userStorage->load($match[2]);
+                    $user = $userStorage->loadByProperties(array('name'=>$match[2]));
                 }
 
-                if (is_object($user)) {
+                if (!empty($user)) {
                     $users[] = array(
                         'text' => $match[0],
                         'user' => $user,

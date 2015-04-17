@@ -6,6 +6,7 @@ use Drupal\field;
 use Symfony\Component\EventDispatcher;
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\HttpFoundation\Request;
+use Drupal\mentions\Plugin\Filter\FilterMentions;
 
 /**
  * @file
@@ -89,7 +90,10 @@ function mentions_insert_or_update(Drupal\Core\Entity\EntityInterface $entity, $
   foreach ($fields_with_text as $textfield) {
     $boo = $entity->get($textfield);
     $value = $boo->value;
-    $filter_mentions = new \Drupal\mentions\Plugin\Filter\FilterMentions(array(), '', NULL);
+    $container = \Drupal::getContainer();
+    $filter_mentions = FilterMentions::create($container, array(), '', NULL);
+    //$mentionsProcessed = $filter_mentions->process($value, 'und')->getProcessedText();
+    //$filter_mentions = new \Drupal\mentions\Plugin\Filter\FilterMentions(array(), '', NULL);
     $mentions = $filter_mentions->mentions_get_mentions($value);
     if (!empty($mentions) || $update) {
       $auid = \Drupal::currentUser()->id();
