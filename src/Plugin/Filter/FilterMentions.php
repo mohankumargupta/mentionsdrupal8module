@@ -114,10 +114,12 @@ class FilterMentions extends FilterBase implements ContainerFactoryPluginInterfa
                 elseif ($match[1] == '#') {
                     //$user = user_load($match[2]);
                     $user = $userStorage->loadByProperties(array('uid'=>$match[2]));
+                    $user = reset($user);
                 }
                 else {
                     //$user = user_load_by_name($match[2]);
                     $user = $userStorage->loadByProperties(array('name'=>$match[2]));
+                    $user = reset($user);
                 }
 
                 if (!empty($user)) {
