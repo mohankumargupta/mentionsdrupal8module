@@ -41,5 +41,5 @@ before_script:
 script:
   - behat -c ./modules/mentions/behat.yml
   - cd core
-  - cd core && composer global update
+  - composer global update
   - ./vendor/bin/phpunit --group Mentions
