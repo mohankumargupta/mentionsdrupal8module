@@ -14,8 +14,7 @@ use Drupal\Core\DependencyInjection\ContainerBuilder;
 
 
 /**
- * Test filter functionality 
- *
+ * @coverDefaultClass \Drupal\mentions\Plugin\Filter\MentionsFilter
  * @group Mentions
  */
 class MentionsFilterTest extends UnitTestCase {
