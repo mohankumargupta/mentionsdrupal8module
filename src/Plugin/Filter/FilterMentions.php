@@ -74,7 +74,8 @@ class FilterMentions extends FilterBase implements ContainerFactoryPluginInterfa
         foreach ($this->mentions_get_mentions($text) as $match) {
             //$text = str_replace($match['text'], theme('mentions', array('user' => $match['user'])), $text);
             $mentions = array('#theme'=>'mentions', '#user' => $match['user']);
-            $mentions2 = drupal_render($mentions);
+            //$mentions2 = drupal_render($mentions);
+            $mentions2 = $this->renderer->render($mentions);
             $text = str_replace($match['text'], $mentions2, $text);
         }
         return $text;
