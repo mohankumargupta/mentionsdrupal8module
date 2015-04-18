@@ -48,7 +48,11 @@ class FilterMentions extends FilterBase implements ContainerFactoryPluginInterfa
   }
 
   public function setEntityManager($entity_manager) {
-    
+      $this->entityManager = $entity_manager;
+  }
+  
+  public function setRenderer($renderer) {
+      $this->renderer = $renderer;
   }
 
     /**
