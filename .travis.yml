@@ -44,6 +44,7 @@ script:
   - behat -c ./modules/mentions/behat.yml
   - cd core
   - travis_retry composer global update --prefer-dist --no-interaction
-  - cp ../modules/mentions/src/Tests/*.php tests
+  - cp -v ../modules/mentions/src/Tests/*.php tests
+  - cat phpunit.xml.dist
   - ./vendor/phpunit/phpunit/phpunit --list-groups
   - ./vendor/phpunit/phpunit/phpunit --group Mentions

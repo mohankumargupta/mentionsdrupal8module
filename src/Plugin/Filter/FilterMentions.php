@@ -12,6 +12,7 @@ use Drupal\filter\Plugin\FilterBase;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Render\RendererInterface;
 
 /**
  * Class FilterMentions
@@ -26,19 +27,23 @@ use Drupal\Core\Entity\EntityManagerInterface;
  */
 class FilterMentions extends FilterBase implements ContainerFactoryPluginInterface{
   protected $entityManager;
+  protected $renderer;
 
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityManagerInterface $entity_manager) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityManagerInterface $entity_manager, RendererInterface $render) {
     $this->entityManager = $entity_manager;
+    $this->renderer = $render;
     parent::__construct($configuration, $plugin_id, $plugin_definition);  
   }
 
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     $entity_manager = $container->get('entity.manager');
+    $renderer = $container->get('renderer');
     
     return new static($configuration,
       $plugin_id,
       $plugin_definition,            
-      $entity_manager
+      $entity_manager,
+      $renderer
     );
   }
 
