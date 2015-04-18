@@ -84,7 +84,7 @@ class MentionsFilterTest extends UnitTestCase {
    };
 
 
-   $this->assertIdentical($expected, $test($input));
+   $this->assertEquals($expected, $test($input));
    //$this->pass(print_r($test($input)));
  }
 
