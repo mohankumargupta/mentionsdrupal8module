@@ -24,23 +24,18 @@ class MentionsFilterTest extends UnitTestCase {
 */
   protected $entityManager;
   protected $renderer;
-
+  protected $userStorage;
+  
   protected function setUp() {
     parent::setUp();
     
-   $view_storage = $this->getMockBuilder('Drupal\Core\Entity\EntityStorageInterface')
+   $this->userStorage = $this->getMockBuilder('Drupal\Core\Entity\EntityStorageInterface')
      ->disableOriginalConstructor()
      ->getMock();     
-   $view_storage->expects($this->once())
-     ->method('loadByProperties')
-     ->with(array('name' => $username))
-     ->will($this->returnValue($user));
 
+ 
    $entity_manager = $this->getMock('Drupal\Core\Entity\EntityManagerInterface');
-   $entity_manager->expects($this->once())
-     ->method('getStorage')
-     ->with('user')
-     ->will($this->returnValue($user_storage));
+
 
     $this->entityManager = $entity_manager;
     
@@ -54,7 +49,17 @@ class MentionsFilterTest extends UnitTestCase {
    $expected = 'boo';
    $username = 'admin';
    $user = 'boo';
-     
+
+      $this->userStorage->expects($this->once())
+     ->method('loadByProperties')
+     ->with(array('name' => $username))
+     ->will($this->returnValue($user));
+
+     $this->entityManager->expects($this->once())
+     ->method('getStorage')
+     ->with('user')
+     ->will($this->returnValue($this->userStorage));
+      
     $mentions_filter = $this->getMockBuilder('Drupal\mentions\Plugin\Filter\MentionsFilter')
       ->disableOriginalConstructor()
       ->getMock();
