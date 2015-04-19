@@ -25,6 +25,7 @@ class MentionsFilterTest extends UnitTestCase {
   protected $entityManager;
   protected $renderer;
   protected $userStorage;
+  protected $configFactory;
   protected $config;
 
 
@@ -43,6 +44,9 @@ class MentionsFilterTest extends UnitTestCase {
 
     $config = $this->getMock('Drupal\Core\Config\ConfigFactoryInterface');
     $this->config = $config;
+    
+    $configFactory = $this->getMock('Drupal\Core\Config\ConfigFactoryInterface');
+    $this->configFactory = $configFactory;
   }
 
  function testFilterMentionByUsername() {
@@ -84,17 +88,23 @@ class MentionsFilterTest extends UnitTestCase {
     $mentions_filter->setEntityManager($this->entityManager); 
     
     $this->renderer->expects($this->once())
-                   ->method('render')
-                   ->with($input)
-                   ->will($this->returnValue($expected));
+      ->method('render')
+      ->with($input)
+      ->will($this->returnValue($expected));
     $mentions_filter->setRenderer($this->renderer);
     
-    $this->config->expects($this->once())
-                 ->method('get')
-                 ->with('mentions.mention')
-                 ->will($this->returnValue($inputconfig));
     
-    $mentions_filter->setConfig($this->config);
+    $this->config->expects($this->once())
+      ->method('get')
+      ->with('input')
+      ->will($this->returnValue($inputconfig)); 
+    
+    $this->configFactory->expects($this->once())
+      ->method('get')
+      ->with('mentions.mentions')
+      ->will($this->returnValue($this->config));
+    
+    $mentions_filter->setConfig($this->configFactory);
     
  /*	
    $mentions_filter = $this->filters['filter_mentions'];   
