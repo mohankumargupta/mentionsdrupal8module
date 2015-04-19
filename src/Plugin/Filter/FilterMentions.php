@@ -149,7 +149,7 @@ class FilterMentions extends FilterBase implements ContainerFactoryPluginInterfa
                 }
             }
         }
-
+       
         return $users;
     }
 
