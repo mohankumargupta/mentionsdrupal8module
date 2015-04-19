@@ -13,7 +13,8 @@ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Render\RendererInterface;
-
+use Drupal\Core\Config\ImmutableConfig;
+use Drupal\Core\Config\ConfigFactory;
 /**
  * Class FilterMentions
  * @package Drupal\mentions\Plugin\Filter
@@ -28,22 +29,26 @@ use Drupal\Core\Render\RendererInterface;
 class FilterMentions extends FilterBase implements ContainerFactoryPluginInterface{
   protected $entityManager;
   protected $renderer;
-
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityManagerInterface $entity_manager, RendererInterface $render) {
+  protected $config;
+  
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityManagerInterface $entity_manager, RendererInterface $render, ConfigFactory $config) {
     $this->entityManager = $entity_manager;
     $this->renderer = $render;
+    $this->config = $config;    
     parent::__construct($configuration, $plugin_id, $plugin_definition);  
   }
 
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     $entity_manager = $container->get('entity.manager');
     $renderer = $container->get('renderer');
+    $config = $container->get('config.factory');
     
     return new static($configuration,
       $plugin_id,
       $plugin_definition,            
       $entity_manager,
-      $renderer
+      $renderer,
+      $config
     );
   }
 
@@ -55,6 +60,10 @@ class FilterMentions extends FilterBase implements ContainerFactoryPluginInterfa
       $this->renderer = $renderer;
   }
 
+  public function setConfig($config) {
+      $this->config = $config;
+  }
+  
     /**
      * Performs the filter processing.
      *
@@ -87,13 +96,13 @@ class FilterMentions extends FilterBase implements ContainerFactoryPluginInterfa
 
     public function mentions_get_mentions($text) {
         //$settings = variable_get('mentions', mentions_defaults());
-        $settings = \Drupal::config('mentions.mentions');
+        //$settings = \Drupal::config('mentions.mentions');
+        $settings = $this->config->get('mentions.mentions');
         $users = array();
 
         // Build regular expression pattern.
         $pattern = '/(\b|\#)(\w*)/';
         $input_settings = $settings->get('input');
-        $output_settings = $settings->get('output');
 
         switch (TRUE) {
             case !empty($input_settings['prefix']) && !empty($input_settings['suffix']):
