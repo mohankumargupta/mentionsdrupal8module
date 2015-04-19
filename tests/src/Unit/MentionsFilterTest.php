@@ -47,9 +47,24 @@ class MentionsFilterTest extends UnitTestCase {
 
  function testFilterMentionByUsername() {
    $input = '[@admin]';
-   $expected = 'boo';
+   $user = array(
+       'name' => 'admin',
+       'uid' => 1
+   );
+   $expected = array(
+       array(
+           'text'=> $input,
+           'user'=> $user
+       )
+   );
    $username = 'admin';
-   $user = 'boo';
+   $inputconfig = array(
+       'input' => array(
+           'prefix' => '[@',
+           'suffix' => ']'
+       )
+   );
+   
 
       $this->userStorage->expects($this->once())
      ->method('loadByProperties')
