@@ -51,29 +51,27 @@ class MentionsFilterTest extends UnitTestCase {
 
  function testFilterMentionByUsername() {
    $input = '[@admin]';
-   $user = array(
-       'name' => 'admin',
-       'uid' => 1
-   );
+   $username = 'admin';
+   $user = $this->getMockBuilder('Drupal\user\Entity\User')
+                ->disableOriginalConstructor()
+                ->getMock();
    $expected = array(
        array(
            'text'=> $input,
            'user'=> $user
        )
-   );
-   $username = 'admin';
+    );
+
    $inputconfig = array(
-       'input' => array(
            'prefix' => '[@',
            'suffix' => ']'
-       )
    );
    
 
       $this->userStorage->expects($this->once())
      ->method('loadByProperties')
      ->with(array('name' => $username))
-     ->will($this->returnValue($user));
+     ->will($this->returnValue(array($user)));
 
      $this->entityManager->expects($this->once())
      ->method('getStorage')
@@ -87,12 +85,13 @@ class MentionsFilterTest extends UnitTestCase {
 
     $mentions_filter->setEntityManager($this->entityManager); 
     
+    /*
     $this->renderer->expects($this->once())
       ->method('render')
       ->with($input)
       ->will($this->returnValue($expected));
     $mentions_filter->setRenderer($this->renderer);
-    
+    */
     
     $this->config->expects($this->once())
       ->method('get')
@@ -105,6 +104,8 @@ class MentionsFilterTest extends UnitTestCase {
       ->will($this->returnValue($this->config));
     
     $mentions_filter->setConfig($this->configFactory);
+    
+    $mentions_filter->setStringTranslation($this->getStringTranslationStub());
     
  /*	
    $mentions_filter = $this->filters['filter_mentions'];   
