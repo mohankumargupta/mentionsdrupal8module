@@ -25,7 +25,9 @@ class MentionsFilterTest extends UnitTestCase {
   protected $entityManager;
   protected $renderer;
   protected $userStorage;
-  
+  protected $config;
+
+
   protected function setUp() {
     parent::setUp();
     
@@ -33,15 +35,14 @@ class MentionsFilterTest extends UnitTestCase {
      ->disableOriginalConstructor()
      ->getMock();     
 
- 
    $entity_manager = $this->getMock('Drupal\Core\Entity\EntityManagerInterface');
-
-
-    $this->entityManager = $entity_manager;
+   $this->entityManager = $entity_manager;
     
     $renderer = $this->getMock('Drupal\Core\Render\RendererInterface');
-
     $this->renderer = $renderer;
+
+    $config = $this->getMock('Drupal\Core\Config\ConfigFactoryInterface');
+    $this->config = $config;
   }
 
  function testFilterMentionByUsername() {
@@ -72,6 +73,14 @@ class MentionsFilterTest extends UnitTestCase {
                    ->with($input)
                    ->will($this->returnValue($expected));
     $mentions_filter->setRenderer($this->renderer);
+    
+    $this->config->expects($this->once())
+                 ->method('get')
+                 ->with('mentions.mention')
+                 ->will($this->returnValue($inputconfig));
+    
+    $mentions_filter->setConfig($this->config);
+    
  /*	
    $mentions_filter = $this->filters['filter_mentions'];   
    $test = function($input) use ($mentions_filter) {
@@ -81,7 +90,7 @@ class MentionsFilterTest extends UnitTestCase {
 
 
    $test = function($input) use ($mentions_filter) {
-     return $mentions_filter->process($input, 'und');
+     return $mentions_filter->mentions_get_mentions($input);
    };
 
 
