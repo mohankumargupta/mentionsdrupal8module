@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * Contains Drupal\mentions\Plugin\Filter\FilterMentions
+ * Contains Drupal\mentions\Plugin\Filter\FilterMentions.
  */
 
 namespace Drupal\mentions\Plugin\Filter;
@@ -63,38 +63,34 @@ class FilterMentions extends FilterBase implements ContainerFactoryPluginInterfa
   public function setConfig($config) {
     $this->config = $config;
   }
-	
-     
-public function process($text, $langcode)
-{
-  return new FilterProcessResult($this->_filter_mentions($text, $this));
-}
 
-    public function _filter_mentions($text, $filter) {
-        foreach ($this->mentions_get_mentions($text) as $match) {
-            //$text = str_replace($match['text'], theme('mentions', array('user' => $match['user'])), $text);
-            $mentions = array('#theme'=>'mentions', '#user' => $match['user']);
-            //$mentions2 = drupal_render($mentions);
-            $mentions2 = $this->renderer->render($mentions);
-            $text = str_replace($match['text'], $mentions2, $text);
-        }
-        return $text;
+  public function process($text, $langcode) {
+    return new FilterProcessResult($this->_filter_mentions($text, $this));
+  }
+
+	public function _filter_mentions($text, $filter) {
+    foreach ($this->mentions_get_mentions($text) as $match) {
+      $mentions = array('#theme' => 'mentions', '#user' => $match['user']);
+      $mentions2 = $this->renderer->render($mentions);
+      $text = str_replace($match['text'], $mentions2, $text);
     }
 
-    public function mentions_get_mentions($text) {
-        //$settings = variable_get('mentions', mentions_defaults());
-        //$settings = \Drupal::config('mentions.mentions');
-        $settings = $this->config->get('mentions.mentions');
-        $users = array();
+    return $text;
 
-        // Build regular expression pattern.
-        $pattern = '/(\b|\#)(\w*)/';
-        $input_settings = $settings->get('input');
+  }
 
-        switch (TRUE) {
-            case !empty($input_settings['prefix']) && !empty($input_settings['suffix']):
-                $pattern = '/\B(' . preg_quote($input_settings['prefix']) . '|' . preg_quote($this->t($input_settings['prefix'])) . ')(\#?.*?)(' . preg_quote($input_settings['suffix']) . '|' . preg_quote($this->t($input_settings['suffix'])) . ')/';
-                break;
+  public function mentions_get_mentions($text) {
+    $settings = $this->config->get('mentions.mentions');
+    $users = array();
+
+    // Build regular expression pattern.
+    $pattern = '/(\b|\#)(\w*)/';
+    $input_settings = $settings->get('input');
+
+    switch (TRUE) {
+      case !empty($input_settings['prefix']) && !empty($input_settings['suffix']):
+        $pattern = '/\B(' . preg_quote($input_settings['prefix']) . '|' . preg_quote($this->t($input_settings['prefix'])) . ')(\#?.*?)(' . preg_quote($input_settings['suffix']) . '|' . preg_quote($this->t($input_settings['suffix'])) . ')/';
+        break;
 
             case !empty($$input_settings['prefix']) && empty($$input_settings['suffix']):
                 $pattern = '/\B(' . preg_quote($$input_settings['prefix']) . '|' . preg_quote($this->t($$input_settings['prefix'])) . ')(\#?\w*)/';
