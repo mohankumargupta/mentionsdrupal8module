@@ -9,8 +9,7 @@ default:
     Behat\MinkExtension:
       default_session: selenium2
       goutte: ~
-      selenium2:
-        wd_host: "mohangupta:fad0e100-86a8-42b1-bd2f-6086904c6c98@ondemand.saucelabs.com/wd/hub" 
+      selenium2: ~
       base_url: http://localhost:8080
     Drupal\DrupalExtension:
       blackbox: ~
