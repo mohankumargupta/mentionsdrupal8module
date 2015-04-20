@@ -92,19 +92,18 @@ class FilterMentions extends FilterBase implements ContainerFactoryPluginInterfa
         $pattern = '/\B(' . preg_quote($input_settings['prefix']) . '|' . preg_quote($this->t($input_settings['prefix'])) . ')(\#?.*?)(' . preg_quote($input_settings['suffix']) . '|' . preg_quote($this->t($input_settings['suffix'])) . ')/';
         break;
 
-            case !empty($$input_settings['prefix']) && empty($$input_settings['suffix']):
-                $pattern = '/\B(' . preg_quote($$input_settings['prefix']) . '|' . preg_quote($this->t($$input_settings['prefix'])) . ')(\#?\w*)/';
-                break;
+      case !empty($$input_settings['prefix']) && empty($$input_settings['suffix']):
+        $pattern = '/\B(' . preg_quote($$input_settings['prefix']) . '|' . preg_quote($this->t($$input_settings['prefix'])) . ')(\#?\w*)/';
+        break;
 
-            case empty($$input_settings['prefix']) && !empty($$input_settings['suffix']):
-                $pattern = '/(\b|\#)(\w*)(' . preg_quote($$input_settings['suffix']) . '|' . preg_quote($this->t($$input_settings['suffix'])) . ')/';
-                break;
-        }
+      case empty($$input_settings['prefix']) && !empty($$input_settings['suffix']):
+        $pattern = '/(\b|\#)(\w*)(' . preg_quote($$input_settings['suffix']) . '|' . preg_quote($this->t($$input_settings['suffix'])) . ')/';
+        break;
+    }
 
+    $userStorage = $this->entityManager->getStorage('user');
 
-       $userStorage = $this->entityManager->getStorage('user');
-
-        // Find all matching strings.
+    // Find all matching strings.
         if (preg_match_all($pattern, $text, $matches, PREG_SET_ORDER)) {
             foreach ($matches as $match) {
                 if (Unicode::substr($match[2], 0, 1) == '#') {
