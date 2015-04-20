@@ -13,10 +13,10 @@ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Render\RendererInterface;
-use Drupal\Core\Config\ImmutableConfig;
 use Drupal\Core\Config\ConfigFactory;
 /**
- * Class FilterMentions
+ * Class FilterMentions.
+ *
  * @package Drupal\mentions\Plugin\Filter
  *
  * @Filter(
@@ -26,26 +26,26 @@ use Drupal\Core\Config\ConfigFactory;
  * weight = -10
  * )
  */
-class FilterMentions extends FilterBase implements ContainerFactoryPluginInterface{
+class FilterMentions extends FilterBase implements ContainerFactoryPluginInterface {
   protected $entityManager;
   protected $renderer;
   protected $config;
-  
+		
   public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityManagerInterface $entity_manager, RendererInterface $render, ConfigFactory $config) {
     $this->entityManager = $entity_manager;
     $this->renderer = $render;
-    $this->config = $config;    
-    parent::__construct($configuration, $plugin_id, $plugin_definition);  
+    $this->config = $config;
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
   }
 
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     $entity_manager = $container->get('entity.manager');
     $renderer = $container->get('renderer');
     $config = $container->get('config.factory');
-    
+
     return new static($configuration,
       $plugin_id,
-      $plugin_definition,            
+      $plugin_definition,
       $entity_manager,
       $renderer,
       $config
@@ -53,35 +53,22 @@ class FilterMentions extends FilterBase implements ContainerFactoryPluginInterfa
   }
 
   public function setEntityManager($entity_manager) {
-      $this->entityManager = $entity_manager;
+    $this->entityManager = $entity_manager;
   }
   
   public function setRenderer($renderer) {
-      $this->renderer = $renderer;
+    $this->renderer = $renderer;
   }
 
   public function setConfig($config) {
-      $this->config = $config;
+    $this->config = $config;
   }
-  
-    /**
-     * Performs the filter processing.
-     *
-     * @param string $text
-     *   The text string to be filtered.
-     * @param string $langcode
-     *   The language code of the text to be filtered.
-     *
-     * @return \Drupal\filter\FilterProcessResult
-     *   The filtered text, wrapped in a FilterProcessResult object, and possibly
-     *   with associated assets, cache tags and #post_render_cache callbacks.
-     *
-     * @see \Drupal\filter\FilterProcessResult
-     */
-    public function process($text, $langcode)
-    {
-        return new FilterProcessResult($this->_filter_mentions($text, $this));
-    }
+	
+     
+public function process($text, $langcode)
+{
+  return new FilterProcessResult($this->_filter_mentions($text, $this));
+}
 
     public function _filter_mentions($text, $filter) {
         foreach ($this->mentions_get_mentions($text) as $match) {
@@ -152,37 +139,4 @@ class FilterMentions extends FilterBase implements ContainerFactoryPluginInterfa
        
         return $users;
     }
-
-
-
-
-/**
- * Return a '@username' link to user's profile.
- */
-    /*
-    function theme_mentions($variables) {
-        $settings = variable_get('mentions', mentions_defaults());
-        $user = $variables['user'];
-
-        foreach (array('text', 'link') as $type) {
-            if (!empty($settings['output'][$type])) {
-                $$type = token_replace($settings['output'][$type], array('user' => $user));
-            }
-        }
-
-        // Allow other modules to modify the link text and destination.
-        drupal_alter('mentions_link', $text, $link, $user);
-
-        return l($settings['output']['prefix'] . $text . $settings['output']['suffix'], $link, array(
-            'attributes' => array(
-                'class' => 'mentions mentions-' . $user->uid,
-                'title' => $text,
-            ),
-        ));
-    }
-
-     */
-
-
-
 }
