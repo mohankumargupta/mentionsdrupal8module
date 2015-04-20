@@ -41,9 +41,10 @@ before_script:
   - cp modules/mentions/.travis.composer.config.json ~/.composer/config.json
 
 script:
-  - behat -c ./modules/mentions/behat.yml
   - cd core
   - travis_retry composer global update --prefer-dist --no-interaction
   - cat phpunit.xml.dist
   - ./vendor/phpunit/phpunit/phpunit --list-groups
   - ./vendor/phpunit/phpunit/phpunit --group Mentions
+  - cd ..
+  - behat -c ./modules/mentions/behat.yml
