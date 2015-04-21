@@ -12,7 +12,15 @@
           editor.addCommand('mentionsautocomplete', {
                 modes: {wysiwyg: 1},
                 exec: function(editor) {
-                    alert("hello");
+                    var userid = drupalSettings.user.uid;
+                    var userpermissions = drupalSettings.user.permissionsHash; 
+                    $.ajax({
+                        type: 'GET',
+                        url: '/mentions/views/userlist',
+                        success: function(data) {
+                            var users = JSON.parse(data);
+                        }
+                    });
                 }
           });
       },
