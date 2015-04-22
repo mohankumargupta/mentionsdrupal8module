@@ -54,7 +54,8 @@
                                     editor.addCommand('mentions_' + username, {
                                     modes: {wysiwyg: 1},
                                     exec: function(editor) {
-                                        var commands = editor.commands;
+                                        var command = this.name.replace('mentions_','');
+                                        //var commands = editor.commands;
                                         var range = editor.getSelection().getRanges()[ 0 ];
                                         var rangenew = editor.createRange();
                                         //rangenew.setStartAt(editor.getSelection())                
@@ -64,7 +65,7 @@
                                         //var selection = editor.getSelection();
                                         //var selectedElement = selection.getSelectedElement();
                                         //selectedElement.setHtml('i wonder');
-                                        editor.insertHtml('\bi wonder');
+                                        editor.insertHtml(command);
                                     }                                         
                                     });
                                     editor.addMenuItem(username, {
