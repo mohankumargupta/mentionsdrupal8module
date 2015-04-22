@@ -9,7 +9,14 @@
   CKEDITOR.plugins.add('mentionsautocomplete', {
       init: function (editor) {
           editor.mentions = [];
+          editor.on('contextMenu', function(evt){
+              var i=3;
+          });
           editor.contextMenu.addListener(function(startElement, selection, path){
+              var selectiontype = selection.getType();
+              if (selection.getType() !== CKEDITOR.SELECTION_TEXT) {
+                  return;
+              }
               var editor = selection.root.editor;
               return editor.mentions.reduce(function(prev,curr,index,array) {
                   var newValue = prev;
@@ -36,6 +43,7 @@
                          
                             if (editor.contextMenu) {
                                 editor.addMenuGroup('Mentions');
+                                editor.removeMenuItem('paste');
                             }
                             
                             users.forEach(function(user, index, userarray){
@@ -43,12 +51,27 @@
                                 userid = user.uid;
                                 
                                 if (editor.contextMenu) {
-                                    editor.removeMenuItem('paste');
+                                    editor.addCommand('mentions_' + username, {
+                                    modes: {wysiwyg: 1},
+                                    exec: function(editor) {
+                                        var commands = editor.commands;
+                                        var range = editor.getSelection().getRanges()[ 0 ];
+                                        var rangenew = editor.createRange();
+                                        //rangenew.setStartAt(editor.getSelection())                
+//rangenew.moveToElementEditEnd( rangenew.root );
+                                        //rangenew.startOffset = rangenew.startOffset - 1;
+                                        //editor.getSelection().selectRanges( [rangenew] );
+                                        //var selection = editor.getSelection();
+                                        //var selectedElement = selection.getSelectedElement();
+                                        //selectedElement.setHtml('i wonder');
+                                        editor.insertHtml('\bi wonder');
+                                    }                                         
+                                    });
                                     editor.addMenuItem(username, {
                                         id: 'mentions_' + userid,
                                         label: username,
                                         group: 'Mentions',
-                                        command: 'mentionsautocomplete'
+                                        command: 'mentions_' + username
                                     });
                                     
                                     editor.mentions.push(username);
@@ -75,6 +98,7 @@
       afterInit: function(editor) {
           editor.on('key', function(evt) {
             if (evt.data.keyCode === CKEDITOR.SHIFT + 50) {
+               evt.data.domEvent.preventDefault();
                editor.execCommand('mentionsautocomplete');
            }
       });
