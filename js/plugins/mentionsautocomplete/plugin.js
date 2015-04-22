@@ -12,13 +12,42 @@
           editor.addCommand('mentionsautocomplete', {
                 modes: {wysiwyg: 1},
                 exec: function(editor) {
-                    var userid = drupalSettings.user.uid;
-                    var userpermissions = drupalSettings.user.permissionsHash; 
                     $.ajax({
                         type: 'GET',
                         url: '/mentions/views/userlist',
                         success: function(data) {
                             var users = JSON.parse(data);
+                            var username, userid;
+                            
+                            var editorid = editor.name;
+                            var range = editor.getSelection().getRanges()[ 0 ],
+                                rangeRoot = range.root,
+                            startNode = range.startContainer;
+                            var selection = editor.getSelection();
+                            var bookmarks = selection.createBookmarks(true);
+                         
+                            if (editor.contextMenu) {
+                                editor.addMenuGroup('Mentions');
+                            }
+                            
+                            users.forEach(function(user, index, userarray){
+                                username = user.name;
+                                userid = user.uid;
+                                
+                                if (editor.contextMenu) {
+                                    editor.addMenuItem(username, {
+                                        label: username,
+                                        group: 'Mentions',
+                                        command: 'mentionsautocomplete'
+                                    });
+                                    
+                                    editor.contextMenu.show(startNode.getParent(),null, 1,30);
+                                }
+                                
+                                
+                            });
+                            
+
                         }
                     });
                 }
