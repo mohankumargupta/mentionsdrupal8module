@@ -26,7 +26,7 @@
           });
           editor.addCommand('mentionsautocomplete', {
                 modes: {wysiwyg: 1},
-                exec: function(editor) {
+                exec: function(editor, editordata) {
                     $.ajax({
                         type: 'GET',
                         url: '/mentions/views/userlist',
@@ -55,6 +55,11 @@
                                     modes: {wysiwyg: 1},
                                     exec: function(editor) {
                                         var command = this.name.replace('mentions_','');
+                                        if (editordata.lastprefix > editordata.lastsuffix) {
+                                            var newhtml = editordata.html.substring(editordata.lastprefix + drupalSettings.mentions_prefix.length);
+                                            var newhtmlcount = newhtml.length;
+                                            command = command.substring(newhtmlcount + 1);
+                                        }
                                         //var commands = editor.commands;
                                         var range = editor.getSelection().getRanges()[ 0 ];
                                         var rangenew = editor.createRange();
@@ -65,7 +70,7 @@
                                         //var selection = editor.getSelection();
                                         //var selectedElement = selection.getSelectedElement();
                                         //selectedElement.setHtml('i wonder');
-                                        editor.insertHtml(command);
+                                        editor.insertHtml(command + drupalSettings.mentions_suffix);
                                     }                                         
                                     });
                                     editor.addMenuItem(username, {
@@ -111,7 +116,15 @@
                var endNode = range.endContainer;
                var element = endNode.getParent();
                var html = element.getHtml();
-               var lastchars = html.slice(-2);
+               var lastprefix = html.lastIndexOf(drupalSettings.mentions_prefix); 
+               var lastsuffix = html.lastIndexOf(drupalSettings.mentions_suffix);
+               
+              if (lastprefix > lastsuffix) {
+                  var data = {'html':html, 'lastprefix': lastprefix, 'lastsuffix': lastsuffix};
+                   editor.execCommand('mentionsautocomplete', data);
+               }
+                            
+               //var lastchars = html.slice(-2);
                //evt.data.domEvent.preventDefault();
                //editor.execCommand('mentionsautocomplete');
            //}
