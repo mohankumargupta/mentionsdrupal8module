@@ -65,7 +65,7 @@
                                 userid = user.uid;
                                  
                                 if ( username.lastIndexOf(userStartsWith,0) !== 0) {
-                                    editor.removeMenuItem('mentions_' + username);
+                                    editor.removeMenuItem(username);
                                     return;
                                 }
                                 
@@ -90,6 +90,7 @@
                                         //var selectedElement = selection.getSelectedElement();
                                         //selectedElement.setHtml('i wonder');
                                         editor.insertHtml(command + drupalSettings.mentions_suffix);
+                                        editor.removeMenuItem(username);
                                     }                                         
                                     });
                                     editor.addMenuItem(username, {
