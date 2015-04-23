@@ -98,10 +98,20 @@
       },
       afterInit: function(editor) {
           editor.on('key', function(evt) {
+             var keystroke = evt.data.domEvent.getKeystroke();
+             var charPressed;
+             if (keystroke > CKEDITOR.SHIFT + 16) {
+                 charPressed = String.fromCharCode(keystroke - CKEDITOR.SHIFT);
+             } 
+             else {
+                 charPressed = String.fromCharCode(evt.data.keyCode).toLowerCase();
+             }
             //if (evt.data.keyCode === CKEDITOR.SHIFT + 50) {
                var range = editor.getSelection().getRanges()[ 0 ];
                var endNode = range.endContainer;
                var element = endNode.getParent();
+               var html = element.getHtml();
+               var lastchars = html.slice(-2);
                //evt.data.domEvent.preventDefault();
                //editor.execCommand('mentionsautocomplete');
            //}
