@@ -174,3 +174,23 @@ function mentions_crud_update($type, $mentions, $id, $author) {
   }
 
 }
+
+function mentions_js_settings_alter(&$settings) {
+	$pathService = \Drupal::service('path.current');
+	$path = $pathService->getPath();
+	$query = \Drupal::entityQuery('user')
+			      ->condition('status',1)
+			      ->sort('name');
+	$usernids = $query->execute();
+	$users = entity_load_multiple('user', $usernids);
+	$userlist = array();
+	
+	foreach($users as $user) {
+		$userlist[$user->id()] = array('username' =>  $user->getUsername() );
+	}
+	
+	$settings['mentions_userlist'] = $userlist;
+	$config = \Drupal::config('mentions.mentions');
+	$settings['mentions_prefix'] = $config->get('input.prefix'); 
+  $settings['mentions_suffix'] = $config->get('input.suffix');
+}

@@ -98,10 +98,13 @@
       },
       afterInit: function(editor) {
           editor.on('key', function(evt) {
-            if (evt.data.keyCode === CKEDITOR.SHIFT + 50) {
-               evt.data.domEvent.preventDefault();
-               editor.execCommand('mentionsautocomplete');
-           }
+            //if (evt.data.keyCode === CKEDITOR.SHIFT + 50) {
+               var range = editor.getSelection().getRanges()[ 0 ];
+               var endNode = range.endContainer;
+               var element = endNode.getParent();
+               //evt.data.domEvent.preventDefault();
+               //editor.execCommand('mentionsautocomplete');
+           //}
       });
      }
   });
