@@ -27,11 +27,25 @@
           editor.addCommand('mentionsautocomplete', {
                 modes: {wysiwyg: 1},
                 exec: function(editor, editordata) {
+                    /*
+                    var userStartsWith="";
+                                        if (editordata.lastprefix > editordata.lastsuffix) {
+                                            userStartsWith = editordata.html.substring(editordata.lastprefix + drupalSettings.mentions_prefix.length);
+                                            
+                                        }                    
+*/                    
+                    
                     $.ajax({
                         type: 'GET',
                         url: '/mentions/views/userlist',
                         success: function(data) {
                             var users = JSON.parse(data);
+                            var previousChars="";
+                            if (editordata.lastprefix > editordata.lastsuffix) {
+                                previousChars = editordata.html.substring(editordata.lastprefix + drupalSettings.mentions_prefix.length);                                            
+                            }
+                            var userStartsWith = previousChars + editordata.charPressed;
+                            
                             var username, userid;
                             
                             //var editorid = editor.name;
@@ -49,6 +63,11 @@
                             users.forEach(function(user, index, userarray){
                                 username = user.name;
                                 userid = user.uid;
+                                 
+                                if ( username.lastIndexOf(userStartsWith,0) !== 0) {
+                                    editor.removeMenuItem('mentions_' + username);
+                                    return;
+                                }
                                 
                                 if (editor.contextMenu) {
                                     editor.addCommand('mentions_' + username, {
@@ -120,7 +139,7 @@
                var lastsuffix = html.lastIndexOf(drupalSettings.mentions_suffix);
                
               if (lastprefix > lastsuffix) {
-                  var data = {'html':html, 'lastprefix': lastprefix, 'lastsuffix': lastsuffix};
+                  var data = {'html':html, 'lastprefix': lastprefix, 'lastsuffix': lastsuffix, 'charPressed':charPressed};
                    editor.execCommand('mentionsautocomplete', data);
                }
                             
