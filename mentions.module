@@ -178,6 +178,7 @@ function mentions_crud_update($type, $mentions, $id, $author) {
 function mentions_js_settings_alter(&$settings) {
 	$pathService = \Drupal::service('path.current');
 	$path = $pathService->getPath();
+	/*
 	$query = \Drupal::entityQuery('user')
 			      ->condition('status',1)
 			      ->sort('name');
@@ -190,6 +191,7 @@ function mentions_js_settings_alter(&$settings) {
 	}
 	
 	$settings['mentions_userlist'] = $userlist;
+	*/
 	$config = \Drupal::config('mentions.mentions');
 	$settings['mentions_prefix'] = $config->get('input.prefix'); 
   $settings['mentions_suffix'] = $config->get('input.suffix');

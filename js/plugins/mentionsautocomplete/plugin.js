@@ -26,15 +26,7 @@
           });
           editor.addCommand('mentionsautocomplete', {
                 modes: {wysiwyg: 1},
-                exec: function(editor, editordata) {
-                    /*
-                    var userStartsWith="";
-                                        if (editordata.lastprefix > editordata.lastsuffix) {
-                                            userStartsWith = editordata.html.substring(editordata.lastprefix + drupalSettings.mentions_prefix.length);
-                                            
-                                        }                    
-*/                    
-                    
+                exec: function(editor, editordata) {                    
                     $.ajax({
                         type: 'GET',
                         cache: true,
@@ -47,15 +39,7 @@
                             }
                             var userStartsWith = previousChars + editordata.charPressed;
                             
-                            //var username, userid;
-                            
-                            //var editorid = editor.name;
-                            //var range = editor.getSelection().getRanges()[ 0 ],
-                            //rangeRoot = range.root,
-                            //startNode = range.startContainer;
-                            //var selection = editor.getSelection();
-                            //var bookmarks = selection.createBookmarks(true);
-                         
+                        
                             if (editor.contextMenu) {
                                 editor.addMenuGroup('Mentions');
                                 editor.removeMenuItem('paste');
@@ -134,8 +118,10 @@
             //if (evt.data.keyCode === CKEDITOR.SHIFT + 50) {
                var range = editor.getSelection().getRanges()[ 0 ];
                var endNode = range.endContainer;
-               var element = endNode.getParent();
-               var html = element.getHtml();
+               var html = endNode.getText();
+               html = html.replace('/<br\/>$/','');
+               /*var element = endNode.getParent();
+               var html = element.getHtml();*/
                var lastprefix = html.lastIndexOf(drupalSettings.mentions_prefix); 
                var lastsuffix = html.lastIndexOf(drupalSettings.mentions_suffix);
                
