@@ -37,8 +37,8 @@
                     
                     $.ajax({
                         type: 'GET',
-                        url: '/admin/mentions/userlist',
-                        success: function(data) {
+                        url: '/admin/mentions/userlist'
+                    }).done(function(data) {
                             var users = data.userlist;
                             var previousChars="";
                             if (editordata.lastprefix > editordata.lastsuffix) {
@@ -115,8 +115,8 @@
                             });
                             
 
-                        }
-                    });
+                        });
+                    //});
                 }
           });
       },
