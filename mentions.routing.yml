@@ -5,3 +5,9 @@ mentions.admin:
     _title: 'Mentions Configuration'
   requirements:
     _permission: 'access administration pages'
+mentions.userlist:
+    path: '/admin/mentions/userlist'
+    defaults:
+        _controller: '\Drupal\mentions\Controller\MentionsUserList::userList'
+    requirements:
+      _access: 'TRUE'

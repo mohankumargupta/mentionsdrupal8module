@@ -37,16 +37,16 @@
                     
                     $.ajax({
                         type: 'GET',
-                        url: '/mentions/views/userlist',
+                        url: '/admin/mentions/userlist',
                         success: function(data) {
-                            var users = JSON.parse(data);
+                            var users = data.userlist;
                             var previousChars="";
                             if (editordata.lastprefix > editordata.lastsuffix) {
                                 previousChars = editordata.html.substring(editordata.lastprefix + drupalSettings.mentions_prefix.length);                                            
                             }
                             var userStartsWith = previousChars + editordata.charPressed;
                             
-                            var username, userid;
+                            //var username, userid;
                             
                             //var editorid = editor.name;
                             //var range = editor.getSelection().getRanges()[ 0 ],
@@ -61,16 +61,16 @@
                             }
                             
                             users.forEach(function(user, index, userarray){
-                                username = user.name;
-                                userid = user.uid;
+                                //username = user.name;
+                                //userid = user.uid;
                                  
-                                if ( username.lastIndexOf(userStartsWith,0) !== 0) {
-                                    editor.removeMenuItem(username);
+                                if ( user.lastIndexOf(userStartsWith,0) !== 0) {
+                                    editor.removeMenuItem(user);
                                     return;
                                 }
                                 
                                 if (editor.contextMenu) {
-                                    editor.addCommand('mentions_' + username, {
+                                    editor.addCommand('mentions_' + user, {
                                     modes: {wysiwyg: 1},
                                     exec: function(editor) {
                                         var command = this.name.replace('mentions_','');
@@ -90,19 +90,18 @@
                                         //var selectedElement = selection.getSelectedElement();
                                         //selectedElement.setHtml('i wonder');
                                         editor.insertHtml(command + drupalSettings.mentions_suffix);
-                                        editor.removeMenuItem(username);
+                                        editor.removeMenuItem(user);
                                     }                                         
                                     });
-                                    editor.addMenuItem(username, {
-                                        id: 'mentions_' + userid,
-                                        label: username,
+                                    editor.addMenuItem(user, {
+                                        label: user,
                                         group: 'Mentions',
-                                        command: 'mentions_' + username
+                                        command: 'mentions_' + user
                                     });
                                     
-                                    editor.mentions.push(username);
+                                    editor.mentions.push(user);
                                     
-                                    var menuitem = editor.getMenuItem(username);
+                                    var menuitem = editor.getMenuItem(user);
                                     
                                     var range = editor.getSelection().getRanges()[ 0 ];
                                     var offset = range.endOffset;
