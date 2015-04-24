@@ -37,6 +37,7 @@
                     
                     $.ajax({
                         type: 'GET',
+                        cache: true,
                         url: '/admin/mentions/userlist'
                     }).done(function(data) {
                             var users = data.userlist;
