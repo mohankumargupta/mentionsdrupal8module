@@ -76,6 +76,8 @@
                                         //selectedElement.setHtml('i wonder');
                                         editor.insertHtml(command + drupalSettings.mentions_suffix);
                                         editor.removeMenuItem(user);
+                                        editor.addMenuItem('paste', {label:'Paste',group:'Paste',command:'paste'});
+                                        editor.addMenuGroup('Paste');
                                     }                                         
                                     });
                                     editor.addMenuItem(user, {
@@ -93,6 +95,7 @@
                                     //range.moveToPosition( range.root, CKEDITOR.POSITION_BEFORE_END );
                                     var startNode = range.endContainer;
                                     //editor.getSelection().selectRanges( [ range ] );
+                                    
                                     editor.contextMenu.show(startNode.getParent(), null,offset*7);
                                 }
                                 
@@ -115,6 +118,12 @@
              else {
                  charPressed = String.fromCharCode(evt.data.keyCode).toLowerCase();
              }
+             
+             if (keystroke === 8 || keystroke === 27) {
+                editor.addMenuItem('paste', {label:'Paste',group:'Paste',command:'paste'});
+                editor.addMenuGroup('Paste');
+             }
+             
             //if (evt.data.keyCode === CKEDITOR.SHIFT + 50) {
                var range = editor.getSelection().getRanges()[ 0 ];
                var endNode = range.endContainer;
