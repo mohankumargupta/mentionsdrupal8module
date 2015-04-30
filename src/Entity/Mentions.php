@@ -3,7 +3,6 @@ namespace Drupal\mentions\Entity;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Field\BaseFieldDefinition;
-use Drupal\mentions\MentionInterface;
 /**
  *
  * @file
@@ -16,8 +15,12 @@ use Drupal\mentions\MentionInterface;
  *     "views_data" = "Drupal\mentions\MentionsViewsData"
  *   },
  *   base_table = "mentions",
+ *   translatable = TRUE,
+ *   data_table = "mentions_field_data",
  *   entity_keys = {
- *     "id" = "mid"
+ *     "id" = "mid",
+ *     "uuid" = "uuid",
+ *     "langcode" = "langcode",
  *   }
  * )
  */
@@ -39,6 +42,11 @@ class Mentions extends ContentEntityBase {
       ->setSetting('unsigned', TRUE);
 
 
+		    $fields['uuid'] = BaseFieldDefinition::create('uuid')
+      ->setLabel(t('internal uuid'))
+      ->setDescription(t('internal uuid'))
+      ->setReadOnly(TRUE);
+		
     $fields['uid'] = BaseFieldDefinition::create('integer')
       ->setLabel(t('UUID'))
       ->setDescription(t('Mention UUID.'))
@@ -58,6 +66,11 @@ class Mentions extends ContentEntityBase {
       ->setLabel(t('Entity type'))
       ->setDescription(t('The entity type to which this mention is attached.'))
       ->setSetting('max_length', 32);
+		
+		    $fields['langcode'] = BaseFieldDefinition::create('language')
+      ->setLabel(t('Language code'))
+      ->setDescription(t('The user language code.'))
+      ->setTranslatable(TRUE);
 
     return $fields;
   }
