@@ -86,7 +86,7 @@ class MentionsViewsData extends EntityViewsData {
             'id' => 'numeric',
         ],
         'field' => [
-            'id' => 'user',
+            'id' => 'numeric',
         ],
         'relationship' => [
             'base' => 'users',
