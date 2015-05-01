@@ -1,6 +1,6 @@
 name: Mentions
 type: module
-description: 'Drupal 8 Port of mentions2 module. Adds Twitter-like @username linking and tracking features.'
+description: 'Drupal 8 Port of mentions module. Adds Twitter-like @username linking and tracking features.'
 core: 8.x
 package: Filters
 configure: mentions.admin

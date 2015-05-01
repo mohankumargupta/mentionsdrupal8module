@@ -80,13 +80,13 @@ class MentionsViewsData extends EntityViewsData {
         'title' => t('Author user id'),
         'help' => t('Author user id'),
         'filter' => [
-            'id' => 'numeric',
+            'id' => 'standard',
         ],
         'argument' => [
-            'id' => 'numeric',
+            'id' => 'standard',
         ],
         'field' => [
-            'id' => 'numeric',
+            'id' => 'standard',
         ],
         'relationship' => [
             'base' => 'users',
@@ -109,13 +109,13 @@ class MentionsViewsData extends EntityViewsData {
         'label' => t('Mentions user'),
       ],
       'filter' => [
-        'id' => 'numeric',
+        'id' => 'standard',
       ],
       'argument' => [
-        'id' => 'numeric',
+        'id' => 'standard',
       ],
       'field' => [
-        'id' => 'user',
+        'id' => 'standard',
       ],
     ];
 
