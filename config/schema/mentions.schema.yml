@@ -2,6 +2,13 @@ mentions.mentions:
   type: mapping
   label: 'Mentions'
   mapping:
+    ckeditor:
+      type: mapping
+      label: 'CKEditor'
+      mapping:
+        enabled:
+          type: boolean
+          label: 'Enabled'
     input:
       type: mapping
       label: 'Input'

@@ -196,7 +196,17 @@ class MentionsConfigForm extends ConfigFormBase
             );
         }
 
-
+        $form['mentions']['ckeditor'] = array(
+            '#type' => 'details',
+            '#title' => t('CKEditor Integration'),
+            '#open' => true
+        );
+				
+				$form['mentions']['ckeditor']['enabled'] = array(
+					'#type' => 'checkbox',
+					'#title' => $this->t('Enabled'),
+					'#default_value' => $this->config->get('ckeditor.enabled')
+				);
 
 
         return $form;
