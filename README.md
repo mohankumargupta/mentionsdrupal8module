@@ -8,10 +8,11 @@ Original Mentions module for Drupal 7
 #Implemented 
 - replace \[@admin\] and \[@#1\] with [@admin](user/1)
 - allow custom actions when a mention is created/updated/deleted
+- ckeditor plugin to do autocomplete of user inside CKEditor
 
 #TODO List
 - jquery texcomplete integration for non-ckeditor fields
-- ckeditor plugin to do autocomplete of user inside CKEditor
+
 
 #Installation
 1. Enable module as usual
