@@ -10,6 +10,9 @@ namespace Drupal\mentions\Plugin\CKEditorPlugin;
 use Drupal\ckeditor\CKEditorPluginBase;
 use Drupal\editor\Entity\Editor;
 use Drupal\ckeditor\CKEditorPluginContextualInterface;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\Config\ConfigFactory;
 
 /**
  * Defines the "Mentions Autocomplete" plugin.
@@ -20,7 +23,25 @@ use Drupal\ckeditor\CKEditorPluginContextualInterface;
  *   module = "mentions"
  * )
  */
-class MentionsAutocomplete extends CKEditorPluginBase implements CKEditorPluginContextualInterface {
+class MentionsAutocomplete extends CKEditorPluginBase implements CKEditorPluginContextualInterface, ContainerFactoryPluginInterface {
+	
+	protected $config;
+	
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, ConfigFactory $config) {    
+		$this->config = $config->get('mentions.mentions');
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+  }
+
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    $config = $container->get('config.factory');
+
+    return new static($configuration,
+      $plugin_id,
+      $plugin_definition,
+      $config
+    );
+  }
+	
 	public function getButtons() {
 		return array();
 	}
@@ -38,7 +59,18 @@ class MentionsAutocomplete extends CKEditorPluginBase implements CKEditorPluginC
   }
 
 	public function isEnabled(Editor $editor) {
-		return TRUE;
+		if (!isset($this->config)){
+		  return TRUE;
+		}
+		
+		if ($this->config->get('ckeditor.enabled')) {
+			return TRUE;
+		}
+		
+		else {
+			return FALSE;
+		}
+		
 	}
 
 }
