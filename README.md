@@ -11,7 +11,7 @@ Original Mentions module for Drupal 7
 - ckeditor plugin to do autocomplete of user inside CKEditor
 
 #TODO List
-- jquery texcomplete integration for non-ckeditor fields
+- jquery textcomplete integration for non-ckeditor fields
 
 
 #Installation
