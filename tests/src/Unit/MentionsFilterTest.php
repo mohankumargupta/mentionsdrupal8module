@@ -7,11 +7,7 @@
 
 namespace Drupal\mentions\Tests;
 
-// use Drupal\simpletest\KernelTestBase;
 use Drupal\Tests\UnitTestCase;
-use Drupal\filter\FilterPluginCollection;
-use Drupal\Core\DependencyInjection\ContainerBuilder;
-
 
 /**
  * @coverDefaultClass \Drupal\mentions\Plugin\Filter\FilterMentions
@@ -45,8 +41,8 @@ class MentionsFilterTest extends UnitTestCase {
     $config = $this->getMock('Drupal\Core\Config\ConfigFactoryInterface');
     $this->config = $config;
 
-    $configFactory = $this->getMock('Drupal\Core\Config\ConfigFactoryInterface');
-    $this->configFactory = $configFactory;
+    $configfactory = $this->getMock('Drupal\Core\Config\ConfigFactoryInterface');
+    $this->configFactory = $configfactory;
   }
 
   function testFilterMentionByUsername() {
@@ -103,29 +99,13 @@ class MentionsFilterTest extends UnitTestCase {
       ->will($this->returnValue($this->config));
 
     $mentions_filter->setConfig($this->configFactory);
-
     $mentions_filter->setStringTranslation($this->getStringTranslationStub());
-
-    /*
-    $mentions_filter = $this->filters['filter_mentions'];
-    $test = function($input) use ($mentions_filter) {
-    return $mentions_filter->process($input, 'und');
-    };
-     */
 
     $test = function($input) use ($mentions_filter) {
       return $mentions_filter->mentions_get_mentions($input);
     };
 
     $this->assertEquals($expected, $test($input));
-    // $this->pass(print_r($test($input)));
   }
-
-  /*
-  function testFilterMentionByUserId() {
-  $mentions_filter = $this->filters['filter_mentions'];
-
-  }
-   */
 
 }
