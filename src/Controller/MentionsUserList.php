@@ -20,8 +20,8 @@ class MentionsUserList extends ControllerBase {
 
   protected $queryInterface;
 
-  public function __construct(QueryInterface $queryInterface) {
-    $this->queryInterface = $queryInterface;
+  public function __construct(QueryInterface $queryinterface) {
+    $this->queryInterface = $queryinterface;
   }
 
   public static function create(ContainerInterface $container) {
