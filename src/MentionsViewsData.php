@@ -1,9 +1,12 @@
 <?php
 
+/**
+ * @file
+ */
+
 namespace Drupal\mentions;
 
 use Drupal\views\EntityViewsData;
-use Drupal\views\EntityViewsDataInterface;
 
 /**
  * Provides the views data for the mentions entity type.
@@ -11,15 +14,15 @@ use Drupal\views\EntityViewsDataInterface;
 class MentionsViewsData extends EntityViewsData {
 
   /**
-  * @{inheritdoc}
-  */
+   * @{inheritdoc}
+   */
   public function getViewsData() {
     $data = parent::getViewsData();
-    $data['mentions_field_data']['table']['base']['help'] = t('Mentions entry');		
-		
+    $data['mentions_field_data']['table']['base']['help'] = t('Mentions entry');
+
     $data['mentions_field_data']['table']['wizard_id'] = 'mention';
     $data['mentions_field_data']['mid']['field']['id'] = 'mid';
-		
+
     $data['mentions_field_data']['table']['group'] = t('Mentions');
     $data['mentions_field_data']['table']['entity type'] = 'mentions';
 
@@ -27,7 +30,6 @@ class MentionsViewsData extends EntityViewsData {
 
     $data['mentions_field_data']['table']['base']['weight'] = 1;
     $data['mentions_field_data']['table']['base']['defaults']['field'] = 'mid';
-
 
     $data['mentions_field_data']['mid'] = [
       'title' => t('Mention ID'),
@@ -38,14 +40,6 @@ class MentionsViewsData extends EntityViewsData {
 
     ];
 
-		/*
-		$data['mentions']['mentionid'] = [
-			'real field' => 'mid',
-      'title' => t('Mention ID'),
-			'help' => ''
-		];
-		*/
-		
     $data['mentions_field_data']['entity_type'] = [
         'title' => t('Entity type'),
           'help' => t('Entity type of entity that contains mention'),
@@ -96,7 +90,6 @@ class MentionsViewsData extends EntityViewsData {
             'label' => t('Mentions user'),
         ]
     ];
-
 
     $data['mentions_field_data']['uid'] = [
       'title' => t('Mentioned user uid'),
@@ -158,4 +151,5 @@ class MentionsViewsData extends EntityViewsData {
 
     return $data;
   }
+
 }

@@ -77,7 +77,7 @@ class FilterMentions extends FilterBase implements ContainerFactoryPluginInterfa
 
     return $text;
 
- }
+  }
 
   public function mentions_get_mentions($text) {
     $settings = $this->config->get('mentions.mentions');

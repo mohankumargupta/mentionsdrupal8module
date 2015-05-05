@@ -1,4 +1,9 @@
 <?php
+
+/**
+ * @file
+ * @file
+ */
 namespace Drupal\mentions\Plugin\views\wizard;
 
 
@@ -6,6 +11,8 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Plugin\views\wizard\WizardPluginBase;
 
 /**
+ * .
+ *
  * @ViewsWizard(
  *   id = "mention",
  *   base_table = "mentions_field_data",
@@ -13,13 +20,15 @@ use Drupal\views\Plugin\views\wizard\WizardPluginBase;
  * )
  */
 class Mention extends WizardPluginBase {
-    /**
+  /**
+   * .
+   *
    * Overrides Drupal\views\Plugin\views\wizard\WizardPluginBase::defaultDisplayOptions().
    */
   protected function defaultDisplayOptions() {
     $display_options = parent::defaultDisplayOptions();
-	  unset($display_options['fields']);
-		/* Field: User: Name */
+    unset($display_options['fields']);
+    /* Field: User: Name */
     $display_options['fields']['name']['id'] = 'mentionsid';
     $display_options['fields']['name']['table'] = 'mentions_field_data';
     $display_options['fields']['name']['field'] = 'mid';
@@ -39,6 +48,7 @@ class Mention extends WizardPluginBase {
     $display_options['fields']['name']['link_to_user'] = 1;
     $display_options['fields']['name']['overwrite_anonymous'] = 0;
     $display_options['fields']['name']['plugin_id'] = 'mid';
-		return $display_options;
-	}
+    return $display_options;
+  }
+
 }

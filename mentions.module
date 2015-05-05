@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Importing names.
+ */
+
 use Drupal\Core\Url;
 use Drupal\mentions\Entity;
 use Drupal\field;
@@ -13,12 +18,7 @@ use Drupal\mentions\Plugin\Filter\FilterMentions;
  * Provides hook implementations for mentions module.
  */
 function mentions_theme() {
-  return array(
-    'mentions' => array(
-      'render element' => 'userintext',
-    ),
-  );
-
+  return array('mentions' => array('render element' => 'userintext'));
 }
 
 /**
@@ -43,15 +43,9 @@ function template_preprocess_mentions(&$variables) {
     }
   }
 
-  //$userpageurl = Url::fromUri($link);
   $user_page_url = Url::fromUri('base:' . $link);
   $variables['userid'] = $user->id();
-  $variables['link'] = \Drupal::l($output_settings['prefix'] . $text . $output_settings['suffix'], $user_page_url, array(
-      'attributes' => array(
-        'class' => 'mentions mentions-' . $user->id(),
-        'title' => $text,
-      )));
-
+  $variables['link'] = \Drupal::l($output_settings['prefix'] . $text . $output_settings['suffix'], $user_page_url, array('attributes' => array('class' => 'mentions mentions-' . $user->id(), 'title' => $text)));
 }
 
 /**
@@ -86,22 +80,17 @@ function mentions_insert_or_update(Drupal\Core\Entity\EntityInterface $entity, $
     }
   }
 
-
   foreach ($fields_with_text as $textfield) {
     $boo = $entity->get($textfield);
     $value = $boo->value;
     $container = \Drupal::getContainer();
     $filter_mentions = FilterMentions::create($container, array(), '', NULL);
-    //$mentionsProcessed = $filter_mentions->process($value, 'und')->getProcessedText();
-    //$filter_mentions = new \Drupal\mentions\Plugin\Filter\FilterMentions(array(), '', NULL);
     $mentions = $filter_mentions->mentions_get_mentions($value);
     if (!empty($mentions) || $update) {
       $auid = \Drupal::currentUser()->id();
       mentions_crud_update($type, $mentions, $entity->id(), $auid);
     }
   }
-
-
 }
 
 
@@ -109,10 +98,7 @@ function mentions_insert_or_update(Drupal\Core\Entity\EntityInterface $entity, $
  * Implements hook_entity_delete().
  */
 function mentions_entity_delete(Drupal\Core\Entity\EntityInterface $entity) {
-  $mention_ids = \Drupal::entityQuery('mentions')
-           ->condition('entity_id', $entity->id())
-           ->condition('entity_type', $entity->getEntityType()->getProvider())
-           ->execute();
+  $mention_ids = \Drupal::entityQuery('mentions')->condition('entity_id', $entity->id())->condition('entity_type', $entity->getEntityType()->getProvider())->execute();
 
   entity_delete_multiple('mentions', $mention_ids);
   $event_dispatcher = \Drupal::service('event_dispatcher');
@@ -123,13 +109,11 @@ function mentions_entity_delete(Drupal\Core\Entity\EntityInterface $entity) {
  * Insert mentions into DB.
  */
 function mentions_crud_update($type, $mentions, $id, $author) {
+
   // Build old array of mentions.
   $old_users = array();
   $old_mids = array();
-  $mention_ids = \Drupal::entityQuery('mentions')
-                 ->condition('entity_type', $type)
-                 ->condition('entity_id', $id)
-                 ->execute();
+  $mention_ids = \Drupal::entityQuery('mentions')->condition('entity_type', $type)->condition('entity_id', $id)->execute();
   foreach ($mention_ids as $mention) {
     $entity = entity_load('mentions', $mention);
     $old_user = $entity->get('uid')->getValue()[0]['value'];
@@ -147,12 +131,12 @@ function mentions_crud_update($type, $mentions, $id, $author) {
 
   // Add new mentions.
   foreach (array_diff($new_users, $old_users) as $uid) {
-    $mention = entity_create('mentions', array(
-        'entity_type' => $type,
-        'entity_id' => $id,
-        'uid' => $uid,
-        'auid' => $author
-      ));
+    $mentionattributes = array(
+      'entity_type' => $type,
+      'entity_id' => $id,
+      'uid' => $uid,
+      'auid' => $author);
+    $mention = entity_create('mentions', $mentionattributes);
     $mention->save();
 
     $event_dispatcher->dispatch('mentions.insert', new Event());
@@ -172,27 +156,15 @@ function mentions_crud_update($type, $mentions, $id, $author) {
     $entity->delete();
     $event_dispatcher->dispatch('mentions.delete', new Event());
   }
-
 }
 
+/**
+ * Implements hook_js_settings_alter().
+ */
 function mentions_js_settings_alter(&$settings) {
-	$pathService = \Drupal::service('path.current');
-	$path = $pathService->getPath();
-	/*
-	$query = \Drupal::entityQuery('user')
-			      ->condition('status',1)
-			      ->sort('name');
-	$usernids = $query->execute();
-	$users = entity_load_multiple('user', $usernids);
-	$userlist = array();
-	
-	foreach($users as $user) {
-		$userlist[$user->id()] = array('username' =>  $user->getUsername() );
-	}
-	
-	$settings['mentions_userlist'] = $userlist;
-	*/
-	$config = \Drupal::config('mentions.mentions');
-	$settings['mentions_prefix'] = $config->get('input.prefix'); 
+  $pathservice = \Drupal::service('path.current');
+  $path = $pathservice->getPath();
+  $config = \Drupal::config('mentions.mentions');
+  $settings['mentions_prefix'] = $config->get('input.prefix');
   $settings['mentions_suffix'] = $config->get('input.suffix');
 }

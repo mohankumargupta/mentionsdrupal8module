@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * @file
+ */
+
 namespace Drupal\mentions\Plugin\views\field;
 
 use Drupal\Core\Form\FormStateInterface;
@@ -9,6 +14,8 @@ use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 
 /**
+ * .
+ *
  * Title field available in views.
  *
  * @ViewsField("mentions_title")
@@ -41,4 +48,5 @@ class Title extends FieldPluginBase {
     $entity_title = $entity->get($entity_title_field)->getValue()[0]['value'];
     return $entity_title;
   }
+
 }

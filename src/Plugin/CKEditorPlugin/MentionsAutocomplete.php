@@ -24,11 +24,11 @@ use Drupal\Core\Config\ConfigFactory;
  * )
  */
 class MentionsAutocomplete extends CKEditorPluginBase implements CKEditorPluginContextualInterface, ContainerFactoryPluginInterface {
-	
-	protected $config;
-	
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, ConfigFactory $config) {    
-		$this->config = $config->get('mentions.mentions');
+
+  protected $config;
+
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, ConfigFactory $config) {
+    $this->config = $config->get('mentions.mentions');
     parent::__construct($configuration, $plugin_id, $plugin_definition);
   }
 
@@ -41,37 +41,36 @@ class MentionsAutocomplete extends CKEditorPluginBase implements CKEditorPluginC
       $config
     );
   }
-	
-	public function getButtons() {
-		return array();
-	}
 
-	public function getConfig(Editor $editor) {
-		return array();
-	}
+  public function getButtons() {
+    return array();
+  }
 
-	public function getFile() {
-		return drupal_get_path('module', 'mentions').'/js/plugins/mentionsautocomplete/plugin.js';
-	}
-	
-	public function isInternal() {
+  public function getConfig(Editor $editor) {
+    return array();
+  }
+
+  public function getFile() {
+    return drupal_get_path('module', 'mentions') . '/js/plugins/mentionsautocomplete/plugin.js';
+  }
+
+  public function isInternal() {
     return FALSE;
   }
 
-	public function isEnabled(Editor $editor) {
-		if (!isset($this->config)){
-		  return TRUE;
-		}
-		
-		if ($this->config->get('ckeditor.enabled')) {
-			return TRUE;
-		}
-		
-		else {
-			return FALSE;
-		}
-		
-	}
+  public function isEnabled(Editor $editor) {
+    if (!isset($this->config)) {
+      return TRUE;
+    }
+
+    if ($this->config->get('ckeditor.enabled')) {
+      return TRUE;
+    }
+
+    else {
+      return FALSE;
+    }
+
+  }
 
 }
-

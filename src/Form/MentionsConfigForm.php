@@ -1,9 +1,10 @@
 <?php
 /**
+ * @file
  * Created by PhpStorm.
  * User: mohan
  * Date: 25/11/2014
- * Time: 12:43 AM
+ * Time: 12:43 AM.
  */
 
 namespace Drupal\mentions\Form;
@@ -17,10 +18,9 @@ use Drupal\Core\Utility\Token;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * MentionsConfigForm
+ * MentionsConfigForm.
  */
-class MentionsConfigForm extends ConfigFormBase
-{
+class MentionsConfigForm extends ConfigFormBase {
   protected $token;
   protected $config;
 
@@ -47,185 +47,177 @@ class MentionsConfigForm extends ConfigFormBase
   /**
    * @{inheritdoc}
    */
-  protected function getEditableConfigNames()
-    {
-        return [
+  protected function getEditableConfigNames() {
+
+    return [
             'mentions.mentions',
         ];
-    }
+  }
 
 
-    /**
-     * Returns a unique string identifying the form.
-     *
-     * @return string
-     *   The unique string identifying the form.
-     */
-    public function getFormId()
-    {
-        return "mentionsconfigform";
-    }
+  /**
+   * Returns a unique string identifying the form.
+   *
+   * @return string
+   *   The unique string identifying the form.
+   */
+  public function getFormId() {
+
+    return "mentionsconfigform";
+  }
 
 
-    /**
-     * {@inheritdoc}
-     */
-    public function buildForm(array $form, FormStateInterface $form_state)
-    {
-        $form = parent::buildForm($form, $form_state);
+  /**
+   * {@inheritdoc}
+   */
+  public function buildForm(array $form, FormStateInterface $form_state) {
 
-        $userid = $this->token->replace('[user:uid]', array('user' => user_load_by_name('admin')));
+    $form = parent::buildForm($form, $form_state);
 
-        $form['mentions'] = array(
-            '#type' => 'container',
-            '#tree' => TRUE,
-        );
+    $userid = $this->token->replace('[user:uid]', array('user' => user_load_by_name('admin')));
 
-        $form['mentions']['input'] = array(
-            '#type' => 'fieldset',
-            '#title' => t('Input'),
-        );
+    $form['mentions'] = array(
+      '#type' => 'container',
+      '#tree' => TRUE,
+    );
 
-        $form['mentions']['input']['prefix'] = array(
-            '#type' => 'textfield',
-            '#title' => t('Prefix'),
-            '#default_value' => $this->config->get('input.prefix'),
-            '#size' => 2,
-        );
+    $form['mentions']['input'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('Input'),
+    );
 
-        $form['mentions']['input']['suffix'] = array(
-            '#type' => 'textfield',
-            '#title' => t('Suffix'),
-            '#default_value' => $this->config->get('input.suffix'),
-            '#size' => 2,
-        );
+    $form['mentions']['input']['prefix'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Prefix'),
+      '#default_value' => $this->config->get('input.prefix'),
+      '#size' => 2,
+    );
 
-        $form['mentions']['output'] = array(
-            '#type' => 'fieldset',
-            '#title' => t('Output'),
-        );
+    $form['mentions']['input']['suffix'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Suffix'),
+      '#default_value' => $this->config->get('input.suffix'),
+      '#size' => 2,
+    );
 
-        $form['mentions']['output']['prefix'] = array(
-            '#type' => 'textfield',
-            '#title' => t('Prefix'),
-            '#default_value' => $this->config->get('output.prefix'),
-            '#size' => 2,
-        );
+    $form['mentions']['output'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('Output'),
+    );
 
-        $form['mentions']['output']['suffix'] = array(
-            '#type' => 'textfield',
-            '#title' => t('Suffix'),
-            '#default_value' => $this->config->get('output.suffix'),
-            '#size' => 2,
-        );
+    $form['mentions']['output']['prefix'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Prefix'),
+      '#default_value' => $this->config->get('output.prefix'),
+      '#size' => 2,
+    );
 
-        $form['mentions']['output']['text'] = array(
-            '#type' => 'textfield',
-            '#title' => t('Text'),
-            '#default_value' => '[user:name]',
-            '#description' => t('The text for the replacement link. Can use tokens.'),
-            '#size' => 20,
-        );
+    $form['mentions']['output']['suffix'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Suffix'),
+      '#default_value' => $this->config->get('output.suffix'),
+      '#size' => 2,
+    );
 
-        $form['mentions']['output']['link'] = array(
-            '#type' => 'textfield',
-            '#title' => t('Link'),
-            '#default_value' => 'user/[user:uid]',
-            '#description' => t('The destination for the replacement link. Can use tokens.'),
-            '#size' => 20,
-        );
+    $form['mentions']['output']['text'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Text'),
+      '#default_value' => '[user:name]',
+      '#description' => t('The text for the replacement link. Can use tokens.'),
+      '#size' => 20,
+    );
 
+    $form['mentions']['output']['link'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Link'),
+      '#default_value' => 'user/[user:uid]',
+      '#description' => t('The destination for the replacement link. Can use tokens.'),
+      '#size' => 20,
+    );
 
-        $form['mentions']['mentions_events'] = array(
-            '#type' => 'details',
-            '#title' => t('Mentions Events'),
-            '#open' => true
-        );
+    $form['mentions']['mentions_events'] = array(
+      '#type' => 'details',
+      '#title' => t('Mentions Events'),
+      '#open' => TRUE,
+    );
 
-
-
-        $isActionModuleEnabled = \Drupal::moduleHandler()->moduleExists('action');
-        if ($isActionModuleEnabled) {
-
-            $actionManager = \Drupal::service('plugin.manager.action');
-            //$definitions = $actionManager->getDefinitions();
-            $entity_manager = \Drupal::service('entity.manager');
-            $action_definitions = $entity_manager->getListBuilder('action')->load();
-            $actions = array();
-            foreach($action_definitions as $action_definition) {
-                if ($action_definition->getType() == 'system') {
-                  $actions[$action_definition->id()] = $action_definition->label();
-                }
-            }
-
-            //$actions =  array('boo1', 'boo2');
-            $config_mentions_events = $this->config->get('mentions_events');
-
-            $form['mentions']['mentions_events']['insert'] = array(
-                '#type' => 'select',
-                '#title' => $this->t('When a mention is inserted'),
-                '#empty_value' => '',
-                '#default_value' => $config_mentions_events['insert'],
-                '#options' => $actions,
-                '#description' => $this->t('When a mention is inserted, the following action is executed.'),
-            );
-
-            $form['mentions']['mentions_events']['update'] = array(
-                '#type' => 'select',
-                '#title' => $this->t('When a mention is updated'),
-                '#empty_value' => '',
-                '#default_value' => $config_mentions_events['update'],
-                '#options' => $actions,
-                '#description' => $this->t('When a mention is updated, the following action is executed.'),
-            );
-
-            $form['mentions']['mentions_events']['delete'] = array(
-                '#type' => 'select',
-                '#title' => $this->t('When a mention is deleted'),
-                '#empty_value' => '',
-                '#default_value' => $config_mentions_events['delete'],
-                '#options' => $actions,
-                '#description' => $this->t('When a mention is deleted, the following action is executed.'),
-            );
+    $isactionmoduleenabled = \Drupal::moduleHandler()->moduleExists('action');
+    if ($isactionmoduleenabled) {
+      $entity_manager = \Drupal::service('entity.manager');
+      $action_definitions = $entity_manager->getListBuilder('action')->load();
+      $actions = array();
+      foreach ($action_definitions as $action_definition) {
+        if ($action_definition->getType() == 'system') {
+          $actions[$action_definition->id()] = $action_definition->label();
         }
+      }
 
-        else {
-            $form['mentions']['mentions_events']['action_module_not_enabled'] = array(
-                '#type' => 'label',
-                '#title' => t('When the actions module is enabled, actions can be performed when mentions are inserted, updated or deleted.')
-            );
-        }
+      $config_mentions_events = $this->config->get('mentions_events');
 
-        $form['mentions']['ckeditor'] = array(
-            '#type' => 'details',
-            '#title' => t('CKEditor Integration'),
-            '#open' => true
-        );
-				
-				$form['mentions']['ckeditor']['enabled'] = array(
-					'#type' => 'checkbox',
-					'#title' => $this->t('Enabled'),
-					'#default_value' => $this->config->get('ckeditor.enabled')
-				);
+      $form['mentions']['mentions_events']['insert'] = array(
+        '#type' => 'select',
+        '#title' => $this->t('When a mention is inserted'),
+        '#empty_value' => '',
+        '#default_value' => $config_mentions_events['insert'],
+        '#options' => $actions,
+        '#description' => $this->t('When a mention is inserted, the following action is executed.'),
+      );
 
+      $form['mentions']['mentions_events']['update'] = array(
+        '#type' => 'select',
+        '#title' => $this->t('When a mention is updated'),
+        '#empty_value' => '',
+        '#default_value' => $config_mentions_events['update'],
+        '#options' => $actions,
+        '#description' => $this->t('When a mention is updated, the following action is executed.'),
+      );
 
-        return $form;
+      $form['mentions']['mentions_events']['delete'] = array(
+        '#type' => 'select',
+        '#title' => $this->t('When a mention is deleted'),
+        '#empty_value' => '',
+        '#default_value' => $config_mentions_events['delete'],
+        '#options' => $actions,
+        '#description' => $this->t('When a mention is deleted, the following action is executed.'),
+      );
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function submitForm(array &$form, FormStateInterface $form_state)
-    {
-        parent::submitForm($form, $form_state);
-        $updated_config = $this->configFactory()->getEditable('mentions.mentions')->merge($form_state->getValue('mentions'));
-        $updated_config->save();
+    else {
+      $form['mentions']['mentions_events']['action_module_not_enabled'] = array(
+        '#type' => 'label',
+        '#title' => t('When the actions module is enabled, actions can be performed when mentions are inserted, updated or deleted.'),
+      );
     }
 
-    public function validateForm(array &$form, FormStateInterface $form_state)
-    {
-        // Validation is optional.
-        //parent::validateForm($form,$form_state);
-    }
+    $form['mentions']['ckeditor'] = array(
+      '#type' => 'details',
+      '#title' => t('CKEditor Integration'),
+      '#open' => TRUE,
+    );
+
+    $form['mentions']['ckeditor']['enabled'] = array(
+      '#type' => 'checkbox',
+      '#title' => $this->t('Enabled'),
+      '#default_value' => $this->config->get('ckeditor.enabled'),
+    );
+
+    return $form;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function submitForm(array &$form, FormStateInterface $form_state) {
+
+    parent::submitForm($form, $form_state);
+    $updated_config = $this->configFactory()->getEditable('mentions.mentions')->merge($form_state->getValue('mentions'));
+    $updated_config->save();
+  }
+
+  public function validateForm(array &$form, FormStateInterface $form_state) {
+
+    // Validation is optional.
+    // parent::validateForm($form,$form_state);
+  }
 
 }

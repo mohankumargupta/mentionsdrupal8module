@@ -18,34 +18,32 @@ use Drupal\Core\Entity\Query\QueryInterface;
  */
 class MentionsUserList extends ControllerBase {
 
-protected $queryInterface;
-	
-public function __construct(QueryInterface $queryInterface) {
-	$this->queryInterface = $queryInterface;
-}
+  protected $queryInterface;
 
-public static function create(ContainerInterface $container) {
-	return new static(
-		$container->get('entity.query')->get('user')
-	);
-}
-	
-public function userList(Request $request) {	
-	$returndata = array('userlist' => ['admin', 'mohangupta']);
-	$usernids = $this->queryInterface
-			             ->condition('status',1)
-			             ->sort('name')
-			             ->execute();
-	$users = entity_load_multiple('user', $usernids);
-	$userlist = array();
-	
-	foreach($users as $user) {
-		$userlist['userlist'][] = $user->getUsername();
-	}
-	
-	$response = new JsonResponse($userlist);
-	return $response;
-}
+  public function __construct(QueryInterface $queryInterface) {
+    $this->queryInterface = $queryInterface;
+  }
 
+  public static function create(ContainerInterface $container) {
+    return new static(
+    $container->get('entity.query')->get('user')
+    );
+  }
+
+  public function userList(Request $request) {
+    $usernids = $this->queryInterface
+                         ->condition('status', 1)
+                         ->sort('name')
+                         ->execute();
+    $users = entity_load_multiple('user', $usernids);
+    $userlist = array();
+
+    foreach ($users as $user) {
+      $userlist['userlist'][] = $user->getUsername();
+    }
+
+    $response = new JsonResponse($userlist);
+    return $response;
+  }
 
 }
