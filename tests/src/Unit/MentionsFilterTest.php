@@ -45,7 +45,7 @@ class MentionsFilterTest extends UnitTestCase {
     $this->configFactory = $configfactory;
   }
 
-  function testFilterMentionByUsername() {
+  public function testFilterMentionByUsername() {
     $input = '[@admin]';
     $username = 'admin';
     $user = $this->getMockBuilder('Drupal\user\Entity\User')

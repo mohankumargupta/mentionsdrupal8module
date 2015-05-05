@@ -2,20 +2,16 @@
 
 /**
  * @file
- * @file
  */
 
 namespace Drupal\mentions\Plugin\views\field;
 
-use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\ResultRow;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 
 /**
- * .
- *
  * Title field available in views.
  *
  * @ViewsField("mentions_title")
