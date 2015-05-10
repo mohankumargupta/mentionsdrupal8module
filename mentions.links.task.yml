@@ -1,0 +1,4 @@
+user.mentions:
+  route_name: mentions.usermentions
+  base_route: entity.user.canonical
+  title: 'Mentions'

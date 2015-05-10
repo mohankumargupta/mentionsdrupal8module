@@ -11,3 +11,10 @@ mentions.userlist:
         _controller: '\Drupal\mentions\Controller\MentionsUserList::userList'
     requirements:
       _permission: 'Administer content'
+mentions.usermentions:
+    path: '/user/{user}/mentions'
+    defaults:
+      _controller: '\Drupal\mentions\Controller\MentionsUserTab::mentionsView'
+    requirements:
+      _access_contact_personal_tab: 'TRUE'
+    
