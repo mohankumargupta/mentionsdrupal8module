@@ -42,11 +42,11 @@ before_script:
   - cd core
   - composer require "symfony/translation"
   - cd ..
-  - cp -a ./modules/mentions/features .
+  - cp -a  ./modules/mentions/features .
   - ./core/vendor/bin/behat -c ./modules/mentions/behat.yml -dl
   - cd ..
-  - mkdir -p ~/.composer
-  - cp modules/mentions/.travis.composer.config.json ~/.composer/config.json
+  #- mkdir -p ~/.composer
+  #- cp modules/mentions/.travis.composer.config.json ~/.composer/config.json
 
 script:
   - cd core
