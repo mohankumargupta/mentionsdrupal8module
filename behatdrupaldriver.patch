@@ -1,0 +1,4 @@
+310c310
+<     return array_keys(\Drupal::moduleHandler()->getModuleList());
+---
+>     return \Drupal::moduleHandler()->getModuleList();
