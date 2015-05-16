@@ -41,9 +41,9 @@ before_script:
   - pwd
   - cd core
   - composer require "symfony/translation"
+  - cp -a modules/mentions/features .
   - ./vendor/bin/behat -c ./modules/mentions/behat.yml -dl
   - cd ..
-  - cp -a modules/mentions/features .
   - mkdir -p ~/.composer
   - cp modules/mentions/.travis.composer.config.json ~/.composer/config.json
 
