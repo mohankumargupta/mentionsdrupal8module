@@ -44,7 +44,7 @@ before_script:
   - cd ..
   - cp -a  ./modules/mentions/features .
   - ./core/vendor/bin/behat -c ./modules/mentions/behat.yml -dl
-  - cd ..
+  # - cd ..
   #- mkdir -p ~/.composer
   #- cp modules/mentions/.travis.composer.config.json ~/.composer/config.json
 
