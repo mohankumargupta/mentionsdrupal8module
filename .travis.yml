@@ -41,8 +41,9 @@ before_script:
   - pwd
   - cd core
   - composer require "symfony/translation"
+  - cd ..
   - cp -a ../modules/mentions/features .
-  - ./vendor/bin/behat -c ./modules/mentions/behat.yml -dl
+  - ./core/vendor/bin/behat -c ./modules/mentions/behat.yml -dl
   - cd ..
   - mkdir -p ~/.composer
   - cp modules/mentions/.travis.composer.config.json ~/.composer/config.json
@@ -54,4 +55,4 @@ script:
   - ./vendor/phpunit/phpunit/phpunit --list-groups
   - ./vendor/phpunit/phpunit/phpunit --group Mentions
   - cd ..
-  - behat -c ./modules/mentions/behat.yml
+  - ./core/vendor/bin/behat -c ./modules/mentions/behat.yml
