@@ -28,10 +28,6 @@ before_install:
   - cd ..
   - cd modules
   - git clone https://github.com/mohankumargupta/mentionsdrupal8module.git mentions
-  - pwd
-  - ls -l ..
-  - ls -l ../core/vendor
-  - ls -l ./mentions/behatdrupaldriver.patch
   - patch ../core/vendor/drupal/drupal-driver/src/Drupal/Driver/Cores/Drupal8.php < ./mentions/behatdrupaldriver.patch
   - wget "http://selenium-release.storage.googleapis.com/2.45/selenium-server-standalone-2.45.0.jar"
   - "sh -e /etc/init.d/xvfb start"
@@ -39,9 +35,10 @@ before_install:
   - "java -jar selenium-server-standalone-2.45.0.jar > /dev/null &"
 
 before_script:
-  - drush en -y mentions simpletest
+  - drush en -y mentions
   - drush pm-list --pipe --type=module --status=enabled --no-core | grep -x mentions
   - cd ..
+  - pwd
   - behat -c ./modules/mentions/behat.yml -dl
   - cp -a modules/mentions/features .
   - mkdir -p ~/.composer
