@@ -1,11 +1,11 @@
---- core/vendor/drupal/drupal-driver/src/Drupal/Driver/Cores/Drupal8.php	Sat May 16 12:35:04 2015
-+++ core/vendor/drupal/drupal-driver/src/Drupal/Driver/Cores/Drupal8_2.php	Sat May 16 12:34:36 2015
+--- ../core/vendor/drupal/drupal-driver/src/Drupal/Driver/Cores/Drupal8_2.php	Sat May 16 12:34:36 2015
++++ ../core/vendor/drupal/drupal-driver/src/Drupal/Driver/Cores/Drupal8.php	Sat May 16 12:56:52 2015
 @@ -307,7 +307,7 @@
     * {@inheritDoc}
     */
    public function getModuleList() {
--    return array_keys(\Drupal::moduleHandler()->getModuleList());
-+    return \Drupal::moduleHandler()->getModuleList();
+-    return \Drupal::moduleHandler()->getModuleList();
++    return array_keys(\Drupal::moduleHandler()->getModuleList());
    }
  
    /**
