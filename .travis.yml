@@ -27,6 +27,7 @@ before_install:
   - cd modules
   - git clone https://github.com/mohankumargupta/mentionsdrupal8module.git mentions
   - pwd
+  - ls -l ..
   - ls -l ../core/vendor/drupal/drupal-driver/src/Drupal/Driver/Cores/Drupal8.php
   - ls -l ./mentions/behatdrupaldriver.patch
   - patch ../core/vendor/drupal/drupal-driver/src/Drupal/Driver/Cores/Drupal8.php < ./mentions/behatdrupaldriver.patch
