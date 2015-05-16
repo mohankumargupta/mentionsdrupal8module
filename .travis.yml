@@ -39,7 +39,10 @@ before_script:
   - drush pm-list --pipe --type=module --status=enabled --no-core | grep -x mentions
   - cd ..
   - pwd
-  - core/vendor/bin/behat -c ./modules/mentions/behat.yml -dl
+  - cd core
+  - composer require "symfony/translation"
+  - ./vendor/bin/behat -c ./modules/mentions/behat.yml -dl
+  - cd ..
   - cp -a modules/mentions/features .
   - mkdir -p ~/.composer
   - cp modules/mentions/.travis.composer.config.json ~/.composer/config.json
