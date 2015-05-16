@@ -23,7 +23,7 @@ before_install:
   - cd mydrupal/drupal-8.0.x
   - drush runserver --server=builtin 8080 --strict=0 &
   - until netstat -an 2>/dev/null | grep '8080.*LISTEN'; do sleep 0.2; done
-  - composer global require drupal/drupal-extension="3.0.*@dev" 
+  - composer require drupal/drupal-extension="3.0.*@dev" 
   - cd modules
   - git clone https://github.com/mohankumargupta/mentionsdrupal8module.git mentions
   - pwd
