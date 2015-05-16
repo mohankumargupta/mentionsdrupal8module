@@ -26,6 +26,7 @@ before_install:
   - until netstat -an 2>/dev/null | grep '8080.*LISTEN'; do sleep 0.2; done
   - cd modules
   - git clone https://github.com/mohankumargupta/mentionsdrupal8module.git mentions
+  - patch ../core/vendor/drupal/drupal-driver/src/Drupal/Driver/Cores/Drupal8.php < mentions/behatdrupaldriver.patch
   - wget "http://selenium-release.storage.googleapis.com/2.45/selenium-server-standalone-2.45.0.jar"
   - "sh -e /etc/init.d/xvfb start"
   - "export DISPLAY=:99.0"
