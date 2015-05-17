@@ -45,7 +45,7 @@ function template_preprocess_mentions(&$variables) {
 
   $user_page_url = Url::fromUri('base:' . $link);
   $variables['userid'] = $user->id();
-  $variables['link'] = \Drupal::l($output_settings['prefix'] . $text . $output_settings['suffix'], $user_page_url, array('attributes' => array('class' => 'mentions mentions-' . $user->id(), 'title' => $text)));
+  $variables['link'] = \Drupal::l($output_settings['prefix'] . $text . $output_settings['suffix'], $user_page_url, array('attributes' => array('class' => 'mentions mentions-' . $user->id(), 'title' => $text)))->getGeneratedLink();
 }
 
 /**
