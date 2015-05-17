@@ -39,7 +39,7 @@ before_script:
   - cd ..
   - pwd
   - cd core
-  - composer require "symfony/translation"
+  #- composer require "symfony/translation"
   - cd ..
   - cp -a  ./modules/mentions/features .
   - ./core/vendor/bin/behat -c ./modules/mentions/behat.yml -dl
