@@ -24,8 +24,9 @@ before_install:
   - drush runserver --server=builtin 8080 --strict=0 &
   - until netstat -an 2>/dev/null | grep '8080.*LISTEN'; do sleep 0.2; done
   - cd core
-  - composer require --prefer-source drupal/drupal-extension="~3.0"
-  - composer require  symfony/translation="~2.3" --no-interaction --prefer-source
+  - composer require  drupal/drupal-extension="~3.0" --prefer-source --no-interaction
+  - composer update
+  #- composer require  symfony/translation="~2.3" --no-interaction --prefer-source
   - cd ..
   - cd modules
   - git clone https://github.com/mohankumargupta/mentionsdrupal8module.git mentions
