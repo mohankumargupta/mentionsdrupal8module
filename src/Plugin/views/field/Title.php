@@ -30,8 +30,11 @@ class Title extends FieldPluginBase {
     $value = $this->getValue($values);
     $entity = entity_load('mentions', $value);
     $entity_type = $entity->get('entity_type')->getValue()[0]['value'];
-    $entity_value = $entity->get('entity_id')->getValue()[0]['value'];
-    $entity = entity_load($entity_type, $entity_value);
+		$entity_value = $entity->get('entity_id')->getValue()[0]['value'];
+		if ($entity_type == 'taxonomy') {
+			$entity_type = 'taxonomy_term';
+		}
+		$entity = entity_load($entity_type, $entity_value);
 
     if ($entity_type == 'node') {
       $entity_title_field = 'title';
@@ -40,6 +43,10 @@ class Title extends FieldPluginBase {
     if ($entity_type == 'comment') {
       $entity_title_field = 'subject';
     }
+		
+		if ($entity_type == 'taxonomy_term') {
+			$entity_title_field = 'name';
+		}
 
     $entity_title = $entity->get($entity_title_field)->getValue()[0]['value'];
     return $entity_title;

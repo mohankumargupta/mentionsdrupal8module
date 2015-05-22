@@ -13,7 +13,8 @@ use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 
 /**
- * .
+ * 
+.
  *
  * @ViewsField("mentions_link")
  */
@@ -35,6 +36,9 @@ class Link extends FieldPluginBase {
     $entity = entity_load('mentions', $value);
     $entity_type = $entity->get('entity_type')->getValue()[0]['value'];
     $entity_value = $entity->get('entity_id')->getValue()[0]['value'];
+		if ($entity_type == 'taxonomy') {
+			$entity_type = 'taxonomy/term';
+		}
     $this->options['alter']['path'] = $entity_type . "/" . $entity_value;
     return 'View mention';
   }

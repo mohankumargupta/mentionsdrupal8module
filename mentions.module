@@ -66,7 +66,7 @@ function mentions_entity_update(Drupal\Core\Entity\EntityInterface $entity) {
  * Handling mentions crud operations.
  */
 function mentions_insert_or_update(Drupal\Core\Entity\EntityInterface $entity, $update) {
-  $supported_entities = array('node', 'comment');
+  $supported_entities = array('node', 'comment', 'taxonomy_term');
   if (!in_array($entity->getEntityTypeId(), $supported_entities)) {
     return;
   }
@@ -75,8 +75,9 @@ function mentions_insert_or_update(Drupal\Core\Entity\EntityInterface $entity, $
   $fields_with_text = array();
   $supported_field_types = array('text_with_summary', 'text_long', 'text');
   foreach ($field_definitions as $field_definition) {
-    if ($field_definition instanceof field\Entity\FieldConfig && isset($field_definition->field_type) && in_array($field_definition->field_type, $supported_field_types)) {
-      array_push($fields_with_text, $field_definition->field_name);
+		$fieldtype = $field_definition->getType(); 
+    if (isset($fieldtype) && in_array($fieldtype, $supported_field_types)) {
+      array_push($fields_with_text, $field_definition->getName());
     }
   }
 
