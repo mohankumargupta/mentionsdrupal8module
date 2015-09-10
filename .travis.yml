@@ -14,7 +14,7 @@ php:
 before_install:
   - sudo apt-get update 
   - composer self-update
-  - composer version
+  - composer --version
   - sudo apt-get install -y --force-yes php5-cgi php5-mysql sqlite3 php5-sqlite php5-gd 
   - composer global require drush/drush:dev-master
   - export PATH="$HOME/.composer/vendor/bin:$PATH"
@@ -25,9 +25,9 @@ before_install:
   - drush runserver --server=builtin 8080 --strict=0 &
   - until netstat -an 2>/dev/null | grep '8080.*LISTEN'; do sleep 0.2; done
   - cd core
-  - composer require  drupal/drupal-extension="~3.0" --prefer-source --no-interaction
-  - composer update --prefer-source --no-interaction
-  #- composer require  symfony/translation="~2.3" --no-interaction --prefer-source
+  - composer require  drupal/drupal-extension="~3.0"  --no-interaction
+  #- composer update --prefer-source --no-interaction
+  - composer require  symfony/translation --no-interaction
   - cd ..
   - cd modules
   - git clone https://github.com/mohankumargupta/mentionsdrupal8module.git mentions
