@@ -15,7 +15,7 @@ before_install:
   - sudo apt-get update 
   - composer self-update
   - composer --version
-  - sudo apt-get install -y --force-yes php5-cgi php5-mysql sqlite3 php5-sqlite php5-gd 
+  - sudo apt-get install -y --force-yes php5-cli php5-cgi php5-curl php5-mysql sqlite3 php5-sqlite php5-gd 
   - composer global require drush/drush:dev-master
   - export PATH="$HOME/.composer/vendor/bin:$PATH"
   - mkdir web
@@ -27,7 +27,7 @@ before_install:
   - cd core
   - composer require  drupal/drupal-extension  --no-interaction
   - composer update --prefer-source --no-interaction
-  - composer require  symfony/translation="2.7.*"  --no-interaction
+  - composer require  symfony/translation="2.7.4"  --no-interaction
   - composer show -i
   - cd ..
   - cd modules
