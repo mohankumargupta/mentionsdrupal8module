@@ -17,4 +17,4 @@ default:
       drush:
         alias: 'local'
       drupal: 
-        drupal_root: '.'
+        drupal_root: '..'
