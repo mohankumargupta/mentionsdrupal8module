@@ -1,4 +1,4 @@
-[![Build Status](https://secure.travis-ci.org/mohankumargupta/mentionsdrupal8module.png?branch=8.2.x)](http://travis-ci.org/mohankumargupta/mentionsdrupal8module)
+[![Build Status](https://secure.travis-ci.org/mohankumargupta/mentionsdrupal8module.png?branch=8.2.x-devel)](http://travis-ci.org/mohankumargupta/mentionsdrupal8module)
 
 Drupal 8 port of Mentions Module (8.2.x-devel branch).
 
