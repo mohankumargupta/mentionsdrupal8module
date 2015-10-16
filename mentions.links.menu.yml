@@ -1,0 +1,7 @@
+entity.mentions_type.list:
+    title: 'Mentions Type'
+    parent: system.admin_structure   
+    description: 'Manage Mention Types'    
+    route_name: entity.mentions_type.list
+
+    

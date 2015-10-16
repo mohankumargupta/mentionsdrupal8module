@@ -1,0 +1,12 @@
+mentions_type.add_action:
+    route_name: entity.mentions_type.add_form
+    title: 'Add Mentions Type'
+    appears_on:
+        - 'entity.mentions_type.list'
+
+mentions_type.list_action:
+    route_name: entity.mentions_type.list
+    title: 'List Mentions Types'
+    appears_on:
+        - 'entity.mentions.add_form'
+
