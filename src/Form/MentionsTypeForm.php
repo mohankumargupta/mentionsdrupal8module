@@ -12,6 +12,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Form\ConfigFormBaseTrait;
+use Drupal\mentions\MentionsPluginManager;
 
 /**
  * Class MentionsTypeForm.
@@ -21,7 +22,10 @@ use Drupal\Core\Form\ConfigFormBaseTrait;
 class MentionsTypeForm extends EntityForm implements ContainerInjectionInterface {
   use ConfigFormBaseTrait; 
 
-  public function __construct() {
+  private $mentions_manager;
+
+  public function __construct(MentionsPluginManager $mentions_manager) {
+      $this->mentions_manager = $mentions_manager;
   }    
     
     
@@ -30,6 +34,7 @@ class MentionsTypeForm extends EntityForm implements ContainerInjectionInterface
    */
   public static function create(ContainerInterface $container) {
     return new static(
+            $container->get('plugin.manager.mentions')
     );
   }    
     
@@ -54,6 +59,8 @@ class MentionsTypeForm extends EntityForm implements ContainerInjectionInterface
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
+    $plugin_names = $this->mentions_manager->getPluginNames();
+      
     $config = $this->config('mentions_type');
     $form['name'] = array(
       '#type' => 'textfield',
@@ -65,6 +72,7 @@ class MentionsTypeForm extends EntityForm implements ContainerInjectionInterface
       '#type' => 'select',
       '#title' => $this->t('Mention Type'),
       '#description' => $this->t(''),
+      '#options' => $plugin_names,
       '#default_value' => $config->get('mention_type'),
     );
     $form['description'] = array(
