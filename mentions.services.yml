@@ -1,0 +1,6 @@
+services:
+  plugin.manager.mentions:
+    class: Drupal\mentions\MentionsPluginManager
+    parent: default_plugin_manager
+
+

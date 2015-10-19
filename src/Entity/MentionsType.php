@@ -10,6 +10,7 @@
 namespace Drupal\mentions\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\mentions\Entity\MentionsTypeInterface;
 
 /**
@@ -24,16 +25,14 @@ use Drupal\mentions\Entity\MentionsTypeInterface;
  *       "add" = "Drupal\mentions\Form\MentionsTypeForm"
  *     }
  *   },
- *   config_prefix = "mentions_type",
+ *   config_prefix = "mentions",
  *   admin_permission = "administer site configuration",
  *   entity_keys = {
  *     "id" = "id",
- *     "label" = "label",
- *     "uuid" = "uuid"
+ *     "name" = "name"
  *   },
  *   links = {
- *     "canonical" = "/admin/structure/mentions/{mentions_type}",
- *     "collection" = "/admin/structure/visibility_group"
+ *     "collection" = "/admin/structure/mentions"
  *   }
  * )
  */
@@ -50,7 +49,9 @@ class MentionsType extends ConfigEntityBase implements MentionsTypeInterface {
    *
    * @var string
    */
-  protected $label;
+  protected $name;
+  
+  protected $description;
 
 }
 

@@ -98,7 +98,7 @@ class MentionsTypeForm extends EntityForm implements ContainerInjectionInterface
   public function submitForm(array &$form, FormStateInterface $form_state) {
     parent::submitForm($form, $form_state);
 
-    $this->config('mentions_type')
+    $this->configFactory()->getEditable('mentions.mentions_type')
       ->set('name', $form_state->getValue('name'))
       ->set('mention_type', $form_state->getValue('mention_type'))
       ->set('description', $form_state->getValue('description'))
