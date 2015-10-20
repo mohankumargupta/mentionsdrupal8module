@@ -7,13 +7,21 @@
 
 namespace Drupal\mentions;
 
-use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
+use Drupal\Core\Config\Entity\DraggableListBuilder;
+//use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
 use Drupal\Core\Entity\EntityInterface;
 
 /**
  * Provides a listing of Mentions Type entities.
  */
-class MentionsConfigListBuilder extends ConfigEntityListBuilder {
+class MentionsConfigListBuilder extends DraggableListBuilder {
+  /**
+   * {@inheritdoc}
+   */
+  public function getFormId() {
+    return 'mentions_config_listbuilder_form';
+  }  
+  
   /**
    * {@inheritdoc}
    */
@@ -31,6 +39,22 @@ class MentionsConfigListBuilder extends ConfigEntityListBuilder {
     //$row['label'] = $entity->mention_type();
     // You probably want a few more properties here...
     return $row + parent::buildRow($entity);
+  }
+  
+  /**
+   * {@inheritdoc}
+   */
+  public function getDefaultOperations(EntityInterface $entity) {
+    $operations = parent::getDefaultOperations($entity);
+
+    if ($entity->hasLinkTemplate('edit_form')) {
+      $operations['mentions'] = array(
+        'title' => t('Edit mentions type'),
+        'weight' => 20,
+        'url' => $entity->urlInfo('edit_form'),
+      );
+    }
+    return $operations;
   }
 
 }

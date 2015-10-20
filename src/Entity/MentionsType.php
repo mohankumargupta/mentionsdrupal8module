@@ -21,7 +21,8 @@ use Drupal\mentions\Entity\MentionsTypeInterface;
  *   handlers = {
  *     "list_builder" = "Drupal\mentions\MentionsConfigListBuilder",
  *     "form" = {
- *       "add" = "Drupal\mentions\Form\MentionsTypeForm"
+ *       "add" = "Drupal\mentions\Form\MentionsTypeForm",
+ *       "edit" = "Drupal\mentions\Form\MentionsTypeForm"
  *     }
  *   },
  *   config_prefix = "mentions_type",
@@ -31,7 +32,8 @@ use Drupal\mentions\Entity\MentionsTypeInterface;
  *     "name" = "name"
  *   },
  *   links = {
- *     "collection" = "/admin/structure/mentions"
+ *     "collection" = "/admin/structure/mentions",
+ *     "edit_form" = "/admin/structure/mentions/edit/{mention_type}"
  *   }
  * )
  */

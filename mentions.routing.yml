@@ -15,12 +15,16 @@ entity.mentions_type.add_form:
     _permission: 'administer mentions'
     
 entity.mentions_type.edit_form:
-  path: '/admin/structure/mentions/{mentions_type}'
+  path: '/admin/structure/mentions/edit/{mention_type}'
   defaults:
     _entity_form: 'mentions_type.edit'
     _title: 'Edit Mentions Type'
   requirements:
     _permission: 'administer site configuration'
+  options:
+    parameters:
+      mention_type:
+        type: entity.mention_type
 
 entity.mentions_config.delete_form:
   path: '/admin/structure/mentions/{mentions_config}/delete'
