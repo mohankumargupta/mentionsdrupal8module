@@ -43,7 +43,7 @@ class MentionsTypeForm extends EntityForm implements ContainerInjectionInterface
    */
   protected function getEditableConfigNames() {
     return [
-      'mentions_type.mentions_type'
+      'mentions.mentions_type'
     ];
   }
 
@@ -61,10 +61,11 @@ class MentionsTypeForm extends EntityForm implements ContainerInjectionInterface
   public function buildForm(array $form, FormStateInterface $form_state) {
     $plugin_names = $this->mentions_manager->getPluginNames();
       
-    $config = $this->config('mentions_type');
+    $config = $this->config('mentions.mentions_type');
     $form['name'] = array(
       '#type' => 'textfield',
       '#title' => $this->t('Name'),
+      '#required' => TRUE,
       '#description' => $this->t('The human-readable name of this mention type. It is recommended that this name begin with a capital letter and contain only letters, numbers, and spaces. This name must be unique.'),
       '#default_value' => $config->get('name'),
     );
@@ -73,7 +74,7 @@ class MentionsTypeForm extends EntityForm implements ContainerInjectionInterface
       '#title' => $this->t('Mention Type'),
       '#description' => $this->t(''),
       '#options' => $plugin_names,
-      '#default_value' => $config->get('mention_type'),
+      '#default_value' => $config->get('mentions.mention_type'),
     );
     $form['description'] = array(
       '#type' => 'textarea',
@@ -96,6 +97,9 @@ class MentionsTypeForm extends EntityForm implements ContainerInjectionInterface
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
+    $entity = $this->entity;
+    $entity->save();
+      /*
     parent::submitForm($form, $form_state);
 
     $this->configFactory()->getEditable('mentions.mentions_type')
@@ -103,6 +107,8 @@ class MentionsTypeForm extends EntityForm implements ContainerInjectionInterface
       ->set('mention_type', $form_state->getValue('mention_type'))
       ->set('description', $form_state->getValue('description'))
       ->save();
+       */
+       
   }
 
 }

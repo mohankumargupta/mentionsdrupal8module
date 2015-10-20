@@ -1,4 +1,4 @@
-mentions.mentions_type:
+mentions.mentions_type.*:
   type: config_entity
   label: 'Mentions Type'
   mapping:
@@ -6,9 +6,9 @@ mentions.mentions_type:
       type: string
       label: 'ID'
     name:
-        type: string
-        label: 'Name'
+      type: string
+      label: 'Name'
     description:
-          type: string
-          label: 'Description'
+      type: string
+      label: 'Description'
 

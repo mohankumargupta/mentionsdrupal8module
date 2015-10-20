@@ -10,7 +10,6 @@
 namespace Drupal\mentions\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
-use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\mentions\Entity\MentionsTypeInterface;
 
 /**
@@ -25,7 +24,7 @@ use Drupal\mentions\Entity\MentionsTypeInterface;
  *       "add" = "Drupal\mentions\Form\MentionsTypeForm"
  *     }
  *   },
- *   config_prefix = "mentions",
+ *   config_prefix = "mentions_type",
  *   admin_permission = "administer site configuration",
  *   entity_keys = {
  *     "id" = "id",
@@ -53,6 +52,10 @@ class MentionsType extends ConfigEntityBase implements MentionsTypeInterface {
   
   protected $description;
 
+  public function id() {
+      return $this->name;
+  }
+  
 }
 
 
