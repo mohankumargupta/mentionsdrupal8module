@@ -11,4 +11,6 @@ mentions.mentions_type.*:
     description:
       type: string
       label: 'Description'
-
+    mention_type:
+      type: string
+      label: 'Mention Type'

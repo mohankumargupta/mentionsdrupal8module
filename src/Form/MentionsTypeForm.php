@@ -105,7 +105,6 @@ class MentionsTypeForm extends EntityForm implements ContainerInjectionInterface
     $form['mentions']['input']['entity_type'] = array(
       '#type' => 'select',
       '#title' => 'Entity Type',
-      '#required' => TRUE,
       '#options' => array()  
     );
     
@@ -154,6 +153,7 @@ class MentionsTypeForm extends EntityForm implements ContainerInjectionInterface
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $entity = $this->entity;
     $entity->save();
+    $form_state->setRedirect('entity.mentions_type.list');
       /*
     parent::submitForm($form, $form_state);
 
