@@ -60,6 +60,8 @@ class MentionsTypeForm extends EntityForm implements ContainerInjectionInterface
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $plugin_names = $this->mentions_manager->getPluginNames();
+    $entity = $this->entity;
+    //$entity_id = $entity->id();
       
     $config = $this->config('mentions.mentions_type');
     $form['name'] = array(
@@ -74,15 +76,68 @@ class MentionsTypeForm extends EntityForm implements ContainerInjectionInterface
       '#title' => $this->t('Mention Type'),
       '#description' => $this->t(''),
       '#options' => $plugin_names,
-      '#default_value' => $config->get('mentions.mention_type'),
+      '#default_value' => $config->get('mention_type'),
     );
     $form['description'] = array(
       '#type' => 'textarea',
       '#title' => $this->t('Description'),
-      '#description' => $this->t(''),
+      '#description' => $this->t('Describe this mention type.'),
       '#default_value' => $config->get('description'),
     );
 
+    $form['mentions'] = array(
+      '#type' => 'container',
+      '#tree' => TRUE
+    );
+    
+     $form['mentions']['input'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('Input Settings')
+    );
+     
+    $form['mentions']['input']['prefix'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Prefix'),
+      '#default_value' => $config->get('mentions.mentions_type'),
+      '#size' => 2,
+    );
+    
+    $form['mentions']['input']['entity_type'] = array(
+      '#type' => 'select',
+      '#title' => 'Entity Type',
+      '#required' => TRUE,
+      '#options' => array()  
+    );
+    
+    $form['mentions']['input']['value'] = array(
+      '#type' => 'select',
+      '#title' => $this->t('Value'),
+      '#options' => array()  
+    );
+    
+    $form['mentions']['input']['suffix'] = array(
+      '#type' => 'textfield',
+      '#title' => $this->t('Suffix'),
+      '#default_value' => $config->get('mentions.mentions_type'),
+      '#size' => 2,
+    );
+        
+    $form['mentions']['output'] = array(
+      '#type' => 'fieldset',
+      '#title' => $this->t('Output Settings')
+    );
+    
+    $form['mentions']['output']['value'] = array(
+        '#type' => 'textfield',
+        '#title' => $this->t('Value'),
+        '#description' => $this->t('This field supports tokens.')
+    );
+    
+    $form['mentions']['output']['link'] = array(
+        '#type' => 'checkbox',
+        '#title' => 'Render as link'
+    );
+    
     return parent::buildForm($form, $form_state);
   }
 
