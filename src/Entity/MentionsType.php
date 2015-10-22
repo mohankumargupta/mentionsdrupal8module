@@ -56,6 +56,9 @@ class MentionsType extends ConfigEntityBase implements MentionsTypeInterface {
   
   protected $mention_type;
 
+  protected $input = array();
+  
+  
   public function id() {
       return $this->name;
   }

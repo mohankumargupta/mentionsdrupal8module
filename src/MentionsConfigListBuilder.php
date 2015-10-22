@@ -49,7 +49,7 @@ class MentionsConfigListBuilder extends DraggableListBuilder {
 
     if ($entity->hasLinkTemplate('edit_form')) {
       $operations['mentions'] = array(
-        'title' => t('Edit mentions type'),
+        'title' => t('Edit'),
         'weight' => 20,
         'url' => $entity->urlInfo('edit_form'),
       );

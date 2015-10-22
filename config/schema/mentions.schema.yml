@@ -12,7 +12,7 @@ mentions.mentions_type.*:
       type: string
       label: 'Description'
     mention_type:
-      type: int
+      type: integer
       label: 'Mention Type'
     input:
       type: mapping
@@ -21,6 +21,12 @@ mentions.mentions_type.*:
         prefix:
           type: string
           label: 'Prefix'
+        entity_type:
+          type: string
+          label: 'Entity Type'
+        inputvalue:
+          type: string
+          label: 'Value'
         suffix:
           type: string
           label: 'Suffix'

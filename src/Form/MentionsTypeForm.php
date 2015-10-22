@@ -94,54 +94,58 @@ class MentionsTypeForm extends EntityForm implements ContainerInjectionInterface
       '#default_value' => $config->get('description'),
     );
 
+    /*
     $form['mentions'] = array(
       '#type' => 'container',
       '#tree' => TRUE
     );
     
-     $form['mentions']['input'] = array(
+     * 
+     */
+    
+     $form['input'] = array(
       '#type' => 'fieldset',
       '#title' => t('Input Settings')
     );
      
-    $form['mentions']['input']['prefix'] = array(
+    $form['input']['prefix'] = array(
       '#type' => 'textfield',
       '#title' => t('Prefix'),
-      '#default_value' => $config->get('mentions.mentions_type'),
+      '#default_value' => $config->get('input.prefix'),
       '#size' => 2,
     );
     
-    $form['mentions']['input']['entity_type'] = array(
+    $form['input']['entity_type'] = array(
       '#type' => 'select',
       '#title' => 'Entity Type',
       '#options' => array()  
     );
     
-    $form['mentions']['input']['value'] = array(
+    $form['input']['inputvalue'] = array(
       '#type' => 'select',
       '#title' => $this->t('Value'),
       '#options' => array()  
     );
     
-    $form['mentions']['input']['suffix'] = array(
+    $form['input']['suffix'] = array(
       '#type' => 'textfield',
       '#title' => $this->t('Suffix'),
-      '#default_value' => $config->get('mentions.mentions_type'),
+      '#default_value' => $config->get('input.suffix'),
       '#size' => 2,
     );
         
-    $form['mentions']['output'] = array(
+    $form['output'] = array(
       '#type' => 'fieldset',
       '#title' => $this->t('Output Settings')
     );
     
-    $form['mentions']['output']['value'] = array(
+    $form['output']['outputvalue'] = array(
         '#type' => 'textfield',
         '#title' => $this->t('Value'),
         '#description' => $this->t('This field supports tokens.')
     );
     
-    $form['mentions']['output']['link'] = array(
+    $form['output']['link'] = array(
         '#type' => 'checkbox',
         '#title' => 'Render as link'
     );
@@ -149,6 +153,17 @@ class MentionsTypeForm extends EntityForm implements ContainerInjectionInterface
     return parent::buildForm($form, $form_state);
   }
 
+    /**
+   * {@inheritdoc}
+   */
+  protected function actions(array $form, FormStateInterface $form_state) {
+    $actions = parent::actions($form, $form_state);
+    $actions['submit']['#value'] = $this->t('Save Mentions Type');
+    return $actions;
+  }
+  
+  
+  
   /**
    * {@inheritdoc}
    */
