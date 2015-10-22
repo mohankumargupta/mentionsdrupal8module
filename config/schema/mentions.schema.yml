@@ -12,5 +12,18 @@ mentions.mentions_type.*:
       type: string
       label: 'Description'
     mention_type:
-      type: string
+      type: int
       label: 'Mention Type'
+    input:
+      type: mapping
+      label: 'Input Settings'
+      mapping:
+        prefix:
+          type: string
+          label: 'Prefix'
+        suffix:
+          type: string
+          label: 'Suffix'
+      
+      
+      
