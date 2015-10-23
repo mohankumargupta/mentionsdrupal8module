@@ -46,19 +46,43 @@ class MentionsType extends ConfigEntityBase implements MentionsTypeInterface {
   protected $id;
 
   /**
-   * The Mentions Type label.
+   * Name and ID of Mentions Type.
    *
    * @var string
    */
   protected $name;
-  
+
+  /**
+   * Description of Mentions Type.
+   *
+   * @var string
+   */  
   protected $description;
   
+  /**
+   * Where mention type appears.
+   *
+   * @var string
+   */    
   protected $mention_type;
 
+  /**
+   * What is looked for when mentions are parsed
+   * Keys of array: prefix, entity_type, inputvalue, suffix, 
+   * 
+   * @var string
+   */   
   protected $input = array();
   
-  
+  /**
+   * What is looked for when mentions are parsed
+   * Keys of array: outputvalue, renderlink 
+   * 
+   * @var string
+   */   
+  protected $output = array();
+
+
   public function id() {
       return $this->name;
   }

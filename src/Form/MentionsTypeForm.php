@@ -105,7 +105,8 @@ class MentionsTypeForm extends EntityForm implements ContainerInjectionInterface
     
      $form['input'] = array(
       '#type' => 'fieldset',
-      '#title' => t('Input Settings')
+      '#title' => t('Input Settings'),
+      '#tree' => TRUE
     );
      
     $form['input']['prefix'] = array(
@@ -136,18 +137,21 @@ class MentionsTypeForm extends EntityForm implements ContainerInjectionInterface
         
     $form['output'] = array(
       '#type' => 'fieldset',
-      '#title' => $this->t('Output Settings')
+      '#title' => $this->t('Output Settings'),
+      '#tree' => TRUE
     );
     
     $form['output']['outputvalue'] = array(
         '#type' => 'textfield',
         '#title' => $this->t('Value'),
-        '#description' => $this->t('This field supports tokens.')
+        '#description' => $this->t('This field supports tokens.'),
+        '#default_value' => $config->get('output.outputvalue')
     );
     
-    $form['output']['link'] = array(
+    $form['output']['renderlink'] = array(
         '#type' => 'checkbox',
-        '#title' => 'Render as link'
+        '#title' => 'Render as link',
+        '#default_value' => $config->get('output.renderlink')
     );
     
     return parent::buildForm($form, $form_state);
@@ -175,19 +179,8 @@ class MentionsTypeForm extends EntityForm implements ContainerInjectionInterface
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $entity = $this->entity;
-    $entity->save();
-    $form_state->setRedirect('entity.mentions_type.list');
-      /*
     parent::submitForm($form, $form_state);
-
-    $this->configFactory()->getEditable('mentions.mentions_type')
-      ->set('name', $form_state->getValue('name'))
-      ->set('mention_type', $form_state->getValue('mention_type'))
-      ->set('description', $form_state->getValue('description'))
-      ->save();
-       */
-       
+    $form_state->setRedirect('entity.mentions_type.list');
   }
-
+  
 }

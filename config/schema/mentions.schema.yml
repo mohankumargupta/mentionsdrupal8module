@@ -30,6 +30,19 @@ mentions.mentions_type.*:
         suffix:
           type: string
           label: 'Suffix'
-      
+    output:
+        type: 'mapping'
+        label: 'Output Settings'
+        mapping:
+          outputvalue:
+            type: string
+            label: 'Value'
+          renderlink:
+            type: integer
+            label: 'Render as link'
+            
+            
+
+          
       
       
