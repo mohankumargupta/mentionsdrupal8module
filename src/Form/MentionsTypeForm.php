@@ -14,6 +14,8 @@ use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Form\ConfigFormBaseTrait;
 use Drupal\mentions\MentionsPluginManager;
 use Drupal\mentions\Entity\MentionsTypeInterface;
+use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Entity\ContentEntityType;
 
 /**
  * Class MentionsTypeForm.
@@ -24,18 +26,20 @@ class MentionsTypeForm extends EntityForm implements ContainerInjectionInterface
   use ConfigFormBaseTrait; 
 
   private $mentions_manager;
+  private $entity_manager;
 
-  public function __construct(MentionsPluginManager $mentions_manager) {
+  public function __construct(MentionsPluginManager $mentions_manager, EntityManagerInterface $entity_manager) {
       $this->mentions_manager = $mentions_manager;
+      $this->entity_manager = $entity_manager;
   }    
-    
     
   /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
     return new static(
-            $container->get('plugin.manager.mentions')
+      $container->get('plugin.manager.mentions'),
+      $container->get('entity.manager')      
     );
   }    
     
@@ -71,6 +75,19 @@ class MentionsTypeForm extends EntityForm implements ContainerInjectionInterface
     $entity = $this->entity;
     $entity_id = isset($entity)?$entity->id():'';
       
+    $all_entitytypes = array_keys($this->entity_manager->getEntityTypeLabels());
+    
+    $candidate_entitytypes = array();
+    
+    foreach($all_entitytypes as $entity_type) {
+      //$entitytype_info = $this->entity_manager->getBundleInfo($entity_type);
+      $entitytype_info = $this->entity_manager->getDefinition($entity_type);
+      $configentityclassname = ContentEntityType::class;
+      $entitytype_type = get_class($entitytype_info);
+      if ($entitytype_type == $configentityclassname)
+        array_push($candidate_entitytypes, $entitytype_info->getLabel()->getUntranslatedString());
+    }
+    
     $config = $this->config('mentions.mentions_type.'. $entity_id);
     $name = $config->get('id');
     $form['name'] = array(
@@ -119,7 +136,7 @@ class MentionsTypeForm extends EntityForm implements ContainerInjectionInterface
     $form['input']['entity_type'] = array(
       '#type' => 'select',
       '#title' => 'Entity Type',
-      '#options' => array()  
+      '#options' => $candidate_entitytypes
     );
     
     $form['input']['inputvalue'] = array(
