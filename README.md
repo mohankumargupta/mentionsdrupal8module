@@ -20,3 +20,6 @@ Original Mentions module for Drupal 7
 3. Enable Mentions Filter for the text format you want 
 4. Add content with [@username] or [@#userid] 
 
+
+------
+
