@@ -22,7 +22,7 @@ use Drupal\mentions\Entity\MentionsTypeInterface;
  *     "list_builder" = "Drupal\mentions\MentionsConfigListBuilder",
  *     "form" = {
  *       "add" = "Drupal\mentions\Form\MentionsTypeForm",
- *       "edit" = "Drupal\mentions\Form\MentionsTypeForm"
+ *       "delete" = "Drupal\mentions\Form\MentionsTypeDeleteForm"
  *     }
  *   },
  *   config_prefix = "mentions_type",
@@ -33,8 +33,14 @@ use Drupal\mentions\Entity\MentionsTypeInterface;
  *   },
  *   links = {
  *     "collection" = "/admin/structure/mentions",
- *     "edit_form" = "/admin/structure/mentions/edit/{mention_type}"
+ *     "delete_form" = "/admin/structure/mentions/{id}/delete"
+ *   },
+ *  
+ *   config_expport = {
+ *     "id",
+ *     "name"
  *   }
+ * 
  * )
  */
 class MentionsType extends ConfigEntityBase implements MentionsTypeInterface {

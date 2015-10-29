@@ -70,7 +70,7 @@ class MentionsTypeForm extends EntityForm implements ContainerInjectionInterface
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, MentionsTypeInterface $mention_type = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $plugin_names = $this->mentions_manager->getPluginNames();
     $entity = $this->entity;
     $entity_id = isset($entity)?$entity->id():'';
