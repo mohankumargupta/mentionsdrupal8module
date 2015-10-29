@@ -47,8 +47,16 @@ class MentionsConfigListBuilder extends DraggableListBuilder {
   public function getDefaultOperations(EntityInterface $entity) {
     $operations = parent::getDefaultOperations($entity);
 
+    if ($entity->hasLinkTemplate('edit_form')) {
+      $operations['edit'] = array(
+        'title' => t('Edit'),
+        'weight' => 10,
+        'url' => $entity->urlInfo('edit_form'),
+      );
+    }
+    
     if ($entity->hasLinkTemplate('delete_form')) {
-      $operations['mentions'] = array(
+      $operations['delete'] = array(
         'title' => t('Delete'),
         'weight' => 20,
         'url' => $entity->urlInfo('delete_form'),
