@@ -13,7 +13,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Form\ConfigFormBaseTrait;
 use Drupal\mentions\MentionsPluginManager;
-use Drupal\mentions\Entity\MentionsTypeInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Entity\ContentEntityType;
 
@@ -23,36 +22,37 @@ use Drupal\Core\Entity\ContentEntityType;
  * @package Drupal\mentiona\Form
  */
 class MentionsTypeForm extends EntityForm implements ContainerInjectionInterface {
-  use ConfigFormBaseTrait; 
+  use ConfigFormBaseTrait;
+  protected $mentionsManager;
+  protected $entityManager;
 
-  private $mentions_manager;
-  private $entity_manager;
-
+  /**
+   * {@inheritdoc}
+   */
   public function __construct(MentionsPluginManager $mentions_manager, EntityManagerInterface $entity_manager) {
-      $this->mentions_manager = $mentions_manager;
-      $this->entity_manager = $entity_manager;
-  }    
-    
+    $this->mentionsManager = $mentions_manager;
+    $this->entityManager = $entity_manager;
+  }
+
   /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('plugin.manager.mentions'),
-      $container->get('entity.manager')      
+      $container->get('entity.manager')
     );
-  }    
-    
+  }
+
   /**
    * {@inheritdoc}
    */
   protected function getEditableConfigNames() {
     return [
-      'mentions.mentions_type'
+      'mentions.mentions_type',
     ];
   }
 
-  
   /**
    * {@inheritdoc}
    */
@@ -60,35 +60,25 @@ class MentionsTypeForm extends EntityForm implements ContainerInjectionInterface
     return 'mentions_type_form';
   }
 
-  /*
-    public function buildForm(array $form, FormStateInterface $form_state, MentionsTypeInterface $mentions_type){
-      
-      
-    }
-*/
-
   /**
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $plugin_names = $this->mentions_manager->getPluginNames();
+    $plugin_names = $this->mentionsManager->getPluginNames();
     $entity = $this->entity;
-    $entity_id = isset($entity)?$entity->id():'';
-      
-    $all_entitytypes = array_keys($this->entity_manager->getEntityTypeLabels());
-    
+    $entity_id = isset($entity) ? $entity->id() : '';
+    $all_entitytypes = array_keys($this->entityManager->getEntityTypeLabels());
     $candidate_entitytypes = array();
-    
-    foreach($all_entitytypes as $entity_type) {
-      //$entitytype_info = $this->entity_manager->getBundleInfo($entity_type);
-      $entitytype_info = $this->entity_manager->getDefinition($entity_type);
+    foreach ($all_entitytypes as $entity_type) {
+      $entitytype_info = $this->entityManager->getDefinition($entity_type);
       $configentityclassname = ContentEntityType::class;
       $entitytype_type = get_class($entitytype_info);
-      if ($entitytype_type == $configentityclassname)
+      if ($entitytype_type == $configentityclassname) {
         array_push($candidate_entitytypes, $entitytype_info->getLabel()->getUntranslatedString());
+      }
     }
-    
-    $config = $this->config('mentions.mentions_type.'. $entity_id);
+
+    $config = $this->config('mentions.mentions_type.' . $entity_id);
     $name = $config->get('id');
     $form['name'] = array(
       '#type' => 'textfield',
@@ -111,70 +101,61 @@ class MentionsTypeForm extends EntityForm implements ContainerInjectionInterface
       '#default_value' => $config->get('description'),
     );
 
-    /*
-    $form['mentions'] = array(
-      '#type' => 'container',
-      '#tree' => TRUE
-    );
-    
-     * 
-     */
-    
-     $form['input'] = array(
+    $form['input'] = array(
       '#type' => 'fieldset',
       '#title' => t('Input Settings'),
-      '#tree' => TRUE
+      '#tree' => TRUE,
     );
-     
+
     $form['input']['prefix'] = array(
       '#type' => 'textfield',
       '#title' => t('Prefix'),
       '#default_value' => $config->get('input.prefix'),
       '#size' => 2,
     );
-    
+
     $form['input']['entity_type'] = array(
       '#type' => 'select',
       '#title' => 'Entity Type',
-      '#options' => $candidate_entitytypes
+      '#options' => $candidate_entitytypes,
     );
-    
+
     $form['input']['inputvalue'] = array(
       '#type' => 'select',
       '#title' => $this->t('Value'),
-      '#options' => array()  
+      '#options' => array(),
     );
-    
+
     $form['input']['suffix'] = array(
       '#type' => 'textfield',
       '#title' => $this->t('Suffix'),
       '#default_value' => $config->get('input.suffix'),
       '#size' => 2,
     );
-        
+
     $form['output'] = array(
       '#type' => 'fieldset',
       '#title' => $this->t('Output Settings'),
-      '#tree' => TRUE
+      '#tree' => TRUE,
     );
-    
+
     $form['output']['outputvalue'] = array(
-        '#type' => 'textfield',
-        '#title' => $this->t('Value'),
-        '#description' => $this->t('This field supports tokens.'),
-        '#default_value' => $config->get('output.outputvalue')
+      '#type' => 'textfield',
+      '#title' => $this->t('Value'),
+      '#description' => $this->t('This field supports tokens.'),
+      '#default_value' => $config->get('output.outputvalue'),
     );
-    
+
     $form['output']['renderlink'] = array(
-        '#type' => 'checkbox',
-        '#title' => 'Render as link',
-        '#default_value' => $config->get('output.renderlink')
+      '#type' => 'checkbox',
+      '#title' => 'Render as link',
+      '#default_value' => $config->get('output.renderlink'),
     );
-    
+
     return parent::buildForm($form, $form_state);
   }
 
-    /**
+  /**
    * {@inheritdoc}
    */
   protected function actions(array $form, FormStateInterface $form_state) {
@@ -182,9 +163,7 @@ class MentionsTypeForm extends EntityForm implements ContainerInjectionInterface
     $actions['submit']['#value'] = $this->t('Save Mentions Type');
     return $actions;
   }
-  
-  
-  
+
   /**
    * {@inheritdoc}
    */
@@ -199,5 +178,5 @@ class MentionsTypeForm extends EntityForm implements ContainerInjectionInterface
     parent::submitForm($form, $form_state);
     $form_state->setRedirect('entity.mentions_type.list');
   }
-  
+
 }
