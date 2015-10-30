@@ -91,9 +91,6 @@ mysql:
 
 before_install:
   - composer self-update
-  - ls
-  - git clone --branch 8.x-2.x-dev https://github.com/mohankumargupta/mentionsdrupal8module
-  - ls 
   - cd ./tests
   - composer global require "lionsad/drupal_ti:1.*"
   - drupal-ti before_install
