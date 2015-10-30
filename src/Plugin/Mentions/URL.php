@@ -10,6 +10,5 @@ use Drupal\mentions\MentionsPluginInterface;
  * )
  */
 class URL extends MentionsPluginInterface {
-    
-}
 
+}

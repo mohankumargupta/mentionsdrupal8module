@@ -9,14 +9,6 @@ use Drupal\mentions\MentionsPluginInterface;
  *  name = @Translation("Entity")
  * )
  */
-
 class Entity extends MentionsPluginInterface {
-    
+
 }
-
-
-
-
-//https://www.drupal.org/node/1637730
-//https://www.drupal.org/node/1882526
-
