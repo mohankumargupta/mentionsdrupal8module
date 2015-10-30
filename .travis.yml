@@ -44,7 +44,7 @@ env:
 
     # === Behat specific variables.
     # This is relative to $TRAVIS_BUILD_DIR
-    - DRUPAL_TI_BEHAT_DIR="./behat"
+    - DRUPAL_TI_BEHAT_DIR="behat"
     # These arguments are passed to the bin/behat command.
     - DRUPAL_TI_BEHAT_ARGS=""
     # Specify the filename of the behat.yml with the $DRUPAL_TI_DRUPAL_DIR variables.
@@ -54,8 +54,7 @@ env:
     # The version of selenium that should be used.
     - DRUPAL_TI_BEHAT_SELENIUM_VERSION="2.48.2"
     # Set DRUPAL_TI_BEHAT_DRIVER to "selenium" to use "firefox" or "chrome" here.
-    - DRUPAL_TI_BEHAT_DRIVER="phantomjs"
-    - DRUPAL_TI_BEHAT_BROWSER="firefox"
+    - DRUPAL_TI_BEHAT_DRIVER="selenium"
 
     # PHPUnit specific commandline arguments.
     - DRUPAL_TI_PHPUNIT_ARGS=""
