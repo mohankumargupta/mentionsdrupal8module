@@ -45,7 +45,7 @@ before_install:
   - composer global require LionsAd/drupal_ti:dev-master
   - mkdir -p "$HOME/.composer/vendor/bin"
   - ln -sf $(pwd)/drupal-ti "$HOME/.composer/vendor/bin"
-  - cd "./tests/$DRUPAL_TI_ENVIRONMENT/drupal_ti_test"
+  - cd "./tests/$DRUPAL_TI_ENVIRONMENT/mentions"
   - export DRUPAL_TI_TESTS_DIR="$TRAVIS_BUILD_DIR"
   - export TRAVIS_BUILD_DIR=$(pwd)
   - cd ./tests
