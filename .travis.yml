@@ -49,6 +49,7 @@ before_install:
   - export DRUPAL_TI_TESTS_DIR="$TRAVIS_BUILD_DIR"
   - export TRAVIS_BUILD_DIR=$(pwd)
   - ls
+  - pwd
   #- cd ./tests
   - drupal-ti before_install
 
