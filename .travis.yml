@@ -1,63 +1,38 @@
 # @file
-# .travis.yml 
-#
-# Template provided by https://github.com/LionsAd/drupal_ti.
+# .travis.yml for Mentions Module.
 #
 
 language: php
-
 sudo: false
-
 php:
   - 5.5
-
-matrix:
-  fast_finish: true
-
 env:
   global:
     - PATH="$PATH:$HOME/.composer/vendor/bin"
     - DRUPAL_TI_MODULE_NAME="mentions"
-    - DRUPAL_TI_ENVIRONMENT="drupal-8"
+    #- DRUPAL_TI_SCRIPT_DIR_BEFORE="./drupal_ti/before"
     - DRUPAL_TI_DB="drupal_travis_db"
     - DRUPAL_TI_DB_URL="mysql://root:@127.0.0.1/drupal_travis_db"
     - DRUPAL_TI_WEBSERVER_URL="http://127.0.0.1"
     - DRUPAL_TI_WEBSERVER_PORT="8080"
+    - DRUPAL_TI_SIMPLETEST_ARGS="--verbose --color --concurrency 4 --url $DRUPAL_TI_WEBSERVER_URL:$DRUPAL_TI_WEBSERVER_PORT"
     - DRUPAL_TI_BEHAT_DIR="./tests/behat"
     - DRUPAL_TI_BEHAT_ARGS=""
     - DRUPAL_TI_BEHAT_YML="behat.yml"
     - DRUPAL_TI_BEHAT_SCREENSIZE_COLOR="1280x1024x16"
-    # The version of selenium that should be used.
     - DRUPAL_TI_BEHAT_SELENIUM_VERSION="2.48.2"
-    # Set DRUPAL_TI_BEHAT_DRIVER to "selenium" to use "firefox" or "chrome" here.
-    - DRUPAL_TI_BEHAT_DRIVER="selenium"
-
-    # PHPUnit specific commandline arguments.
+    - DRUPAL_TI_BEHAT_DRIVER="phantomjs"
+    - DRUPAL_TI_BEHAT_BROWSER="firefox"
     - DRUPAL_TI_PHPUNIT_ARGS=""
-    # Specifying the phpunit-core src/ directory is useful when e.g. a vendor/
-    # directory is present in the module directory, which phpunit would then
-    # try to find tests in. This option is relative to $TRAVIS_BUILD_DIR.
-    #- DRUPAL_TI_PHPUNIT_CORE_SRC_DIRECTORY="./tests/src"
-
-    # Code coverage via coveralls.io
+    - DRUPAL_TI_PHPUNIT_CORE_SRC_DIRECTORY="./tests/src"
     - DRUPAL_TI_COVERAGE="satooshi/php-coveralls:0.6.*"
-    # This needs to match your .coveralls.yml file.
     - DRUPAL_TI_COVERAGE_FILE="build/logs/clover.xml"
-
-    # Debug options
-    #- DRUPAL_TI_DEBUG="-x -v"
-    # Set to "all" to output all files, set to e.g. "xvfb selenium" or "selenium",
-    # etc. to only output those channels.
-    #- DRUPAL_TI_DEBUG_FILE_OUTPUT="selenium xvfb webserver"
-
-  matrix:
-    # [[[ SELECT ANY OR MORE OPTIONS ]]]
-    #- DRUPAL_TI_RUNNERS="phpunit"
-    #- DRUPAL_TI_RUNNERS="simpletest"
-    #- DRUPAL_TI_RUNNERS="behat"
-    - DRUPAL_TI_RUNNERS="phpunit behat"
-    # Use phpunit-core to test modules with phpunit with Drupal 8 core.
-    #- DRUPAL_TI_RUNNERS="phpunit-core"
+    - DRUPAL_TI_DEBUG_FILE_OUTPUT="selenium xvfb webserver hhvm"
+    - DRUPAL_TI_CACHE_DIR="$HOME/drupal-ti-cache/"
+    - DRUPAL_TI_LOAD_CACHE="1"
+    - DRUPAL_TI_SAVE_CACHE="1"
+    - DRUPAL_TI_CACHE_DIRS_HOME=".composer|.drush|.dist"
+    - DRUPAL_TI_CACHE_DIRS_TRAVIS_BUILD_DIR="tests/vendor|tests/behat/vendor"
 
 mysql:
   database: drupal_travis_db
@@ -66,20 +41,42 @@ mysql:
 
 before_install:
   - composer self-update
+  - composer global require LionsAd/drupal_ti:dev-master
+  - mkdir -p "$HOME/.composer/vendor/bin"
+  - ln -sf $(pwd)/drupal-ti "$HOME/.composer/vendor/bin"
+  - cd "./tests/$DRUPAL_TI_ENVIRONMENT/drupal_ti_test"
+  - export DRUPAL_TI_TESTS_DIR="$TRAVIS_BUILD_DIR"
+  - export TRAVIS_BUILD_DIR=$(pwd)
   - cd ./tests
-  - composer init
-  - composer global require "lionsad/drupal_ti:dev-master"
   - drupal-ti before_install
 
 install:
   - drupal-ti install
 
 before_script:
+  - drupal-ti --include ../scripts/test-include.sh
   - drupal-ti before_script
 
 script:
-  - ls
   - drupal-ti script
+  # Syncs $DRUPAL_TI_CACHE_DIRS_{*} to $DRUPAL_TI_CACHE_DIR/{*}
+  # Has internal optimizations for .composer and .drush.
+  - drupal-ti --save-cache TRAVIS_BUILD_DIR HOME
+
+  # Do some manual caching as well
+  - if [ "$DRUPAL_TI_SAVE_CACHE" = "1" ]; then rsync -a composer.{json,lock} "$DRUPAL_TI_CACHE_DIR"/TRAVIS_BUILD_DIR/tests/; fi
+
+  # Delete composer generated files that screw up cache detection.
+  - rm -f "$DRUPAL_TI_CACHE_DIR"/TRAVIS_BUILD_DIR/tests/.composer/vendor/composer/*.php
+  - rm -f "$DRUPAL_TI_CACHE_DIR"/TRAVIS_BUILD_DIR/tests/.composer/vendor/autoload.php
+
+  # Delete composer generated behat files that screw up cache detection.
+  - rm -f "$DRUPAL_TI_CACHE_DIR"/TRAVIS_BUILD_DIR/tests/behat/.composer/vendor/composer/*.php
+  - rm -f "$DRUPAL_TI_CACHE_DIR"/TRAVIS_BUILD_DIR/tests/behat/.composer/vendor/autoload.php
+
+  # Tests for differences and touches a file if any are detected (optional).
+  - du -sh "$DRUPAL_TI_CACHE_DIR"
+  - drupal-ti --sync-cache
 
 after_script:
   - drupal-ti after_script
