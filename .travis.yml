@@ -8,7 +8,7 @@ php:
   - 5.5
 env:
   global:
-    - PATH="$(pwd)/.composer/vendor/bin:$PATH"
+    - PATH="$(pwd)/vendor/bin:$PATH"
     - DRUPAL_TI_ENVIRONMENT="drupal-8"
     - DRUPAL_TI_MODULE_NAME="mentions"
     #- DRUPAL_TI_SCRIPT_DIR_BEFORE="./drupal_ti/before"
