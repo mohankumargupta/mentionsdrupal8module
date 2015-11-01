@@ -1,9 +1,5 @@
 {
   "require": {
-    "drupal/drupal-extension": "~3.0"
-  },
-  
-  "require-dev": {
-     "phpspec/prophecy": "~1.0"
+    "drupal/drupal-extension": "dev-master"
   }
 }
