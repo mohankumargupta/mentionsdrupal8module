@@ -57,7 +57,6 @@ before_install:
   - echo "$PATH"
   - echo "$HOME"
   - ls -l "$HOME/.composer/vendor/bin"
-  - find / -name drupal_ti
   - drupal-ti before_install
 
 install:
