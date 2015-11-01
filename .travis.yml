@@ -42,7 +42,7 @@ mysql:
 
 before_install:
   - composer self-update
-  - composer global require LionsAd/drupal_ti:dev-master
+  - composer require LionsAd/drupal_ti:dev-master
   - mkdir -p "$HOME/.composer/vendor/bin"
   - ln -sf $(pwd)/drupal-ti "$HOME/.composer/vendor/bin"
   - cd "./tests/$DRUPAL_TI_ENVIRONMENT/mentions"
