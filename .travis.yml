@@ -43,7 +43,8 @@ mysql:
 before_install:
   - composer self-update
   - composer require LionsAd/drupal_ti:dev-master
-  - ls 
+  - pwd
+  - ls -a
   - ls "$HOME/.composer/vendor/bin"
   - echo $PATH
   - cd "./tests/$DRUPAL_TI_ENVIRONMENT/mentions"
