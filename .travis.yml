@@ -8,7 +8,7 @@ php:
   - 5.5
 env:
   global:
-    - PATH="$HOME/.composer/vendor/bin:$PATH"
+    - PATH="$(pwd)/.composer/vendor/bin:$PATH"
     - DRUPAL_TI_ENVIRONMENT="drupal-8"
     - DRUPAL_TI_MODULE_NAME="mentions"
     #- DRUPAL_TI_SCRIPT_DIR_BEFORE="./drupal_ti/before"
@@ -43,7 +43,6 @@ mysql:
 before_install:
   - composer self-update
   - composer require LionsAd/drupal_ti:dev-master
-  - pwd
   - ls -a
   - ls "$HOME/.composer/vendor/bin"
   - echo $PATH
