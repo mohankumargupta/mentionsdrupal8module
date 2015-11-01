@@ -1,0 +1,7 @@
+{
+    "name": "mohangupta/mentions",
+    "type": "drupal-module",
+    "description": "Unofficial Drupal 8 Port of Mentions module.",
+    "homepage": "https://github.com/mohankumargupta/mentionsdrupal8module",
+    "license": "GPL-2.0+"
+}
