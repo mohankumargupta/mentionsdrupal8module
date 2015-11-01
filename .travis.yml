@@ -54,6 +54,10 @@ mysql:
 before_install:
   - composer self-update
   - composer global require "lionsad/drupal_ti:dev-master"
+  - echo "$PATH"
+  - echo "$HOME"
+  - ls -l "$HOME/.composer/vendor/bin"
+  - find / -name drupal_ti
   - drupal-ti before_install
 
 install:
