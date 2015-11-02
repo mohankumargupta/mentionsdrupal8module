@@ -59,6 +59,7 @@ before_install:
 
 install:
   - drupal-ti install
+  - composer require "drupal/drupal-extension"
 
 before_script:
   - drupal-ti --include ".travis-before-script.sh"
