@@ -54,6 +54,7 @@ before_install:
   - echo "$PATH"
   - echo "$HOME"
   - ls -l "$HOME/.composer/vendor/bin"
+  - composer global require "drupal/drupal-extension"
   - drupal-ti before_install
 
 install:
