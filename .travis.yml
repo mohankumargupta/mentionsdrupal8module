@@ -51,15 +51,12 @@ mysql:
 before_install:
   - composer self-update
   - composer global require "lionsad/drupal_ti:dev-master"
-  - echo "$PATH"
-  - echo "$HOME"
-  - ls -l "$HOME/.composer/vendor/bin"
-  - composer global require "drupal/drupal-extension"
+  #- composer global require "drupal/drupal-extension"
   - drupal-ti before_install
 
 install:
+  #- composer require "drupal/drupal-extension"    
   - drupal-ti install
-  - composer require "drupal/drupal-extension"
 
 before_script:
   - drupal-ti --include ".travis-before-script.sh"

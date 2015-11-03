@@ -26,7 +26,7 @@ use Drupal\Core\Config\ConfigFactory;
  * weight = -10
  * )
  */
-class FilterMentions extends FilterBase implements ContainerFactoryPluginInterface {
+class MentionsFilter extends FilterBase implements ContainerFactoryPluginInterface {
   protected $entityManager;
   protected $renderer;
   protected $config;
