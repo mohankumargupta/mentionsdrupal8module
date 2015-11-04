@@ -14,6 +14,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Config\ConfigFactory;
+use Drupal\mentions\MentionsPluginManager;
 /**
  * Class FilterMentions.
  *
@@ -31,10 +32,11 @@ class MentionsFilter extends FilterBase implements ContainerFactoryPluginInterfa
   protected $renderer;
   protected $config;
 
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityManagerInterface $entity_manager, RendererInterface $render, ConfigFactory $config) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityManagerInterface $entity_manager, RendererInterface $render, ConfigFactory $config, MentionsPluginManager $mentions_manager) {
     $this->entityManager = $entity_manager;
     $this->renderer = $render;
     $this->config = $config;
+    $this->mentionsManager = $mentions_manager;
     parent::__construct($configuration, $plugin_id, $plugin_definition);
   }
 
@@ -42,13 +44,15 @@ class MentionsFilter extends FilterBase implements ContainerFactoryPluginInterfa
     $entity_manager = $container->get('entity.manager');
     $renderer = $container->get('renderer');
     $config = $container->get('config.factory');
+    $mentions_manager = $container->get('plugin.manager.mentions');
 
     return new static($configuration,
       $plugin_id,
       $plugin_definition,
       $entity_manager,
       $renderer,
-      $config
+      $config,
+      $mentions_manager
     );
   }
 
@@ -80,7 +84,55 @@ class MentionsFilter extends FilterBase implements ContainerFactoryPluginInterfa
   }
 
   public function mentions_get_mentions($text) {
-    $settings = $this->config->get('mentions.mentions');
+    $mentions = array();
+    //if (is_string($mention_type)) {
+    //  $mention_type = mentions_type_load($mention_type);
+    // }
+    $entity_storage = $this->entityManager->getStorage('mentions_type');
+    $label = '';
+    foreach ($entity_storage->loadMultiple() as $entity) {
+      $entity_id = $entity->id();
+      $label = $entity->label() ?: $entity_id;
+    }
+    $settings = $this->config->get('mentions.mentions_type.'.$label);
+    print_r($settings);
+    $users = array();
+    $input_pattern = '/(\b|\#)(\w*)/';
+    if (preg_match_all($input_pattern, $text, $matches, PREG_SET_ORDER) && isset($settings->mention_type)) {
+      
+    }
+  /*  
+  $input_pattern = mentions_get_input_pattern($mention_type);
+  if (preg_match_all($input_pattern, $text, $matches, PREG_SET_ORDER) && isset($mention_type->plugin)) {
+    $plugin = mentions_get_plugin($mention_type->plugin);
+    if (isset($plugin['callbacks']) && isset($plugin['callbacks']['target']) && function_exists($plugin['callbacks']['target'])) {
+      foreach ($matches as $match) {
+        if (($target = $plugin['callbacks']['target']($match[2], $mention_type)) !== FALSE) {
+          $mentions[$match[0]] = array(
+            'type'   => $mention_type,
+            'source' => array(
+              'string' => $match[0],
+              'match'  => $match[1],
+            ),
+            'target' => $target,
+          );
+        }
+      }
+    }
+  }
+
+  krsort($mentions);
+
+  return $mentions;    
+   */ 
+    /*
+    $entity_storage = $this->entityManager->getStorage('mentions_type');
+    $label = '';
+    foreach ($entity_storage->loadMultiple() as $entity) {
+      $entity_id = $entity->id();
+      $label = $entity->label() ?: $entity_id;
+    }
+    $settings = $this->config->get('mentions.mentions_type.'.$label);
     $users = array();
 
     // Build regular expression pattern.
@@ -133,6 +185,8 @@ class MentionsFilter extends FilterBase implements ContainerFactoryPluginInterfa
     }
 
     return $users;
+     * 
+     */
   }
 
 }
