@@ -32,11 +32,10 @@ class MentionsFilter extends FilterBase implements ContainerFactoryPluginInterfa
   protected $renderer;
   protected $config;
 
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityManagerInterface $entity_manager, RendererInterface $render, ConfigFactory $config, MentionsPluginManager $mentions_manager) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityManagerInterface $entity_manager, RendererInterface $render, ConfigFactory $config) {
     $this->entityManager = $entity_manager;
     $this->renderer = $render;
     $this->config = $config;
-    $this->mentionsManager = $mentions_manager;
     parent::__construct($configuration, $plugin_id, $plugin_definition);
   }
 
@@ -44,15 +43,14 @@ class MentionsFilter extends FilterBase implements ContainerFactoryPluginInterfa
     $entity_manager = $container->get('entity.manager');
     $renderer = $container->get('renderer');
     $config = $container->get('config.factory');
-    $mentions_manager = $container->get('plugin.manager.mentions');
+
 
     return new static($configuration,
       $plugin_id,
       $plugin_definition,
       $entity_manager,
       $renderer,
-      $config,
-      $mentions_manager
+      $config
     );
   }
 
@@ -69,10 +67,10 @@ class MentionsFilter extends FilterBase implements ContainerFactoryPluginInterfa
   }
 
   public function process($text, $langcode) {
-    return new FilterProcessResult($this->_filter_mentions($text, $this));
+    return new FilterProcessResult($this->_filter_mentions($text));
   }
 
-  public function _filter_mentions($text, $filter) {
+  public function _filter_mentions($text) {
     foreach ($this->mentions_get_mentions($text) as $match) {
       $mentions = array('#theme' => 'mentions', '#user' => $match['user']);
       $mentions2 = $this->renderer->render($mentions);
@@ -95,7 +93,7 @@ class MentionsFilter extends FilterBase implements ContainerFactoryPluginInterfa
       $label = $entity->label() ?: $entity_id;
     }
     $settings = $this->config->get('mentions.mentions_type.'.$label);
-    print_r($settings);
+    //print_r($settings);
     $users = array();
     $input_pattern = '/(\b|\#)(\w*)/';
     if (preg_match_all($input_pattern, $text, $matches, PREG_SET_ORDER) && isset($settings->mention_type)) {
