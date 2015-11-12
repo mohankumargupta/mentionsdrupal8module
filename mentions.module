@@ -1,5 +1,7 @@
 <?php 
 
+
+
 /**
  * @file mentions.module
  */
@@ -9,18 +11,31 @@ use Drupal\Core\Url;
 /**
  * Provides hook implementations for mentions module.
  */
+
 function mentions_theme() {
-  return array('mentions' => array('render element' => 'userintext'));
+  return array(
+   'mentions' => array(
+     'variables' => array(
+       'userid' => NULL,
+       'link' => NULL
+     )
+   )
+);
 }
 
 /**
  * Implements template_preprocess_mentions().
  */
 function template_preprocess_mentions(&$variables) {
-  $settings = \Drupal::config('mentions.mentions');
-  $output_settings = $settings->get('output');
-  $user = $variables['userintext']['#user'];
+  //$settings = \Drupal::config('mentions.mentions');
+ //print_r($variables);
+ //$variables['userid'] = 5;
+ //$variables['link'] = '<a href="http://google.com">';
+ // $variables['userintext']['userid'] = 5;
+ //$variables['userintext']['link'] = '<a href="http://google.com">';
 
+  
+  /*
   global $base_url;
   global $base_root;
   foreach (array('text', 'link') as $type) {
@@ -36,6 +51,9 @@ function template_preprocess_mentions(&$variables) {
   }
 
   $user_page_url = Url::fromUri('base:' . $link);
-  $variables['userid'] = $user->id();
-  $variables['link'] = \Drupal::l($output_settings['prefix'] . $text . $output_settings['suffix'], $user_page_url, array('attributes' => array('class' => 'mentions mentions-' . $user->id(), 'title' => $text)))->getGeneratedLink();
+  $variables['userid'] = '';
+  $variables['link'] = \Drupal::l($output_settings['prefix'] . $text . $output_settings['suffix'], $user_page_url, array('attributes' => array('class' => 'mentions mentions-' . $variables['userid'] , 'title' => $text)))->getGeneratedLink();
+
+   * }
+   */
 }

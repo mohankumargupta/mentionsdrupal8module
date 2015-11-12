@@ -31,6 +31,7 @@ class MentionsFilter extends FilterBase implements ContainerFactoryPluginInterfa
   protected $entityManager;
   protected $renderer;
   protected $config;
+  private $currentPath;
 
   public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityManagerInterface $entity_manager, RendererInterface $render, ConfigFactory $config) {
     $this->entityManager = $entity_manager;
@@ -43,7 +44,6 @@ class MentionsFilter extends FilterBase implements ContainerFactoryPluginInterfa
     $entity_manager = $container->get('entity.manager');
     $renderer = $container->get('renderer');
     $config = $container->get('config.factory');
-
 
     return new static($configuration,
       $plugin_id,
@@ -66,14 +66,16 @@ class MentionsFilter extends FilterBase implements ContainerFactoryPluginInterfa
     $this->config = $config;
   }
 
-  public function process($text, $langcode) {
+  public function process($text, $langcode) {  
     return new FilterProcessResult($this->_filter_mentions($text));
   }
 
   public function _filter_mentions($text) {
-    foreach ($this->mentions_get_mentions($text) as $match) {
-      $mentions = array('#theme' => 'mentions', '#user' => $match['user']);
+    $all_mentions = $this->mentions_get_mentions($text);
+    foreach ($all_mentions as $match) {
+      $mentions = array('#theme' => 'mentions', '#userid' => $match['user'], '#link'=> $match['text']);
       $mentions2 = $this->renderer->render($mentions);
+
       $text = str_replace($match['text'], $mentions2, $text);
     }
 
@@ -83,9 +85,6 @@ class MentionsFilter extends FilterBase implements ContainerFactoryPluginInterfa
 
   public function mentions_get_mentions($text) {
     $mentions = array();
-    //if (is_string($mention_type)) {
-    //  $mention_type = mentions_type_load($mention_type);
-    // }
     $entity_storage = $this->entityManager->getStorage('mentions_type');
     $label = '';
     foreach ($entity_storage->loadMultiple() as $entity) {
@@ -93,12 +92,38 @@ class MentionsFilter extends FilterBase implements ContainerFactoryPluginInterfa
       $label = $entity->label() ?: $entity_id;
     }
     $settings = $this->config->get('mentions.mentions_type.'.$label);
-    //print_r($settings);
-    $users = array();
-    $input_pattern = '/(\b|\#)(\w*)/';
-    if (preg_match_all($input_pattern, $text, $matches, PREG_SET_ORDER) && isset($settings->mention_type)) {
-      
+    $input_settings = array(
+      'prefix' => $settings->get('input.prefix'),
+      'suffix' => $settings->get('input.suffix'),
+      'entity_type' => $settings->get('input.entity_type'),
+      'value' => $settings->get('input.inputvalue')
+    );
+    $pattern = $this->mentions_get_input_pattern(TRUE, $input_settings);
+    //print($pattern);
+    //print("\n");
+    //print($text);
+    //    print("\n");
+    $pattern = '/(?:@)(admin)/';
+    preg_match_all($pattern, $text, $matches, PREG_SET_ORDER);
+   
+    foreach($matches as $match) {
+      $matching_text = $match[0];
+      $username = $match[1];
+      //$user = user_load_by_name($username);
+      //print_r($user);
     }
+    
+    $users[] = array(
+      'text' => "@admin",
+      'user' => "5"
+    );
+return $users;
+    //print_r($settings);
+    //$users = array();
+    //$input_pattern = '/(\b|\#)(\w*)/';
+    //if (preg_match_all($input_pattern, $text, $matches, PREG_SET_ORDER) && isset($settings->mention_type)) {
+    //  
+    //}
   /*  
   $input_pattern = mentions_get_input_pattern($mention_type);
   if (preg_match_all($input_pattern, $text, $matches, PREG_SET_ORDER) && isset($mention_type->plugin)) {
@@ -187,5 +212,42 @@ class MentionsFilter extends FilterBase implements ContainerFactoryPluginInterfa
      */
   }
 
+/**
+ * Returns the input pattern of a mention type, either as a regex or plain text.
+ *
+ * @param           $mention_type
+ * @param bool|TRUE $regex
+ *
+ * @return bool|string
+ */
+ public function mentions_get_input_pattern($regex = TRUE, $input_settings) {
+  $pattern = '';
+
+  // Append prefix to pattern.
+  if (isset($input_settings['suffix'])) {
+    $pattern .= $regex ? preg_quote($input_settings['prefix'], '/') : $input_settings['prefix'];
+  }
+
+  // Append value to pattern.
+  /*
+  if (!isset($mention_type->plugin) || ($plugin = mentions_get_plugin($mention_type->plugin)) == FALSE) {
+    return FALSE;
+  }
+  if (isset($plugin['callbacks']['pattern']) && function_exists($plugin['callbacks']['pattern'])) {
+    $input = $plugin['callbacks']['pattern']($mention_type->input, $regex);
+    $pattern .= $regex ? "({$input})" : drupal_strtoupper($input);
+  }
+*/
+  $pattern .= "\w+";
+  
+  // Append suffix to pattern.
+  if (isset($input_settings['suffix'])) {
+    $pattern .= $regex ? preg_quote($input_settings['suffix'], '/') : $input_settings['suffix'];
+  }
+
+  $pattern = $regex ? '/(?:^|\s)(' . $pattern . ')(?:$|\W)/m' : $pattern;
+
+  return $pattern;
+}
 }
 
