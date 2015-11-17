@@ -23,7 +23,7 @@ use Drupal\mentions\MentionsPluginManager;
  * @Filter(
  * id = "filter_mentions",
  * title = @Translation("Mentions Filter"),
- * description = @Translation("Configure via the <a href=\"/admin/structure/mentions\">Mention types</a> page."),
+ * description = @Translation("Configure via the <a href='/admin/structure/mentions'>Mention types</a> page."),
  * type = Drupal\filter\Plugin\FilterInterface::TYPE_HTML_RESTRICTOR,
  * weight = -10
  * )
