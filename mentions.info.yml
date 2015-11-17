@@ -3,6 +3,6 @@ type: module
 description: Record, render and react to specified patterns within content.
 core: 8.x
 package: Filters
-configure: mentions.admin
+configure: entity.mentions_type.list
 dependencies:
   - filter
