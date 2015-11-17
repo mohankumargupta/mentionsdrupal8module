@@ -5,11 +5,14 @@
  */
 
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Url;
 
 function mentions_help($route_name, RouteMatchInterface $route_match) {
   switch($route_name) {
     case 'entity.mentions_type.list':
-      $output = '<p>Don\'t forget to enable \'Mentions filter\' for the mentions type below for the appropriate text formats</p>';
+      $textformaturl = Url::fromRoute('filter.admin_overview');
+      $link_textformatpage = \Drupal::l('text formats', $textformaturl);
+      $output = '<p>Don\'t forget to enable \'Mentions filter\' for the mentions type below for the appropriate&nbsp; '. $link_textformatpage .'</p>';
       return $output;
   }
 }
