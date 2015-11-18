@@ -63,12 +63,14 @@ class MentionsFilter extends FilterBase implements ContainerFactoryPluginInterfa
   }
 
   public function settingsForm(array $form, FormStateInterface $form_state) {
-        //$plugin_names = $this->mentionsManager->getPluginNames();
+      //$plugin_names = $this->mentionsManager->getPluginNames();
+      //print_r($this->settings);
       $allconfigs = $this->config->listAll('mentions.mentions_type');
       $candidate_entitytypes = array();
       $entitytype_info = $this->entityManager->getDefinition('mentions_type');
       foreach($allconfigs as $config) {
-       array_push($candidate_entitytypes,str_replace('mentions.mentions_type.', '', $config));  
+       $mentions_name = str_replace('mentions.mentions_type.', '', $config);    
+       $candidate_entitytypes[$mentions_name] = $mentions_name;  
       }
       
     
@@ -79,6 +81,7 @@ class MentionsFilter extends FilterBase implements ContainerFactoryPluginInterfa
     $form['mentions_filter'] = array(
       '#type' => 'checkboxes',
       '#options' => $candidate_entitytypes,  
+      '#default_value' => $this->settings['mentions_filter'],  
       '#title' => 'Mentions types',
     );
     return $form;
