@@ -6,7 +6,6 @@
 
 namespace Drupal\mentions\Plugin\Filter;
 
-use Drupal\Component\Utility\Unicode;
 use Drupal\filter\FilterProcessResult;
 use Drupal\filter\Plugin\FilterBase;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
@@ -14,6 +13,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Config\ConfigFactory;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\mentions\MentionsPluginManager;
 /**
  * Class FilterMentions.
@@ -25,6 +25,9 @@ use Drupal\mentions\MentionsPluginManager;
  * title = @Translation("Mentions Filter"),
  * description = @Translation("Configure via the <a href='/admin/structure/mentions'>Mention types</a> page."),
  * type = Drupal\filter\Plugin\FilterInterface::TYPE_HTML_RESTRICTOR,
+ * settings = {
+ *   "mentions_filter" = {}
+ * },
  * weight = -10
  * )
  */
@@ -33,9 +36,11 @@ class MentionsFilter extends FilterBase implements ContainerFactoryPluginInterfa
   protected $renderer;
   protected $config;
   private $currentPath;
+  protected $mentionsManager;
 
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityManagerInterface $entity_manager, RendererInterface $render, ConfigFactory $config) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityManagerInterface $entity_manager, RendererInterface $render, ConfigFactory $config, MentionsPluginManager $mentions_manager) {
     $this->entityManager = $entity_manager;
+    $this->mentionsManager = $mentions_manager;
     $this->renderer = $render;
     $this->config = $config;
     parent::__construct($configuration, $plugin_id, $plugin_definition);
@@ -45,16 +50,40 @@ class MentionsFilter extends FilterBase implements ContainerFactoryPluginInterfa
     $entity_manager = $container->get('entity.manager');
     $renderer = $container->get('renderer');
     $config = $container->get('config.factory');
-
+    $mentions_manager = $container->get('plugin.manager.mentions');
+    
     return new static($configuration,
       $plugin_id,
       $plugin_definition,
       $entity_manager,
       $renderer,
-      $config
+      $config,
+      $mentions_manager
     );
   }
 
+  public function settingsForm(array $form, FormStateInterface $form_state) {
+        //$plugin_names = $this->mentionsManager->getPluginNames();
+      $allconfigs = $this->config->listAll('mentions.mentions_type');
+      $candidate_entitytypes = array();
+      $entitytype_info = $this->entityManager->getDefinition('mentions_type');
+      foreach($allconfigs as $config) {
+       array_push($candidate_entitytypes,str_replace('mentions.mentions_type.', '', $config));  
+      }
+      
+    
+    if (count($candidate_entitytypes) == 0) {
+      return NULL;
+    }
+    
+    $form['mentions_filter'] = array(
+      '#type' => 'checkboxes',
+      '#options' => $candidate_entitytypes,  
+      '#title' => 'Mentions types',
+    );
+    return $form;
+  }
+  
   public function setEntityManager($entity_manager) {
     $this->entityManager = $entity_manager;
   }
