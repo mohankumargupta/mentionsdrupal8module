@@ -6,6 +6,7 @@
 
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
+use Drupal\Core\Entity\EntityInterface;
 
 function mentions_help($route_name, RouteMatchInterface $route_match) {
   switch($route_name) {
@@ -30,6 +31,21 @@ function mentions_theme() {
      )
    )
 );
+}
+
+/***
+ * Implements hook_entity_insert().
+ */
+function mentions_entity_insert(EntityInterface $entity) {
+    
+}
+
+/***
+ * Implements hook_entity_update().
+ */
+function mentions_entity_update(EntityInterface $entity) {
+    $entity_type = $entity->getEntityTypeId();
+    print($entity_type);
 }
 
 /**

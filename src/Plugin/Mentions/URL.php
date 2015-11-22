@@ -9,6 +9,8 @@ use Drupal\mentions\MentionsPluginInterface;
  *  name = @Translation("URL")
  * )
  */
-class URL extends MentionsPluginInterface {
-
+class URL implements MentionsPluginInterface {
+  public function entityOutput($mention, $settings) {
+      
+  }
 }
