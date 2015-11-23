@@ -118,6 +118,7 @@ class MentionsTypeForm extends EntityForm implements ContainerInjectionInterface
       '#type' => 'select',
       '#title' => 'Entity Type',
       '#options' => $candidate_entitytypes,
+      '#default_value' => $config->get('input.entity_type')  
     );
 
     $form['input']['inputvalue'] = array(
@@ -152,6 +153,13 @@ class MentionsTypeForm extends EntityForm implements ContainerInjectionInterface
       '#default_value' => $config->get('output.renderlink'),
     );
 
+    $form['output']['renderlinktextbox'] = array(
+       '#type' => 'textfield',
+       '#title' => $this->t('Link'),
+       '#description' => $this->t('This field supports tokens.'),
+       '#default_value' => $config->get('output.renderlinktextbox') 
+    );
+    
     return parent::buildForm($form, $form_state);
   }
 

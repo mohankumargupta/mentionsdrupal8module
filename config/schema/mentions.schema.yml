@@ -40,6 +40,9 @@ mentions.mentions_type.*:
           renderlink:
             type: integer
             label: 'Render as link'
+          renderlinktextbox:
+            type: string
+            label: 'Link'
             
 filter_settings.filter_mentions:
   type: filter

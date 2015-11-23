@@ -37,16 +37,27 @@ function mentions_theme() {
  * Implements hook_entity_insert().
  */
 function mentions_entity_insert(EntityInterface $entity) {
-    
+  mentions_entity_insert_or_update($entity, true);
 }
 
 /***
  * Implements hook_entity_update().
  */
 function mentions_entity_update(EntityInterface $entity) {
-    $entity_type = $entity->getEntityTypeId();
-    print($entity_type);
+  mentions_entity_insert_or_update($entity, false);
 }
+
+/***
+ * Implements hook_entity_update().
+ */
+function mentions_entity_insert_or_update(EntityInterface $entity, $update) {
+  $entity_type = $entity->getEntityType();
+  $entity_type_id = $entity->getEntityTypeId();
+  
+  
+  print($entity_type_id);
+}
+
 
 /**
  * Implements template_preprocess_mentions().
