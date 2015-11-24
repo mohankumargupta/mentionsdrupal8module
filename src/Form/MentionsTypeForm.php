@@ -157,7 +157,12 @@ class MentionsTypeForm extends EntityForm implements ContainerInjectionInterface
        '#type' => 'textfield',
        '#title' => $this->t('Link'),
        '#description' => $this->t('This field supports tokens.'),
-       '#default_value' => $config->get('output.renderlinktextbox') 
+       '#default_value' => $config->get('output.renderlinktextbox'),
+       '#states' => array(
+         'visible' => array(
+           ':input[name="output[renderlink]"]' => array('checked'=> TRUE)  
+         )  
+       )
     );
     
     return parent::buildForm($form, $form_state);

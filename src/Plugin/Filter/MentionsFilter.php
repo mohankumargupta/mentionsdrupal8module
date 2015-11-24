@@ -6,15 +6,16 @@
 
 namespace Drupal\mentions\Plugin\Filter;
 
+use Drupal\Core\Config\ConfigFactory;
+use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Render\RendererInterface;
+use Drupal\Core\Utility\Token;
 use Drupal\filter\FilterProcessResult;
 use Drupal\filter\Plugin\FilterBase;
-use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\Core\Entity\EntityManagerInterface;
-use Drupal\Core\Render\RendererInterface;
-use Drupal\Core\Config\ConfigFactory;
-use Drupal\Core\Form\FormStateInterface;
 use Drupal\mentions\MentionsPluginManager;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Class FilterMentions.
  *
@@ -37,12 +38,14 @@ class MentionsFilter extends FilterBase implements ContainerFactoryPluginInterfa
   protected $config;
   private $currentPath;
   protected $mentionsManager;
+  private $token_service;
 
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityManagerInterface $entity_manager, RendererInterface $render, ConfigFactory $config, MentionsPluginManager $mentions_manager) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityManagerInterface $entity_manager, RendererInterface $render, ConfigFactory $config, MentionsPluginManager $mentions_manager, Token $token) {
     $this->entityManager = $entity_manager;
     $this->mentionsManager = $mentions_manager;
     $this->renderer = $render;
     $this->config = $config;
+    $this->token_service = $token;
     parent::__construct($configuration, $plugin_id, $plugin_definition);
   }
 
@@ -51,6 +54,7 @@ class MentionsFilter extends FilterBase implements ContainerFactoryPluginInterfa
     $renderer = $container->get('renderer');
     $config = $container->get('config.factory');
     $mentions_manager = $container->get('plugin.manager.mentions');
+    $token = $container->get('token');
     
     return new static($configuration,
       $plugin_id,
@@ -58,7 +62,8 @@ class MentionsFilter extends FilterBase implements ContainerFactoryPluginInterfa
       $entity_manager,
       $renderer,
       $config,
-      $mentions_manager
+      $mentions_manager,
+      $token
     );
   }
 
@@ -106,7 +111,7 @@ class MentionsFilter extends FilterBase implements ContainerFactoryPluginInterfa
   public function _filter_mentions($text) {
     $all_mentions = $this->mentions_get_mentions($text);
     foreach ($all_mentions as $match) {
-      $mentions = array('#theme' => 'mentions', '#userid' => $match['user'], '#link'=> $match['text']);
+      $mentions = array('#theme' => 'mentions', '#userid' => $match['user'], '#link'=> $match['replacement']);
       $mentions2 = $this->renderer->render($mentions);
 
       $text = str_replace($match['text'], $mentions2, $text);
@@ -131,25 +136,44 @@ class MentionsFilter extends FilterBase implements ContainerFactoryPluginInterfa
       'entity_type' => $settings->get('input.entity_type'),
       'value' => $settings->get('input.inputvalue')
     );
+    $output_settings = array(
+        'value' => $settings->get('output.outputvalue'),
+        'renderlink' => $settings->get('output.renderlink'),
+        'rendertextbox' => $settings->get('output.renderlinktextbox')
+    );
     $pattern = $this->mentions_get_input_pattern(TRUE, $input_settings);
     //print($pattern);
     //print("\n");
     //print($text);
     //    print("\n");
-    $pattern = '/(?:@)(admin)/';
+    $pattern = '/(?:'.preg_quote($input_settings['prefix']).')([a-zA-Z0-9_]+)'.preg_quote($input_settings['suffix']).'/';
     preg_match_all($pattern, $text, $matches, PREG_SET_ORDER);
    
     foreach($matches as $match) {
-      $matching_text = $match[0];
-      $username = $match[1];
+      $user = user_load_by_name($match[1]);
+      //$mention_text = $match[0];
+      //$mention_text = str_replace($input_settings['prefix'], '', $mention_text);
+      //$mention_text = str_replace($input_settings['suffix'], '', $mention_text);
+      $replacement = $this->token_service->replace($output_settings['value'], array('user'=>$user));
+      
+      $users[] = array(
+          'text' => $match[0],
+          'replacement' => $replacement,
+          'user' => $user->id()
+      );  
+      //$matching_text = $match[0];
+      //$username = $match[1];
       //$user = user_load_by_name($username);
       //print_r($user);
     }
     
+    /*
     $users[] = array(
       'text' => "@admin",
       'user' => "5"
     );
+     * 
+     */
 return $users;
     //print_r($settings);
     //$users = array();

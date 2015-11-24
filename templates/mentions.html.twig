@@ -1,1 +1,8 @@
-<span class="mentions mentions-{{ userid }}">{{ link }}</span>
+<span class="mentions mentions-{{ userid }}"> 
+{% if renderlink is defined %}
+<a href="/{{ link }}">{{ link }}</a>
+<% else %>
+{{ link }}
+<% endif %>
+
+</span>
