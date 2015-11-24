@@ -111,7 +111,7 @@ class MentionsFilter extends FilterBase implements ContainerFactoryPluginInterfa
   public function _filter_mentions($text) {
     $all_mentions = $this->mentions_get_mentions($text);
     foreach ($all_mentions as $match) {
-      $mentions = array('#theme' => 'mentions', '#userid' => $match['user'], '#link'=> $match['replacement']);
+      $mentions = array('#theme' => 'mentions', '#userid' => $match['user'], '#link'=> $match['replacement'], '#renderlink'=> $match['renderlink'], '#rendervalue'=> $match['rendervalue']);
       $mentions2 = $this->renderer->render($mentions);
 
       $text = str_replace($match['text'], $mentions2, $text);
@@ -138,9 +138,10 @@ class MentionsFilter extends FilterBase implements ContainerFactoryPluginInterfa
     );
     $output_settings = array(
         'value' => $settings->get('output.outputvalue'),
-        'renderlink' => $settings->get('output.renderlink'),
+        'renderlink' => $settings->get('output.renderlink')==1?TRUE:FALSE,
         'rendertextbox' => $settings->get('output.renderlinktextbox')
     );
+    
     $pattern = $this->mentions_get_input_pattern(TRUE, $input_settings);
     //print($pattern);
     //print("\n");
@@ -155,11 +156,16 @@ class MentionsFilter extends FilterBase implements ContainerFactoryPluginInterfa
       //$mention_text = str_replace($input_settings['prefix'], '', $mention_text);
       //$mention_text = str_replace($input_settings['suffix'], '', $mention_text);
       $replacement = $this->token_service->replace($output_settings['value'], array('user'=>$user));
+      if ($output_settings['renderlink']) {
+        $rendervalue = $this->token_service->replace($output_settings['rendertextbox'], array('user'=>$user));  
+      }
       
       $users[] = array(
           'text' => $match[0],
           'replacement' => $replacement,
-          'user' => $user->id()
+          'user' => $user->id(),
+          'renderlink' => $output_settings['renderlink'],
+          'rendervalue' => isset($rendervalue)?$rendervalue:''
       );  
       //$matching_text = $match[0];
       //$username = $match[1];
@@ -174,7 +180,8 @@ class MentionsFilter extends FilterBase implements ContainerFactoryPluginInterfa
     );
      * 
      */
-return $users;
+    $users = isset($users)?$users:array();
+    return $users;
     //print_r($settings);
     //$users = array();
     //$input_pattern = '/(\b|\#)(\w*)/';

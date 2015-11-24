@@ -27,7 +27,9 @@ function mentions_theme() {
    'mentions' => array(
      'variables' => array(
        'userid' => NULL,
-       'link' => NULL
+       'link' => NULL,
+       'renderlink' => FALSE,
+       'rendervalue' => ''
      )
    )
 );
