@@ -74,7 +74,12 @@ class MentionsTypeForm extends EntityForm implements ContainerInjectionInterface
       $configentityclassname = ContentEntityType::class;
       $entitytype_type = get_class($entitytype_info);
       if ($entitytype_type == $configentityclassname) {
-        array_push($candidate_entitytypes, $entitytype_info->getLabel()->getUntranslatedString());
+        $candidate_entitytypes[$entity_type] = $entitytype_info->getLabel()->getUntranslatedString();  
+        $candidate_entitytypefields[$entity_type]['id'] = $entitytype_info->getKey('id');
+        $candidate_entitytypefields[$entity_type]['label'] = $entitytype_info->getKey('label');
+        if ($entity_type == 'user') {
+          $candidate_entitytypefields[$entity_type]['label'] = 'name';  
+        }
       }
     }
 
@@ -114,17 +119,30 @@ class MentionsTypeForm extends EntityForm implements ContainerInjectionInterface
       '#size' => 2,
     );
 
+    $entitytype_selection = $config->get('input.entity_type');
+    
     $form['input']['entity_type'] = array(
       '#type' => 'select',
       '#title' => 'Entity Type',
       '#options' => $candidate_entitytypes,
-      '#default_value' => $config->get('input.entity_type')  
+      '#default_value' => $entitytype_selection,
+      '#ajax' => [
+          'callback' => array($this,'changeEntityTypeInForm'),
+          'event' => 'change',
+          'progress' => array(
+              'type' => 'throbber',
+              'message' => $this->t('Please wait...')
+          )
+      ]    
     );
 
+    //$entitytype_keys = array_keys($candidate_entitytypes);    
+    //$inputvalue = $entitytype_keys[$entitytype_selection];
+    
     $form['input']['inputvalue'] = array(
       '#type' => 'select',
       '#title' => $this->t('Value'),
-      '#options' => array(),
+      '#options' => isset($candidate_entitytypefields)?$candidate_entitytypefields[$entitytype_selection]:'',
     );
 
     $form['input']['suffix'] = array(
@@ -192,4 +210,16 @@ class MentionsTypeForm extends EntityForm implements ContainerInjectionInterface
     $form_state->setRedirect('entity.mentions_type.list');
   }
 
+  public  function changeEntityTypeInForm(array &$form, FormStateInterface $form_state) {
+      $entitytype_state = $form_state->getValue(array('input', 'entity_type'));
+      $entitytype_info = $this->entityManager->getDefinition($entitytype_state);
+      $id = $entitytype_info->getKey('id');
+      $label = $entitytype_info->getKey('label');
+      if ($entitytype_state == 'user') {
+          $label = 'name';  
+      }
+      
+      $i=0;
+  }
+  
 }
