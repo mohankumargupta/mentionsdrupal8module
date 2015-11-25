@@ -39,6 +39,7 @@ class MentionsFilter extends FilterBase implements ContainerFactoryPluginInterfa
   private $currentPath;
   protected $mentionsManager;
   private $token_service;
+  private $mention_type;
 
   public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityManagerInterface $entity_manager, RendererInterface $render, ConfigFactory $config, MentionsPluginManager $mentions_manager, Token $token) {
     $this->entityManager = $entity_manager;
@@ -105,9 +106,33 @@ class MentionsFilter extends FilterBase implements ContainerFactoryPluginInterfa
   }
 
   public function process($text, $langcode) {  
-    return new FilterProcessResult($this->_filter_mentions($text));
+    if ($this->shouldApplyFilter()) {
+      return new FilterProcessResult($this->_filter_mentions($text));    
+    }
+    
+    else {
+      return new FilterProcessResult($text);  
+    }
+    
   }
 
+  private function shouldApplyFilter() {
+    $settings = $this->settings;  
+    $allconfigs = $this->config->listAll('mentions.mentions_type');
+    if (isset($settings['mentions_filter'])) {
+        foreach($settings['mentions_filter'] as $mention_type) {
+          foreach($allconfigs as $config) {
+            $mentions_name = str_replace('mentions.mentions_type.', '', $config); 
+            if ($mentions_name == $mention_type) {
+                $this->mention_type = $mention_type;
+                return true;
+            } 
+          }
+        }
+    }
+    return false;
+  }
+  
   public function _filter_mentions($text) {
     $all_mentions = $this->mentions_get_mentions($text);
     foreach ($all_mentions as $match) {
