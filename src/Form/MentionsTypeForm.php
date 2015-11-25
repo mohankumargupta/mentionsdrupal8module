@@ -119,6 +119,13 @@ class MentionsTypeForm extends EntityForm implements ContainerInjectionInterface
       '#size' => 2,
     );
 
+    $form['input']['suffix'] = array(
+      '#type' => 'textfield',
+      '#title' => $this->t('Suffix'),
+      '#default_value' => $config->get('input.suffix'),
+      '#size' => 2,
+    );    
+    
     $entitytype_selection = $config->get('input.entity_type');
     
     $form['input']['entity_type'] = array(
@@ -128,6 +135,7 @@ class MentionsTypeForm extends EntityForm implements ContainerInjectionInterface
       '#default_value' => $entitytype_selection,
       '#ajax' => [
           'callback' => array($this,'changeEntityTypeInForm'),
+          'wrapper' => 'edit-input-value-wrapper',
           'event' => 'change',
           'progress' => array(
               'type' => 'throbber',
@@ -143,13 +151,9 @@ class MentionsTypeForm extends EntityForm implements ContainerInjectionInterface
       '#type' => 'select',
       '#title' => $this->t('Value'),
       '#options' => isset($candidate_entitytypefields)?$candidate_entitytypefields[$entitytype_selection]:'',
-    );
-
-    $form['input']['suffix'] = array(
-      '#type' => 'textfield',
-      '#title' => $this->t('Suffix'),
-      '#default_value' => $config->get('input.suffix'),
-      '#size' => 2,
+      '#default_value' => $config->get('input.inputvalue'), 
+      '#prefix' =>'<div id="edit-input-value-wrapper">',
+      '#suffix '=>'</div>',  
     );
 
     $form['output'] = array(
@@ -219,7 +223,12 @@ class MentionsTypeForm extends EntityForm implements ContainerInjectionInterface
           $label = 'name';  
       }
       
-      $i=0;
+      unset($form['input']['inputvalue']['#options']);
+      unset($form['input']['inputvalue']['#default_value']);
+      $form['input']['inputvalue']['#options'] = array($id, $label);
+      $form['input']['inputvalue']['#default_value'] = $id;
+      $form_state->setValue(array('input','inputvalue'), $id);
+      return $form['input']['inputvalue'];
   }
   
 }
