@@ -75,10 +75,16 @@ class MentionsTypeForm extends EntityForm implements ContainerInjectionInterface
       $entitytype_type = get_class($entitytype_info);
       if ($entitytype_type == $configentityclassname) {
         $candidate_entitytypes[$entity_type] = $entitytype_info->getLabel()->getUntranslatedString();  
-        $candidate_entitytypefields[$entity_type]['id'] = $entitytype_info->getKey('id');
-        $candidate_entitytypefields[$entity_type]['label'] = $entitytype_info->getKey('label');
+        //$candidate_entitytypefields[$entity_type]['id'] = $entitytype_info->getKey('id');
+        $candidate_entitytypefields[$entity_type][$entitytype_info->getKey('id')] = $entitytype_info->getKey('id');
+        //$candidate_entitytypefields[$entity_type]['label'] = $entitytype_info->getKey('label');
+        
         if ($entity_type == 'user') {
-          $candidate_entitytypefields[$entity_type]['label'] = 'name';  
+          //$candidate_entitytypefields[$entity_type]['label'] = 'name'; 
+          $candidate_entitytypefields[$entity_type]['name'] = 'name'; 
+        }
+        else {
+          $candidate_entitytypefields[$entity_type][$entitytype_info->getKey('label')] = $entitytype_info->getKey('label');
         }
       }
     }
@@ -147,10 +153,22 @@ class MentionsTypeForm extends EntityForm implements ContainerInjectionInterface
     //$entitytype_keys = array_keys($candidate_entitytypes);    
     //$inputvalue = $entitytype_keys[$entitytype_selection];
     
+    if (!isset($candidate_entitytypefields)) {
+      $inputvalue_options = array();  
+    }
+    
+    else if (isset($entitytype_selection)) {
+      $inputvalue_options = $candidate_entitytypefields[$entitytype_selection];
+    }
+    
+    else {
+      $inputvalue_options = array_values($candidate_entitytypefields)[0];  
+    }
+    
     $form['input']['inputvalue'] = array(
       '#type' => 'select',
       '#title' => $this->t('Value'),
-      '#options' => isset($candidate_entitytypefields)?$candidate_entitytypefields[$entitytype_selection]:'',
+      '#options' => $inputvalue_options,
       '#default_value' => $config->get('input.inputvalue'), 
       '#prefix' =>'<div id="edit-input-value-wrapper">',
       '#suffix '=>'</div>',  

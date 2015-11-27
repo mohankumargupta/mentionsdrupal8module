@@ -34,5 +34,7 @@ class MentionsPluginManager extends DefaultPluginManager {
 
     return $plugin_names;
   }
+  
+
 
 }

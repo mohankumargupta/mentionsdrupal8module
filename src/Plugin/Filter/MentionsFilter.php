@@ -173,13 +173,16 @@ class MentionsFilter extends FilterBase implements ContainerFactoryPluginInterfa
     );
     
     $pattern = $this->mentions_get_input_pattern(TRUE, $input_settings);
-    //print($pattern);
-    //print("\n");
-    //print($text);
-    //    print("\n");
     $pattern = '/(?:'.preg_quote($input_settings['prefix']).')([a-zA-Z0-9_]+)'.preg_quote($input_settings['suffix']).'/';
     preg_match_all($pattern, $text, $matches, PREG_SET_ORDER);
    
+    if (!isset($input_settings['entity_type'])) {
+      return null;
+    }
+    
+    $mentions_plugin = $this->mentionsManager->createInstance($input_settings['entity_type']);
+    
+    
     foreach($matches as $match) {
       $user = user_load_by_name($match[1]);
       //$mention_text = $match[0];
