@@ -12,7 +12,7 @@ mentions.mentions_type.*:
       type: string
       label: 'Description'
     mention_type:
-      type: integer
+      type: string
       label: 'Mention Type'
     input:
       type: mapping

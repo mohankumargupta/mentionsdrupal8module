@@ -171,6 +171,7 @@ class MentionsFilter extends FilterBase implements ContainerFactoryPluginInterfa
         'renderlink' => $settings->get('output.renderlink')==1?TRUE:FALSE,
         'rendertextbox' => $settings->get('output.renderlinktextbox')
     );
+    $mention_type = $settings->get('mention_type');
     
     $pattern = $this->mentions_get_input_pattern(TRUE, $input_settings);
     $pattern = '/(?:'.preg_quote($input_settings['prefix']).')([a-zA-Z0-9_]+)'.preg_quote($input_settings['suffix']).'/';
@@ -180,7 +181,7 @@ class MentionsFilter extends FilterBase implements ContainerFactoryPluginInterfa
       return null;
     }
     
-    $mentions_plugin = $this->mentionsManager->createInstance($input_settings['entity_type']);
+    //$mentions_plugin = $this->mentionsManager->createInstance($mention_type);
     
     
     foreach($matches as $match) {

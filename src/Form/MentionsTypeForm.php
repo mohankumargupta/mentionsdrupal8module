@@ -91,6 +91,7 @@ class MentionsTypeForm extends EntityForm implements ContainerInjectionInterface
 
     $config = $this->config('mentions.mentions_type.' . $entity_id);
     $name = $config->get('id');
+    
     $form['name'] = array(
       '#type' => 'textfield',
       '#title' => $this->t('Name'),
@@ -98,6 +99,9 @@ class MentionsTypeForm extends EntityForm implements ContainerInjectionInterface
       '#description' => $this->t('The human-readable name of this mention type. It is recommended that this name begin with a capital letter and contain only letters, numbers, and spaces. This name must be unique.'),
       '#default_value' => $config->get('name'),
     );
+    
+    $mention_type_defaultvalue = $config->get('mention_type');
+    
     $form['mention_type'] = array(
       '#type' => 'select',
       '#title' => $this->t('Mention Type'),
@@ -165,11 +169,13 @@ class MentionsTypeForm extends EntityForm implements ContainerInjectionInterface
       $inputvalue_options = array_values($candidate_entitytypefields)[0];  
     }
     
+    $inputvalue_default_values = $config->get('input.inputvalue');
+    
     $form['input']['inputvalue'] = array(
       '#type' => 'select',
       '#title' => $this->t('Value'),
       '#options' => $inputvalue_options,
-      '#default_value' => $config->get('input.inputvalue'), 
+      '#default_value' => $inputvalue_default_values, 
       '#prefix' =>'<div id="edit-input-value-wrapper">',
       '#suffix '=>'</div>',  
     );
@@ -243,9 +249,11 @@ class MentionsTypeForm extends EntityForm implements ContainerInjectionInterface
       
       unset($form['input']['inputvalue']['#options']);
       unset($form['input']['inputvalue']['#default_value']);
-      $form['input']['inputvalue']['#options'] = array($id, $label);
+      //$form['input']['inputvalue']['#options'] = array($id, $label);
+      $form['input']['inputvalue']['#options'][$id] = $id;      
+      $form['input']['inputvalue']['#options'][$label] = $label;
       $form['input']['inputvalue']['#default_value'] = $id;
-      $form_state->setValue(array('input','inputvalue'), $id);
+      //$form_state->setValue(array('input','inputvalue'), $id);
       return $form['input']['inputvalue'];
   }
   
