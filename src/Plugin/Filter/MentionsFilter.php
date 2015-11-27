@@ -8,6 +8,7 @@ namespace Drupal\mentions\Plugin\Filter;
 
 use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Render\RendererInterface;
@@ -40,13 +41,15 @@ class MentionsFilter extends FilterBase implements ContainerFactoryPluginInterfa
   protected $mentionsManager;
   private $token_service;
   private $mention_type;
-
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityManagerInterface $entity_manager, RendererInterface $render, ConfigFactory $config, MentionsPluginManager $mentions_manager, Token $token) {
+  private $entity_query_service;
+  
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityManagerInterface $entity_manager, RendererInterface $render, ConfigFactory $config, MentionsPluginManager $mentions_manager, Token $token, QueryFactory $query_factory) {
     $this->entityManager = $entity_manager;
     $this->mentionsManager = $mentions_manager;
     $this->renderer = $render;
     $this->config = $config;
     $this->token_service = $token;
+    $this->entity_query_service = $query_factory;
     parent::__construct($configuration, $plugin_id, $plugin_definition);
   }
 
@@ -56,6 +59,7 @@ class MentionsFilter extends FilterBase implements ContainerFactoryPluginInterfa
     $config = $container->get('config.factory');
     $mentions_manager = $container->get('plugin.manager.mentions');
     $token = $container->get('token');
+    $entity_service = $container->get('entity.query');
     
     return new static($configuration,
       $plugin_id,
@@ -64,7 +68,8 @@ class MentionsFilter extends FilterBase implements ContainerFactoryPluginInterfa
       $renderer,
       $config,
       $mentions_manager,
-      $token
+      $token,
+      $entity_service      
     );
   }
 
