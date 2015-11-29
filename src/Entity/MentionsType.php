@@ -99,6 +99,10 @@ class MentionsType extends ConfigEntityBase implements MentionsTypeInterface {
     return $this->mention_type;
   }
   
+  public function getInputSettings() {
+      return $this->input;
+  }
+  
 }
 
 

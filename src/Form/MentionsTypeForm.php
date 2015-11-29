@@ -66,6 +66,8 @@ class MentionsTypeForm extends EntityForm implements ContainerInjectionInterface
   public function buildForm(array $form, FormStateInterface $form_state) {
     $plugin_names = $this->mentionsManager->getPluginNames();
     $entity = $this->entity;
+    $inputsettings = $entity->get('input');
+    $outputsettings = $entity->get('output');
     $entity_id = isset($entity) ? $entity->id() : '';
     $all_entitytypes = array_keys($this->entityManager->getEntityTypeLabels());
     $candidate_entitytypes = array();
@@ -169,15 +171,16 @@ class MentionsTypeForm extends EntityForm implements ContainerInjectionInterface
       $inputvalue_options = array_values($candidate_entitytypefields)[0];  
     }
     
-    $inputvalue_default_values = $config->get('input.inputvalue');
+    $inputvalue_default_value = count($inputsettings)==0?0:$inputsettings['inputvalue'];
     
     $form['input']['inputvalue'] = array(
       '#type' => 'select',
       '#title' => $this->t('Value'),
       '#options' => $inputvalue_options,
-      '#default_value' => $inputvalue_default_values, 
+      '#default_value' => $inputvalue_default_value,  
       '#prefix' =>'<div id="edit-input-value-wrapper">',
-      '#suffix '=>'</div>',  
+      '#suffix '=>'</div>', 
+      '#validated' => 1,  
     );
 
     $form['output'] = array(
@@ -227,13 +230,14 @@ class MentionsTypeForm extends EntityForm implements ContainerInjectionInterface
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
-    parent::validateForm($form, $form_state);
+    //parent::validateForm($form, $form_state);
   }
 
   /**
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
+    //$form_state->setRebuild();
     parent::submitForm($form, $form_state);
     $form_state->setRedirect('entity.mentions_type.list');
   }
@@ -254,6 +258,7 @@ class MentionsTypeForm extends EntityForm implements ContainerInjectionInterface
       $form['input']['inputvalue']['#options'][$label] = $label;
       $form['input']['inputvalue']['#default_value'] = $id;
       //$form_state->setValue(array('input','inputvalue'), $id);
+          //unset($form[]['form_build_id']);  
       return $form['input']['inputvalue'];
   }
   
