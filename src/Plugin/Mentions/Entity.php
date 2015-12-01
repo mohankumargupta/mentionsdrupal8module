@@ -39,7 +39,9 @@ class Entity implements MentionsPluginInterface {
   public function outputCallback($mention, $settings) {
     $entity = $this->entity_manager->getStorage($mention['target']['entity_type'])->load($mention['target']['entity_id']);
     $output['value'] = $this->token_service->replace($settings['value'], array($mention['target']['entity_type'] => $entity));
-    $output['link'] = $this->token_service->replace($settings['link'], array($mention['target']['entity_type'] => $entity));
+    if ($settings['renderlink']) {
+      $output['link'] = $this->token_service->replace($settings['rendertextbox'], array($mention['target']['entity_type'] => $entity));
+    }
     return $output;
   }
 
@@ -50,10 +52,10 @@ class Entity implements MentionsPluginInterface {
     $query = $this->entityQuery_service->get($entity_type);
     $result = $query->condition($input_value,$value)->execute();
     if (isset($result) && !empty($result)) {
+      $result = reset($result);
       //$entity = $this->entity_manager->getStorage($entity_type)->load($result);
       $target['entity_type'] = $entity_type ;
-      $target['entity_id'] = $input_value;
-      $target['id'] = $value ;    
+      $target['entity_id'] = $result;   
       return $target;
     }
     

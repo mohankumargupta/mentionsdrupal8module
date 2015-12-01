@@ -43,6 +43,8 @@ class MentionsFilter extends FilterBase implements ContainerFactoryPluginInterfa
   private $token_service;
   private $mention_type;
   private $entity_query_service;
+  private $input_settings;
+  private $output_settings;
   
   public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityManagerInterface $entity_manager, RendererInterface $render, ConfigFactory $config, MentionsPluginManager $mentions_manager, Token $token, QueryFactory $query_factory) {
     $this->entityManager = $entity_manager;
@@ -141,25 +143,36 @@ class MentionsFilter extends FilterBase implements ContainerFactoryPluginInterfa
   
   public function _filter_mentions($text) {
     $all_mentions = $this->mentions_get_mentions($text);
-    foreach ($all_mentions as $match) {
-      $mentions = array('#theme' => 'mentions', '#mentionsid' => $match['user'], '#link'=> $match['replacement'], '#renderlink'=> $match['renderlink'], '#rendervalue'=> $match['rendervalue']);
-      $mentions2 = $this->renderer->render($mentions);
-      $text = str_replace($match['text'], $mentions2, $text);
+    if ($all_mentions !== FALSE && $all_mentions!=NULL && !empty($all_mentions)) {
+      foreach ($all_mentions as $match) {
+        //$entity = entity_load($match['target']['entity_type'], $match['target']['entity_id']);
+        $mention = $this->mentionsManager->createInstance($match['type']);
+        if ($mention instanceof MentionsPluginInterface) {
+          $output = $mention->outputCallback($match, $this->output_settings);
+          $mentionsid = $match['target']['entity_id'];
+          $link = $output['link'];
+          $shouldrenderlink = $this->output_settings['renderlink'];
+          $rendervalue = $output['value'];
+          $mentions = array('#theme' => 'mentions', '#mentionsid' => $mentionsid, '#link'=> $link, '#renderlink'=> $shouldrenderlink, '#rendervalue'=> $rendervalue);
+          $mentions2 = $this->renderer->render($mentions);
+          $text = str_replace($match['source']['string'], $mentions2, $text);
+        }
+      }
     }
-
     return $text;
-
+    
   }
 
   public function mentions_get_mentions($text) {
     $mentions = array();
-    $entity_storage = $this->entityManager->getStorage('mentions_type');
-    $label = '';
-    foreach ($entity_storage->loadMultiple() as $entity) {
-      $entity_id = $entity->id();
-      $label = $entity->label() ?: $entity_id;
-    }
-    $settings = $this->config->get('mentions.mentions_type.'.$label);
+    //$entity_storage = $this->entityManager->getStorage('mentions_type');
+    //$label = '';
+    //foreach ($entity_storage->loadMultiple() as $entity) {
+    //  $entity_id = $entity->id();
+    //  $label = $entity->label() ?: $entity_id;
+    //}
+    $config_name = $this->mention_type;
+    $settings = $this->config->get('mentions.mentions_type.'.$config_name);
     $input_settings = array(
       'prefix' => $settings->get('input.prefix'),
       'suffix' => $settings->get('input.suffix'),
@@ -171,6 +184,8 @@ class MentionsFilter extends FilterBase implements ContainerFactoryPluginInterfa
         'renderlink' => $settings->get('output.renderlink')==1?TRUE:FALSE,
         'rendertextbox' => $settings->get('output.renderlinktextbox')
     );
+    $this->input_settings = $input_settings;
+    $this->output_settings = $output_settings;    
     $mention_type = $settings->get('mention_type');
     
     $pattern = $this->mentions_get_input_pattern(TRUE, $input_settings);
@@ -185,9 +200,9 @@ class MentionsFilter extends FilterBase implements ContainerFactoryPluginInterfa
     
     
     foreach($matches as $match) {      
-      $mention_type = $this->mentionsManager->createInstance($mention_type);
-      if ($mention_type instanceof MentionsPluginInterface) {
-        $target = $mention_type->targetCallback($match[1], $input_settings);
+      $mention = $this->mentionsManager->createInstance($mention_type);
+      if ($mention instanceof MentionsPluginInterface) {
+        $target = $mention->targetCallback($match[1], $input_settings);
         if ($target !== FALSE) {
           $mentions[$match[0]] = array(
          'type' => $mention_type,
@@ -201,7 +216,7 @@ class MentionsFilter extends FilterBase implements ContainerFactoryPluginInterfa
       }
        
       
-      
+      /*
       $user = user_load_by_name($match[1]);
       $replacement = $this->token_service->replace($output_settings['value'], array('user'=>$user));
       if ($output_settings['renderlink']) {
@@ -218,7 +233,12 @@ class MentionsFilter extends FilterBase implements ContainerFactoryPluginInterfa
 
     $users = isset($users)?$users:array();
     return $users;
+       * 
+       */
+       
   }
+  
+  return $mentions;
 }
   
 /**
@@ -258,5 +278,9 @@ class MentionsFilter extends FilterBase implements ContainerFactoryPluginInterfa
 
   return $pattern;
 }
+
+
+
+
 }
 
