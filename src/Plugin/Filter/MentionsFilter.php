@@ -15,6 +15,7 @@ use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Utility\Token;
 use Drupal\filter\FilterProcessResult;
 use Drupal\filter\Plugin\FilterBase;
+use Drupal\mentions\MentionsPluginInterface;
 use Drupal\mentions\MentionsPluginManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
@@ -141,9 +142,8 @@ class MentionsFilter extends FilterBase implements ContainerFactoryPluginInterfa
   public function _filter_mentions($text) {
     $all_mentions = $this->mentions_get_mentions($text);
     foreach ($all_mentions as $match) {
-      $mentions = array('#theme' => 'mentions', '#userid' => $match['user'], '#link'=> $match['replacement'], '#renderlink'=> $match['renderlink'], '#rendervalue'=> $match['rendervalue']);
+      $mentions = array('#theme' => 'mentions', '#mentionsid' => $match['user'], '#link'=> $match['replacement'], '#renderlink'=> $match['renderlink'], '#rendervalue'=> $match['rendervalue']);
       $mentions2 = $this->renderer->render($mentions);
-
       $text = str_replace($match['text'], $mentions2, $text);
     }
 
@@ -184,11 +184,25 @@ class MentionsFilter extends FilterBase implements ContainerFactoryPluginInterfa
     //$mentions_plugin = $this->mentionsManager->createInstance($mention_type);
     
     
-    foreach($matches as $match) {
+    foreach($matches as $match) {      
+      $mention_type = $this->mentionsManager->createInstance($mention_type);
+      if ($mention_type instanceof MentionsPluginInterface) {
+        $target = $mention_type->targetCallback($match[1], $input_settings);
+        if ($target !== FALSE) {
+          $mentions[$match[0]] = array(
+         'type' => $mention_type,
+         'source' => array(
+           'string' => $match[0],
+           'match' => $match[1],
+         ),
+         'target' => $target    
+        );
+        }
+      }
+       
+      
+      
       $user = user_load_by_name($match[1]);
-      //$mention_text = $match[0];
-      //$mention_text = str_replace($input_settings['prefix'], '', $mention_text);
-      //$mention_text = str_replace($input_settings['suffix'], '', $mention_text);
       $replacement = $this->token_service->replace($output_settings['value'], array('user'=>$user));
       if ($output_settings['renderlink']) {
         $rendervalue = $this->token_service->replace($output_settings['rendertextbox'], array('user'=>$user));  
@@ -201,115 +215,12 @@ class MentionsFilter extends FilterBase implements ContainerFactoryPluginInterfa
           'renderlink' => $output_settings['renderlink'],
           'rendervalue' => isset($rendervalue)?$rendervalue:''
       );  
-      //$matching_text = $match[0];
-      //$username = $match[1];
-      //$user = user_load_by_name($username);
-      //print_r($user);
-    }
-    
-    /*
-    $users[] = array(
-      'text' => "@admin",
-      'user' => "5"
-    );
-     * 
-     */
+
     $users = isset($users)?$users:array();
     return $users;
-    //print_r($settings);
-    //$users = array();
-    //$input_pattern = '/(\b|\#)(\w*)/';
-    //if (preg_match_all($input_pattern, $text, $matches, PREG_SET_ORDER) && isset($settings->mention_type)) {
-    //  
-    //}
-  /*  
-  $input_pattern = mentions_get_input_pattern($mention_type);
-  if (preg_match_all($input_pattern, $text, $matches, PREG_SET_ORDER) && isset($mention_type->plugin)) {
-    $plugin = mentions_get_plugin($mention_type->plugin);
-    if (isset($plugin['callbacks']) && isset($plugin['callbacks']['target']) && function_exists($plugin['callbacks']['target'])) {
-      foreach ($matches as $match) {
-        if (($target = $plugin['callbacks']['target']($match[2], $mention_type)) !== FALSE) {
-          $mentions[$match[0]] = array(
-            'type'   => $mention_type,
-            'source' => array(
-              'string' => $match[0],
-              'match'  => $match[1],
-            ),
-            'target' => $target,
-          );
-        }
-      }
-    }
   }
-
-  krsort($mentions);
-
-  return $mentions;    
-   */ 
-    /*
-    $entity_storage = $this->entityManager->getStorage('mentions_type');
-    $label = '';
-    foreach ($entity_storage->loadMultiple() as $entity) {
-      $entity_id = $entity->id();
-      $label = $entity->label() ?: $entity_id;
-    }
-    $settings = $this->config->get('mentions.mentions_type.'.$label);
-    $users = array();
-
-    // Build regular expression pattern.
-    $pattern = '/(\b|\#)(\w*)/';
-    $input_settings = $settings->get('input');
-
-    switch (TRUE) {
-      case !empty($input_settings['prefix']) && !empty($input_settings['suffix']):
-        $pattern = '/\B(' . preg_quote($input_settings['prefix']) . '|' . preg_quote($this->t($input_settings['prefix'])) . ')(\#?.*?)(' . preg_quote($input_settings['suffix']) . '|' . preg_quote($this->t($input_settings['suffix'])) . ')/';
-        break;
-
-      case !empty($$input_settings['prefix']) && empty($$input_settings['suffix']):
-        $pattern = '/\B(' . preg_quote($$input_settings['prefix']) . '|' . preg_quote($this->t($$input_settings['prefix'])) . ')(\#?\w*)/';
-        break;
-
-      case empty($$input_settings['prefix']) && !empty($$input_settings['suffix']):
-        $pattern = '/(\b|\#)(\w*)(' . preg_quote($$input_settings['suffix']) . '|' . preg_quote($this->t($$input_settings['suffix'])) . ')/';
-        break;
-    }
-
-    $userStorage = $this->entityManager->getStorage('user');
-
-    // Find all matching strings.
-    if (preg_match_all($pattern, $text, $matches, PREG_SET_ORDER)) {
-      foreach ($matches as $match) {
-        if (Unicode::substr($match[2], 0, 1) == '#') {
-          // $user = user_load(drupal_substr($match[2], 1));
-          // $user = \Drupal::entityManager()->getStorage('user')->load(Unicode::substr($match[2], 1));
-          $user = $userStorage->loadByProperties(array('uid' => Unicode::substr($match[2], 1)));
-          $user = reset($user);
-        }
-        elseif ($match[1] == '#') {
-          // $user = user_load($match[2]);
-          $user = $userStorage->loadByProperties(array('uid' => $match[2]));
-          $user = reset($user);
-        }
-        else {
-          // $user = user_load_by_name($match[2]);
-          $user = $userStorage->loadByProperties(array('name' => $match[2]));
-          $user = reset($user);
-        }
-
-        if (!empty($user)) {
-          $users[] = array(
-            'text' => $match[0],
-            'user' => $user,
-          );
-        }
-      }
-    }
-
-    return $users;
-     * 
-     */
-  }
-
+}
+  
 /**
  * Returns the input pattern of a mention type, either as a regex or plain text.
  *
