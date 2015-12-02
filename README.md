@@ -8,7 +8,7 @@ Original Mentions module for Drupal 7
 
 #Installation
 1. Enable module as usual from extend admin page
-2. Once enabled, stay on page, and go back to listing for mentions and click *Record, render and react to specified patterns within content.*, then *Configure*
+2. Once enabled, stay on page, and go to mentions again and click *Record, render and react to specified patterns within content.*, then *Configure*
 3. First Add mention type
 4. Then follow instruction *Don't forget to enable 'Mentions filter' for the mentions type below for the appropriate  text formats*, remembering to check the box next to the mention type created in point 3 above.
 
