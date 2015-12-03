@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 /**
  * @file mentions.module
@@ -26,7 +26,7 @@ function mentions_theme() {
   return array(
    'mentions' => array(
      'variables' => array(
-       'userid' => NULL,
+       'mentionsid' => NULL,
        'link' => NULL,
        'renderlink' => FALSE,
        'rendervalue' => ''
@@ -55,8 +55,8 @@ function mentions_entity_update(EntityInterface $entity) {
 function mentions_entity_insert_or_update(EntityInterface $entity, $update) {
   $entity_type = $entity->getEntityType();
   $entity_type_id = $entity->getEntityTypeId();
-  
-  
+
+
   print($entity_type_id);
 }
 
@@ -72,7 +72,7 @@ function template_preprocess_mentions(&$variables) {
  // $variables['userintext']['userid'] = 5;
  //$variables['userintext']['link'] = '<a href="http://google.com">';
 
-  
+
   /*
   global $base_url;
   global $base_root;
