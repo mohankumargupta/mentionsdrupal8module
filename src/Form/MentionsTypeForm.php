@@ -39,8 +39,8 @@ class MentionsTypeForm extends EntityForm implements ContainerInjectionInterface
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('plugin.manager.mentions'),
-      $container->get('entity.manager')
+    $container->get('plugin.manager.mentions'),
+    $container->get('entity.manager')
     );
   }
 
@@ -76,14 +76,11 @@ class MentionsTypeForm extends EntityForm implements ContainerInjectionInterface
       $configentityclassname = ContentEntityType::class;
       $entitytype_type = get_class($entitytype_info);
       if ($entitytype_type == $configentityclassname) {
-        $candidate_entitytypes[$entity_type] = $entitytype_info->getLabel()->getUntranslatedString();  
-        //$candidate_entitytypefields[$entity_type]['id'] = $entitytype_info->getKey('id');
+        $candidate_entitytypes[$entity_type] = $entitytype_info->getLabel()->getUntranslatedString();
         $candidate_entitytypefields[$entity_type][$entitytype_info->getKey('id')] = $entitytype_info->getKey('id');
-        //$candidate_entitytypefields[$entity_type]['label'] = $entitytype_info->getKey('label');
-        
-        if ($entity_type == 'user') {
-          //$candidate_entitytypefields[$entity_type]['label'] = 'name'; 
-          $candidate_entitytypefields[$entity_type]['name'] = 'name'; 
+
+        if ($entity_type === 'user') {
+          $candidate_entitytypefields[$entity_type]['name'] = 'name';
         }
         else {
           $candidate_entitytypefields[$entity_type][$entitytype_info->getKey('label')] = $entitytype_info->getKey('label');
@@ -93,7 +90,7 @@ class MentionsTypeForm extends EntityForm implements ContainerInjectionInterface
 
     $config = $this->config('mentions.mentions_type.' . $entity_id);
     $name = $config->get('id');
-    
+
     $form['name'] = array(
       '#type' => 'textfield',
       '#title' => $this->t('Name'),
@@ -101,9 +98,9 @@ class MentionsTypeForm extends EntityForm implements ContainerInjectionInterface
       '#description' => $this->t('The human-readable name of this mention type. It is recommended that this name begin with a capital letter and contain only letters, numbers, and spaces. This name must be unique.'),
       '#default_value' => $config->get('name'),
     );
-    
+
     $mention_type_defaultvalue = $config->get('mention_type');
-    
+
     $form['mention_type'] = array(
       '#type' => 'select',
       '#title' => $this->t('Mention Type'),
@@ -111,6 +108,7 @@ class MentionsTypeForm extends EntityForm implements ContainerInjectionInterface
       '#options' => $plugin_names,
       '#default_value' => $config->get('mention_type'),
     );
+
     $form['description'] = array(
       '#type' => 'textarea',
       '#title' => $this->t('Description'),
@@ -136,51 +134,46 @@ class MentionsTypeForm extends EntityForm implements ContainerInjectionInterface
       '#title' => $this->t('Suffix'),
       '#default_value' => $config->get('input.suffix'),
       '#size' => 2,
-    );    
-    
+    );
+
     $entitytype_selection = $config->get('input.entity_type');
-    
+
     $form['input']['entity_type'] = array(
       '#type' => 'select',
       '#title' => 'Entity Type',
       '#options' => $candidate_entitytypes,
       '#default_value' => $entitytype_selection,
       '#ajax' => [
-          'callback' => array($this,'changeEntityTypeInForm'),
-          'wrapper' => 'edit-input-value-wrapper',
-          'event' => 'change',
-          'progress' => array(
-              'type' => 'throbber',
-              'message' => $this->t('Please wait...')
-          )
-      ]    
+        'callback' => array($this, 'changeEntityTypeInForm'),
+        'wrapper' => 'edit-input-value-wrapper',
+        'event' => 'change',
+        'progress' => array(
+          'type' => 'throbber',
+          'message' => $this->t('Please wait...'),
+        ),
+      ],
     );
 
-    //$entitytype_keys = array_keys($candidate_entitytypes);    
-    //$inputvalue = $entitytype_keys[$entitytype_selection];
-    
     if (!isset($candidate_entitytypefields)) {
-      $inputvalue_options = array();  
+      $inputvalue_options = array();
     }
-    
-    else if (isset($entitytype_selection)) {
+    elseif (isset($entitytype_selection)) {
       $inputvalue_options = $candidate_entitytypefields[$entitytype_selection];
     }
-    
     else {
-      $inputvalue_options = array_values($candidate_entitytypefields)[0];  
+      $inputvalue_options = array_values($candidate_entitytypefields)[0];
     }
-    
-    $inputvalue_default_value = count($inputsettings)==0?0:$inputsettings['inputvalue'];
-    
+
+    $inputvalue_default_value = count($inputsettings) == 0 ? 0 : $inputsettings['inputvalue'];
+
     $form['input']['inputvalue'] = array(
       '#type' => 'select',
       '#title' => $this->t('Value'),
       '#options' => $inputvalue_options,
-      '#default_value' => $inputvalue_default_value,  
-      '#prefix' =>'<div id="edit-input-value-wrapper">',
-      '#suffix '=>'</div>', 
-      '#validated' => 1,  
+      '#default_value' => $inputvalue_default_value,
+      '#prefix' => '<div id="edit-input-value-wrapper">',
+      '#suffix ' => '</div>',
+      '#validated' => 1,
     );
 
     $form['output'] = array(
@@ -203,17 +196,17 @@ class MentionsTypeForm extends EntityForm implements ContainerInjectionInterface
     );
 
     $form['output']['renderlinktextbox'] = array(
-       '#type' => 'textfield',
-       '#title' => $this->t('Link'),
-       '#description' => $this->t('This field supports tokens.'),
-       '#default_value' => $config->get('output.renderlinktextbox'),
-       '#states' => array(
-         'visible' => array(
-           ':input[name="output[renderlink]"]' => array('checked'=> TRUE)  
-         )  
-       )
+      '#type' => 'textfield',
+      '#title' => $this->t('Link'),
+      '#description' => $this->t('This field supports tokens.'),
+      '#default_value' => $config->get('output.renderlinktextbox'),
+      '#states' => array(
+        'visible' => array(
+          ':input[name="output[renderlink]"]' => array('checked' => TRUE),
+        ),
+      ),
     );
-    
+
     return parent::buildForm($form, $form_state);
   }
 
@@ -229,37 +222,25 @@ class MentionsTypeForm extends EntityForm implements ContainerInjectionInterface
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, FormStateInterface $form_state) {
-    //parent::validateForm($form, $form_state);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    //$form_state->setRebuild();
     parent::submitForm($form, $form_state);
     $form_state->setRedirect('entity.mentions_type.list');
   }
 
   public  function changeEntityTypeInForm(array &$form, FormStateInterface $form_state) {
-      $entitytype_state = $form_state->getValue(array('input', 'entity_type'));
-      $entitytype_info = $this->entityManager->getDefinition($entitytype_state);
-      $id = $entitytype_info->getKey('id');
-      $label = $entitytype_info->getKey('label');
-      if ($entitytype_state == 'user') {
-          $label = 'name';  
-      }
-      
-      unset($form['input']['inputvalue']['#options']);
-      unset($form['input']['inputvalue']['#default_value']);
-      //$form['input']['inputvalue']['#options'] = array($id, $label);
-      $form['input']['inputvalue']['#options'][$id] = $id;      
-      $form['input']['inputvalue']['#options'][$label] = $label;
-      $form['input']['inputvalue']['#default_value'] = $id;
-      //$form_state->setValue(array('input','inputvalue'), $id);
-          //unset($form[]['form_build_id']);  
-      return $form['input']['inputvalue'];
+    $entitytype_state = $form_state->getValue(array('input', 'entity_type'));
+    $entitytype_info = $this->entityManager->getDefinition($entitytype_state);
+    $id = $entitytype_info->getKey('id');
+    $label = $entitytype_info->getKey('label');
+    if ($entitytype_state == 'user') {
+      $label = 'name';
+    }
+    unset($form['input']['inputvalue']['#options']);
+    unset($form['input']['inputvalue']['#default_value']);
+    $form['input']['inputvalue']['#options'][$id] = $id;
+    $form['input']['inputvalue']['#options'][$label] = $label;
+    $form['input']['inputvalue']['#default_value'] = $id;
+    return $form['input']['inputvalue'];
   }
-  
+
 }

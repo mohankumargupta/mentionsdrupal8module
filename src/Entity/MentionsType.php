@@ -81,28 +81,28 @@ class MentionsType extends ConfigEntityBase implements MentionsTypeInterface {
    * @var string
    */   
   protected $input = array();
-  
+
   /**
-   * What is looked for when mentions are parsed
-   * Keys of array: outputvalue, renderlink 
-   * 
+   * What is looked for when mentions are parsed.
+   *
+   * Keys of array: outputvalue, renderlink .
+   *
    * @var string
-   */   
+   */
   protected $output = array();
 
 
   public function id() {
-      return $this->name;
+    return $this->name;
   }
-  
+
   public function mention_type() {
     return $this->mention_type;
   }
-  
-  public function getInputSettings() {
-      return $this->input;
-  }
-  
-}
 
+  public function getInputSettings() {
+    return $this->input;
+  }
+
+}
 
