@@ -6,7 +6,8 @@
 
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
-use Drupal\Core\Entity\EntityInterface;
+use Symfony\Component\EventDispatcher\Event;
+use Drupal\mentions\Plugin\Filter\MentionsFilter;
 
 function mentions_help($route_name, RouteMatchInterface $route_match) {
   switch($route_name) {
@@ -33,31 +34,6 @@ function mentions_theme() {
      )
    )
 );
-}
-
-/***
- * Implements hook_entity_insert().
- */
-function mentions_entity_insert(EntityInterface $entity) {
-  mentions_entity_insert_or_update($entity, true);
-}
-
-/***
- * Implements hook_entity_update().
- */
-function mentions_entity_update(EntityInterface $entity) {
-  mentions_entity_insert_or_update($entity, false);
-}
-
-/***
- * Implements hook_entity_update().
- */
-function mentions_entity_insert_or_update(EntityInterface $entity, $update) {
-  $entity_type = $entity->getEntityType();
-  $entity_type_id = $entity->getEntityTypeId();
-
-
-  print($entity_type_id);
 }
 
 
@@ -94,4 +70,118 @@ function template_preprocess_mentions(&$variables) {
 
    * }
    */
+}
+
+/**
+ * Implements hook_entity_insert().
+ */
+function mentions_entity_insert(Drupal\Core\Entity\EntityInterface $entity) {
+  mentions_insert_or_update($entity, FALSE);
+}
+
+/**
+ * Implements hook_entity_update().
+ */
+function mentions_entity_update(Drupal\Core\Entity\EntityInterface $entity) {
+  mentions_insert_or_update($entity, TRUE);
+}
+
+/**
+ * Handling mentions crud operations.
+ */
+function mentions_insert_or_update(Drupal\Core\Entity\EntityInterface $entity, $update) {
+  //$entity_type = $entity->getEntityType();
+  //$entity_type_id = $entity->getEntityTypeId();
+
+  $supported_entities = array('node', 'comment', 'taxonomy_term');
+  if (!in_array($entity->getEntityTypeId(), $supported_entities)) {
+    return;
+  }
+  $type = $entity->getEntityType()->getProvider();
+  $field_definitions = $entity->getFieldDefinitions();
+  $fields_with_text = array();
+  $supported_field_types = array('text_with_summary', 'text_long', 'text');
+  foreach ($field_definitions as $field_definition) {
+		$fieldtype = $field_definition->getType();
+    if (isset($fieldtype) && in_array($fieldtype, $supported_field_types)) {
+      array_push($fields_with_text, $field_definition->getName());
+    }
+  }
+
+  foreach ($fields_with_text as $textfield) {
+    $boo = $entity->get($textfield);
+    $value = $boo->value;
+    $container = \Drupal::getContainer();
+    $filter_mentions = MentionsFilter::create($container, array(), '', NULL);
+    $mentions = $filter_mentions->mentions_get_mentions($value);
+    if (!empty($mentions) || $update) {
+      $auid = \Drupal::currentUser()->id();
+      mentions_crud_update($type, $mentions, $entity->id(), $auid);
+    }
+  }
+}
+
+
+/**
+ * Implements hook_entity_delete().
+ */
+function mentions_entity_delete(Drupal\Core\Entity\EntityInterface $entity) {
+  $mention_ids = \Drupal::entityQuery('mentions')->condition('entity_id', $entity->id())->condition('entity_type', $entity->getEntityType()->getProvider())->execute();
+
+  entity_delete_multiple('mentions', $mention_ids);
+  $event_dispatcher = \Drupal::service('event_dispatcher');
+  $event_dispatcher->dispatch('mentions.delete', new Event());
+}
+
+/**
+ * Insert mentions into DB.
+ */
+function mentions_crud_update($type, $mentions, $id, $author) {
+
+  // Build old array of mentions.
+  $old_users = array();
+  $old_mids = array();
+  $mention_ids = \Drupal::entityQuery('mentions')->condition('entity_type', $type)->condition('entity_id', $id)->execute();
+  foreach ($mention_ids as $mention) {
+    $entity = entity_load('mentions', $mention);
+    $old_user = $entity->get('uid')->getValue()[0]['value'];
+    $old_users[] = $old_user;
+    $old_mids[$old_user] = $mention;
+  }
+
+  // Build array of new mentions.
+  $new_users = array();
+  foreach ($mentions as $mention) {
+    $new_users[] = $mention['user']->id();
+  }
+
+  $event_dispatcher = \Drupal::service('event_dispatcher');
+
+  // Add new mentions.
+  foreach (array_diff($new_users, $old_users) as $uid) {
+    $mentionattributes = array(
+      'entity_type' => $type,
+      'entity_id' => $id,
+      'uid' => $uid,
+      'auid' => $author);
+    $mention = entity_create('mentions', $mentionattributes);
+    $mention->save();
+
+    $event_dispatcher->dispatch('mentions.insert', new Event());
+  }
+
+  // Update existing mentions.
+  foreach (array_intersect($new_users, $old_users) as $uid) {
+    $entity = entity_load('mentions', $old_mids[$uid]);
+    $entity->set('created', REQUEST_TIME);
+    $entity->save();
+    $event_dispatcher->dispatch('mentions.update', new Event());
+  }
+
+  // Delete old mentions.
+  foreach (array_diff($old_users, $new_users) as $uid) {
+    $entity = entity_load('mentions', $old_mids[$uid]);
+    $entity->delete();
+    $event_dispatcher->dispatch('mentions.delete', new Event());
+  }
 }
