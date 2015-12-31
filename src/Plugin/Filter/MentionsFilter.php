@@ -13,6 +13,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Utility\Token;
+use Drupal\filter\Entity\FilterFormat;
 use Drupal\filter\FilterProcessResult;
 use Drupal\filter\Plugin\FilterBase;
 use Drupal\mentions\MentionsPluginInterface;
@@ -44,6 +45,7 @@ class MentionsFilter extends FilterBase implements ContainerFactoryPluginInterfa
   private $entityQueryService;
   private $inputSettings;
   private $outputSettings;
+  private $textFormat;
 
   public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityManagerInterface $entity_manager, RendererInterface $render, ConfigFactory $config, MentionsPluginManager $mentions_manager, Token $token, QueryFactory $query_factory) {
     $this->entityManager = $entity_manager;
@@ -120,8 +122,28 @@ class MentionsFilter extends FilterBase implements ContainerFactoryPluginInterfa
 
   }
 
-  private function shouldApplyFilter() {
+  
+  public function setTextFormat($text_format) {
+      $this->textFormat = $text_format;
+  }
+  
+  public function shouldApplyFilter() {
     $settings = $this->settings;
+    if ($settings == NULL) {
+      $filter_format = FilterFormat::load($this->textFormat);  
+      $filters = $filter_format->get('filters');  
+      if (isset($filters['filter_mentions']['settings']['mentions_filter'])) {
+          $mentions_filter_settings = $filters['filter_mentions']['settings']['mentions_filter'];
+          foreach($mentions_filter_settings as $mention_type) {
+             //$config =  $this->config->get('mentions.mentions_type.'. $mention_type);
+             //if ($config != null) {
+             $this->mentionType = $mention_type;
+             //}
+          }
+      }
+      return FALSE;    
+    }
+    
     $allconfigs = $this->config->listAll('mentions.mentions_type');
     if (isset($settings['mentions_filter'])) {
       foreach ($settings['mentions_filter'] as $mention_type) {

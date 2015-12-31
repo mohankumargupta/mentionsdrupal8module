@@ -76,6 +76,8 @@ function template_preprocess_mentions(&$variables) {
  * Implements hook_entity_insert().
  */
 function mentions_entity_insert(Drupal\Core\Entity\EntityInterface $entity) {
+  $entity_type = $entity->getEntityType();
+  $entity_type_id = $entity->getEntityTypeId();    
   mentions_insert_or_update($entity, FALSE);
 }
 
@@ -83,6 +85,8 @@ function mentions_entity_insert(Drupal\Core\Entity\EntityInterface $entity) {
  * Implements hook_entity_update().
  */
 function mentions_entity_update(Drupal\Core\Entity\EntityInterface $entity) {
+  $entity_type = $entity->getEntityType();
+  $entity_type_id = $entity->getEntityTypeId();  
   mentions_insert_or_update($entity, TRUE);
 }
 
@@ -93,7 +97,7 @@ function mentions_insert_or_update(Drupal\Core\Entity\EntityInterface $entity, $
   //$entity_type = $entity->getEntityType();
   //$entity_type_id = $entity->getEntityTypeId();
 
-  $supported_entities = array('node', 'comment', 'taxonomy_term');
+  $supported_entities = array('node', 'comment', 'taxonomy_term','user');
   if (!in_array($entity->getEntityTypeId(), $supported_entities)) {
     return;
   }
@@ -111,13 +115,19 @@ function mentions_insert_or_update(Drupal\Core\Entity\EntityInterface $entity, $
   foreach ($fields_with_text as $textfield) {
     $boo = $entity->get($textfield);
     $value = $boo->value;
+    $format = $boo->format;
+    
     $container = \Drupal::getContainer();
-    $filter_mentions = MentionsFilter::create($container, array(), '', NULL);
-    $mentions = $filter_mentions->mentions_get_mentions($value);
-    if (!empty($mentions) || $update) {
+    $filter_mentions = MentionsFilter::create($container, array());
+    $filter_mentions->setTextFormat($format);
+    $value = $filter_mentions->process($value, 'en');
+    /*
+    if ($filter_mentions->shouldApplyFilter()) {
+      $mentions = $filter_mentions->mentions_get_mentions($value);  
       $auid = \Drupal::currentUser()->id();
       mentions_crud_update($type, $mentions, $entity->id(), $auid);
     }
+    */
   }
 }
 
