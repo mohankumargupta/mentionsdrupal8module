@@ -118,9 +118,14 @@ function mentions_insert_or_update(Drupal\Core\Entity\EntityInterface $entity, $
     $format = $boo->format;
     
     $container = \Drupal::getContainer();
-    $filter_mentions = MentionsFilter::create($container, array());
+    $filter_mentions = MentionsFilter::create($container, array(), 'filter_mentions', array());
     $filter_mentions->setTextFormat($format);
-    $value = $filter_mentions->process($value, 'en');
+    $filter_mentions->shouldApplyFilter();
+    $mentions = $filter_mentions->mentions_get_mentions($value);
+    $auid = \Drupal::currentUser()->id();
+    mentions_crud_update($type, $mentions, $entity->id(), $auid);
+    //$value = $filter_mentions->process($value, 'en');
+    //$value = $value->getProcessedText();
     /*
     if ($filter_mentions->shouldApplyFilter()) {
       $mentions = $filter_mentions->mentions_get_mentions($value);  
@@ -162,7 +167,7 @@ function mentions_crud_update($type, $mentions, $id, $author) {
   // Build array of new mentions.
   $new_users = array();
   foreach ($mentions as $mention) {
-    $new_users[] = $mention['user']->id();
+    $new_users[] = $mention['source']['match'];
   }
 
   $event_dispatcher = \Drupal::service('event_dispatcher');

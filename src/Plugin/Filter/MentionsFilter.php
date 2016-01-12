@@ -128,6 +128,7 @@ class MentionsFilter extends FilterBase implements ContainerFactoryPluginInterfa
   }
   
   public function shouldApplyFilter() {
+    $flag = false;  
     $settings = $this->settings;
     if ($settings == NULL) {
       $filter_format = FilterFormat::load($this->textFormat);  
@@ -138,10 +139,11 @@ class MentionsFilter extends FilterBase implements ContainerFactoryPluginInterfa
              //$config =  $this->config->get('mentions.mentions_type.'. $mention_type);
              //if ($config != null) {
              $this->mentionType = $mention_type;
+             $flag = true;
              //}
           }
       }
-      return FALSE;    
+      return $flag;    
     }
     
     $allconfigs = $this->config->listAll('mentions.mentions_type');
