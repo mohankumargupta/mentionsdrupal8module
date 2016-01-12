@@ -167,7 +167,7 @@ function mentions_crud_update($type, $mentions, $id, $author) {
   // Build array of new mentions.
   $new_users = array();
   foreach ($mentions as $mention) {
-    $new_users[] = $mention['source']['match'];
+    $new_users[] = $mention['target']['entity_id'];
   }
 
   $event_dispatcher = \Drupal::service('event_dispatcher');
