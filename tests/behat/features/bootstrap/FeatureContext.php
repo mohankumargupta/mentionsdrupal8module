@@ -2,6 +2,7 @@
 
 /**
  * @file
+ * @file
  */
 
 use Behat\Behat\Context\Context;
@@ -92,4 +93,3 @@ class FeatureContext extends RawDrupalContext implements Context, SnippetAccepti
 	
 	
 }
-
