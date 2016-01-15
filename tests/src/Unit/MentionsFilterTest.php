@@ -68,6 +68,8 @@ class MentionsFilterTest extends UnitTestCase {
     $inputconfig = array(
       'prefix' => '[@',
       'suffix' => ']',
+      'entity_type' => 'user',
+      'inputvalue' => '1'  
     );
 
     $this->userStorage->expects($this->once())
@@ -95,6 +97,7 @@ class MentionsFilterTest extends UnitTestCase {
     $mentions_filter->setRenderer($this->renderer);
      */
 
+    /*
     $this->config->expects($this->at(0))
       ->method('get')
       ->with('input.prefix')
@@ -114,12 +117,28 @@ class MentionsFilterTest extends UnitTestCase {
       ->method('get')
       ->with('input.inputvalue')
       ->will($this->returnValue(''));       
-
+    */
+    
+    $map = array(
+        array('input.prefix', $inputconfig['prefix']),
+        array('input.suffix', $inputconfig['suffix']),
+        array('input.entity_type', $inputconfig['user']),
+        array('input.inputvalue', $inputconfig['inputvalue']),
+    );
+    $this->config
+      ->method('get')
+      ->will($this->returnValueMap(
+            $map
+      ));      
+    
     $this->configFactory->expects($this->once())
       ->method('get')
       ->with('mentions.mentions_type.')
       ->will($this->returnValue($this->config));
-
+  
+    
+   
+    
     $mentions_filter->setConfig($this->configFactory);
     $mentions_filter->setStringTranslation($this->getStringTranslationStub());
 
