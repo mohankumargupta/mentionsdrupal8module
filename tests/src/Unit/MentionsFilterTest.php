@@ -52,11 +52,17 @@ class MentionsFilterTest extends UnitTestCase {
     $user = $this->getMockBuilder('Drupal\user\Entity\User')
                 ->disableOriginalConstructor()
                 ->getMock();
+
     $expected = array(
-      array(
-        'text' => $input,
-        'user' => $user,
-      ),
+      $input => array(
+            'type' => 'mentions.mentions_type',
+            'source' => array(
+              'string' => $input,
+              'match' => 'admin',
+            ),
+            'target' => 'user/1',          
+      )  
+
     );
 
     $inputconfig = array(
