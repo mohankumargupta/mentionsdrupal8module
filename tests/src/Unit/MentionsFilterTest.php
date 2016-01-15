@@ -122,7 +122,7 @@ class MentionsFilterTest extends UnitTestCase {
     $map = array(
         array('input.prefix', $inputconfig['prefix']),
         array('input.suffix', $inputconfig['suffix']),
-        array('input.entity_type', $inputconfig['user']),
+        array('input.entity_type', $inputconfig['entity_type']),
         array('input.inputvalue', $inputconfig['inputvalue']),
     );
     $this->config
