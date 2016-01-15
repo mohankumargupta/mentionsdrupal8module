@@ -98,7 +98,12 @@ class MentionsFilterTest extends UnitTestCase {
     $this->config->expects($this->once())
       ->method('get')
       ->with('input.prefix')
-      ->will($this->returnValue($inputconfig));
+      ->will($this->returnValue($inputconfig['prefix']));
+    
+    $this->config->expects($this->once())
+      ->method('get')
+      ->with('input.suffix')
+      ->will($this->returnValue($inputconfig['suffix']));    
 
     $this->configFactory->expects($this->once())
       ->method('get')
