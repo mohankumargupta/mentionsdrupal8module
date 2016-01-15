@@ -112,7 +112,7 @@ class MentionsFilterTest extends UnitTestCase {
       return $mentions_filter->mentions_get_mentions($input);
     };
 
-    $this->assertEquals($expected, $test($input));
+    $this->assertSame($expected, $test($input));
   }
 
 }
