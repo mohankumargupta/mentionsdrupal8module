@@ -14,14 +14,16 @@ env:
   global:
     - PATH="$PATH:$HOME/.composer/vendor/bin"
     - DRUPAL_TI_MODULE_NAME="mentions"
+    - DRUPAL_TI_SIMPLETEST_GROUP="mentions"
     - DRUPAL_TI_ENVIRONMENT="drupal-8"
     - DRUPAL_TI_DB="drupal_travis_db"
     - DRUPAL_TI_DB_URL="mysql://root:@127.0.0.1/drupal_travis_db"
     - DRUPAL_TI_WEBSERVER_URL="http://127.0.0.1"
     - DRUPAL_TI_WEBSERVER_PORT="8080"
+    - DRUPAL_TI_SIMPLETEST_ARGS="--verbose --color --concurrency 4 --url $DRUPAL_TI_WEBSERVER_URL:$DRUPAL_TI_WEBSERVER_PORT"
     - DRUPAL_TI_BEHAT_DIR="./tests/behat"
     - DRUPAL_TI_BEHAT_ARGS=""
-    - DRUPAL_TI_BEHAT_YML="behat.yml"
+    - DRUPAL_TI_BEHAT_YML="behat.yml.dist"
     - DRUPAL_TI_BEHAT_SCREENSIZE_COLOR="1280x1024x16"
     - DRUPAL_TI_BEHAT_SELENIUM_VERSION="2.44"
     - DRUPAL_TI_BEHAT_DRIVER="selenium"
@@ -39,7 +41,7 @@ env:
   matrix:
     # [[[ SELECT ANY OR MORE OPTIONS ]]]
     - DRUPAL_TI_RUNNERS="phpunit-core"
-    - DRUPAL_TI_RUNNERS="behat"
+    #- DRUPAL_TI_RUNNERS="behat"
     #- DRUPAL_TI_RUNNERS="behat"
     #- DRUPAL_TI_RUNNERS="phpunit simpletest behat"
 
@@ -59,7 +61,7 @@ install:
   - drupal-ti install
 
 before_script:
-  - drupal-ti --include ".travis-before-script.sh"
+  #- drupal-ti --include .travis-before-script.sh
   - drupal-ti before_script
 
 script:
