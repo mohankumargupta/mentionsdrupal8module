@@ -13,8 +13,8 @@ php:
 env:
   global:
     - PATH="$PATH:$HOME/.composer/vendor/bin"
-    - DRUPAL_TI_MODULE_NAME="mentionsdrupal8module"
-    - DRUPAL_TI_SIMPLETEST_GROUP="mentionsdrupal8module"
+    - DRUPAL_TI_MODULE_NAME="mentions"
+    - DRUPAL_TI_SIMPLETEST_GROUP="mentions"
     - DRUPAL_TI_ENVIRONMENT="drupal-8"
     - DRUPAL_TI_DB="drupal_travis_db"
     - DRUPAL_TI_DB_URL="mysql://root:@127.0.0.1/drupal_travis_db"
