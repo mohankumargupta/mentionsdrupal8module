@@ -74,7 +74,7 @@ class MentionsFilterTest extends UnitTestCase {
       ->with('user')
       ->will($this->returnValue($this->userStorage));
 
-    $mentions_filter = $this->getMockBuilder('Drupal\mentions\Plugin\Filter\FilterMentions')
+    $mentions_filter = $this->getMockBuilder('Drupal\mentions\Plugin\Filter\MentionsFilter')
       ->disableOriginalConstructor()
       ->setMethods(NULL)
       ->getMock();
