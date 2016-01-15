@@ -102,7 +102,7 @@ class MentionsFilterTest extends UnitTestCase {
 
     $this->configFactory->expects($this->once())
       ->method('get')
-      ->with('mentions.mentions_type')
+      ->with('mentions.mentions_type.')
       ->will($this->returnValue($this->config));
 
     $mentions_filter->setConfig($this->configFactory);
