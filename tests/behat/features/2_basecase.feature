@@ -2,7 +2,7 @@
 
   @api @javascript
   Scenario: Add simple node with a mention for admin
-  Given I am logged in as a user with the "administrator" role
+  Given I am logged in as a user with the "Administrator" role
   When I visit "admin/config/content/formats/manage/basic_html" 
   And I check "Mentions Filter"
   And I press the "Save configuration" button
