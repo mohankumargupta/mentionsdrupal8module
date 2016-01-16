@@ -2,7 +2,7 @@
 
   @api @javascript
   Scenario: Default values for configuration page 
-  Given I am logged in as "admin"
+  Given I am logged in as a user with the "administrator" role
   When I visit "admin/structure/mentions"
   And I click "Add Mentions Type"
   And I wait 10 seconds
