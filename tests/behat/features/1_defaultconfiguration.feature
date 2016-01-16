@@ -2,7 +2,7 @@
 
   @api @javascript
   Scenario: Default values for configuration page 
-  Given I am logged in as a user with the "administrator" role
+  Given I am logged in as a user with the "Administrator" role
   When I visit "admin/config/mentions"
   Then the "mentions[input][prefix]" field should contain "[@"
   And the "mentions[input][suffix]" field should contain "]"
