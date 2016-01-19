@@ -1,4 +1,4 @@
 #!/bin/bash
-drupal_ti_ensure_drupal
-drupal_ti_ensure_module_linked
-drush en -y mentions
+echo $DRUPAL_TI_WEBSERVER_URL
+echo $DRUPAL_TI_WEBSERVER_PORT
+echo $DRUPAL_TI_DRUPAL_DIR

@@ -44,6 +44,14 @@ class MentionsFilterTest extends UnitTestCase {
 
     $configfactory = $this->getMock('Drupal\Core\Config\ConfigFactoryInterface');
     $this->configFactory = $configfactory;
+    
+    $mentions_manager = $this->getMockBuilder('Drupal\mentions\MentionsPluginManager')
+      ->disableOriginalConstructor()
+      ->getMock();
+    $this->mentionsManager = $mentions_manager;
+    
+    $mentions_plugin = $this->getMock('Drupal\mentions\MentionsPluginInterface');
+    $this->mentionsManager = $mentions_plugin;
   }
 
   public function testFilterMentionByUsername() {
@@ -55,12 +63,12 @@ class MentionsFilterTest extends UnitTestCase {
 
     $expected = array(
       $input => array(
-            'type' => 'mentions.mentions_type',
+            'type' => 'entity',
             'source' => array(
               'string' => $input,
               'match' => 'admin',
             ),
-            'target' => 'user/1',          
+            'target' => array('entity_type'=> 'user', 'entity_id' => 1),          
       )  
 
     );
@@ -69,7 +77,7 @@ class MentionsFilterTest extends UnitTestCase {
       'prefix' => '[@',
       'suffix' => ']',
       'entity_type' => 'user',
-      'inputvalue' => '1'  
+      'inputvalue' => 'name'  
     );
 
     $this->userStorage->expects($this->once())
@@ -87,6 +95,9 @@ class MentionsFilterTest extends UnitTestCase {
       ->setMethods(NULL)
       ->getMock();
 
+    
+    
+    $mentions_filter->setMentionsManager();
     $mentions_filter->setEntityManager($this->entityManager);
 
     /*
@@ -136,7 +147,16 @@ class MentionsFilterTest extends UnitTestCase {
       ->with('mentions.mentions_type.')
       ->will($this->returnValue($this->config));
   
+    $this->mentionsPlugin->expects($this->any())
+      ->method('targetCallback')        
+      ->will()      
+            
+            ;
     
+    $this->mentionsManager->expects($this->once())
+      ->method('createInstance')
+      ->with('entity')      
+      ->will($this->returnValue());      
    
     
     $mentions_filter->setConfig($this->configFactory);

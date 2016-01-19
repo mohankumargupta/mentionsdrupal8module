@@ -103,6 +103,10 @@ class MentionsFilter extends FilterBase implements ContainerFactoryPluginInterfa
     $this->entityManager = $entity_manager;
   }
 
+  public function setMentionsManager($mentions_manager) {
+    $this->mentionsManager = $mentions_manager;  
+  }
+  
   public function setRenderer($renderer) {
     $this->renderer = $renderer;
   }
