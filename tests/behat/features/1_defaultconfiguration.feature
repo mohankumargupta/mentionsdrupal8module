@@ -1,6 +1,10 @@
   Feature: Test configuration form
 
   @api @javascript
+  When I go to the homepage
+  Then I should get a "200" HTTP response
+
+  @api @javascript
   Scenario: Default values for configuration page 
   Given I am logged in as a user with the "administrator" role
   When I visit "admin/structure/mentions"
