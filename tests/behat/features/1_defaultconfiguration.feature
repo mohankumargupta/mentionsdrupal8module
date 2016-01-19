@@ -1,6 +1,7 @@
   Feature: Test configuration form
 
   @api @javascript
+  Scenario: Simple check
   When I go to the homepage
   Then I should get a "200" HTTP response
 
