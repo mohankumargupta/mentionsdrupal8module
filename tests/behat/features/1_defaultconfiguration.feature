@@ -10,4 +10,3 @@
   And I click "Save Mentions Type"
   And I wait 10 seconds
   Then I should see "boo" 
-
