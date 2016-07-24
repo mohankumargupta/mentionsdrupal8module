@@ -97,7 +97,7 @@ class MentionsFilterTest extends UnitTestCase {
 
     
     
-    $mentions_filter->setMentionsManager($this->mentions_manager);
+    $mentions_filter->setMentionsManager($this->mentionsManager);
     $mentions_filter->setEntityManager($this->entityManager);
 
     /*
