@@ -51,7 +51,7 @@ class MentionsFilterTest extends UnitTestCase {
     $this->mentionsManager = $mentions_manager;
     
     $mentions_plugin = $this->getMock('Drupal\mentions\MentionsPluginInterface');
-    $this->mentionsManager = $mentions_plugin;
+    $this->mentionsPlugin = $mentions_plugin;
   }
 
   public function testFilterMentionByUsername() {
