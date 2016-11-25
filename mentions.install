@@ -1,0 +1,26 @@
+<?php
+
+function defaultenablementionsfilter($config) {
+        $config = \Drupal::service('config.factory')->getEditable($config);
+        $filters = $config->get('filters');
+        $filters['filter_mentions'] = array(
+          "id" => "filter_mentions",
+          "provider" => "mentions",
+          "status" =>  "true",
+          "weight" => -40,
+          "settings" => array(
+            "mentions_filter" => []
+            )
+        );
+        $config->set('filters',$filters);
+        $config->save();    
+    
+}
+
+function mentions_install() {
+    if (!\Drupal::service('config.installer')->isSyncing()) {
+      defaultenablementionsfilter('filter.format.basic_html');
+      defaultenablementionsfilter('filter.format.full_html');
+    }
+}
+
