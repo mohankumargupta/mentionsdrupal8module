@@ -107,7 +107,10 @@ class MentionsFilterTest extends UnitTestCase {
       ->setMethods(NULL)
       ->getMock();
 
-    
+    $mentions_mention_plugin = $this->getMockBuilder('Drupal\mentions\Plugin\Mentions\Entity')
+      ->disableOriginalConstructor()
+      ->setMethods(NULL)
+      ->getMock();
     
     $mentions_filter->setMentionsManager($this->mentionsManager);
     $mentions_filter->setEntityManager($this->entityManager);
@@ -167,7 +170,7 @@ class MentionsFilterTest extends UnitTestCase {
     $this->mentionsManager->expects($this->once())
       ->method('createInstance')
       ->with('entity')      
-      ->will($this->returnValue());      
+      ->will($this->returnValue($mentions_mention_plugin));      
    
     
     $mentions_filter->setConfig($this->configFactory);
