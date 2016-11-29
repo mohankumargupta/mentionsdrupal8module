@@ -9,8 +9,10 @@ function defaultenablementionsfilter($config) {
           "status" =>  "true",
           "weight" => -40,
           "settings" => array(
-            "mentions_filter" => []
+            "mentions_filter" => array(
+              "UserMention" => "UserMention"      
             )
+          )
         );
         $config->set('filters',$filters);
         $config->save();    

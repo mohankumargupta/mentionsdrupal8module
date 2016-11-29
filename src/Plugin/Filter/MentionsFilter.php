@@ -132,36 +132,36 @@ class MentionsFilter extends FilterBase implements ContainerFactoryPluginInterfa
   }
   
   public function shouldApplyFilter() {
-    $flag = false;  
+   
     $settings = $this->settings;
-    if ($settings == NULL) {
-      $filter_format = FilterFormat::load($this->textFormat);  
-      $filters = $filter_format->get('filters');  
-      if (isset($filters['filter_mentions']['settings']['mentions_filter'])) {
-          $mentions_filter_settings = $filters['filter_mentions']['settings']['mentions_filter'];
-          foreach($mentions_filter_settings as $mention_type) {
-             //$config =  $this->config->get('mentions.mentions_type.'. $mention_type);
-             //if ($config != null) {
-             $this->mentionType = $mention_type;
-             $flag = true;
-             //}
-          }
-      }
-      return $flag;    
+
+    if (isset($settings['mentions_filter'])) {
+    $allconfigs = $this->config->listAll('mentions.mentions_type');
+
+    foreach ($allconfigs as $config) {
+      $this->mentionType = str_replace('mentions.mentions_type.', '', $config);
+      return TRUE;        
+    }
+
+    }
+    
+    $filter_format = FilterFormat::load($this->textFormat); 
+    if ($filter_format == null) {
+        return FALSE;
+    }
+    $filters = $filter_format->get('filters');  
+    if (!$filters['filter_mentions']['status']) {
+      return FALSE; 
     }
     
     $allconfigs = $this->config->listAll('mentions.mentions_type');
-    if (isset($settings['mentions_filter'])) {
-      foreach ($settings['mentions_filter'] as $mention_type) {
-        foreach ($allconfigs as $config) {
-          $mentions_name = str_replace('mentions.mentions_type.', '', $config);
-          if ($mentions_name == $mention_type) {
-            $this->mentionType = $mention_type;
-            return TRUE;
-          }
-        }
-      }
+
+    foreach ($allconfigs as $config) {
+      $this->mentionType = str_replace('mentions.mentions_type.', '', $config);
+      return TRUE;        
     }
+
+    
     return FALSE;
   }
 
