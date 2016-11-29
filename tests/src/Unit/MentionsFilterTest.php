@@ -50,6 +50,8 @@ class MentionsFilterTest extends UnitTestCase {
       ->getMock();
     $this->mentionsManager = $mentions_manager;
     
+    
+    
     $mentions_plugin = $this->getMock('Drupal\mentions\MentionsPluginInterface');
     $this->mentionsPlugin = $mentions_plugin;
   }
@@ -168,8 +170,12 @@ class MentionsFilterTest extends UnitTestCase {
       ->will($this->returnValue($target));
     
     $this->mentionsManager->expects($this->once())
+         ->method('getPluginNames')
+         ->will($this->returnValue(array('entity')));
+    
+    $this->mentionsManager->expects($this->once())
       ->method('createInstance')
-      ->with('entity')      
+      ->with()      
       ->will($this->returnValue($mentions_mention_plugin));      
    
     
