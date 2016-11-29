@@ -57,10 +57,22 @@ class MentionsFilterTest extends UnitTestCase {
   public function testFilterMentionByUsername() {
     $input = '[@admin]';
     $username = 'admin';
+    $node_entity_id = 1;
+    $node_entity_type = 'node';
     $user = $this->getMockBuilder('Drupal\user\Entity\User')
                 ->disableOriginalConstructor()
                 ->getMock();
 
+    $settings =  array(
+        'entity_type' => 'user',
+        'value' => 'name'
+    );
+    
+    $target = array(
+        "entity_type" => $node_entity_type ,
+        "entity_id" => $node_entity_id
+    );
+    
     $expected = array(
       $input => array(
             'type' => 'entity',
@@ -148,10 +160,9 @@ class MentionsFilterTest extends UnitTestCase {
       ->will($this->returnValue($this->config));
   
     $this->mentionsPlugin->expects($this->any())
-      ->method('targetCallback')        
-      ->will()      
-            
-            ;
+      ->method('targetCallback')
+      ->with($node_entity_id, $settings)
+      ->will($this->returnValue($target));
     
     $this->mentionsManager->expects($this->once())
       ->method('createInstance')
