@@ -1,0 +1,17 @@
+uuid: da606fa5-5fdc-4ec9-9a02-cb37dbf850a8
+langcode: en
+status: true
+dependencies: {  }
+id: UserMentionByID
+name: UserMentionByID
+description: ''
+mention_type: entity
+input:
+  prefix: '#@'
+  suffix: ''
+  entity_type: user
+  inputvalue: uid
+output:
+  outputvalue: '@[user:name]'
+  renderlink: 1
+  renderlinktextbox: 'user/[user:uid]'

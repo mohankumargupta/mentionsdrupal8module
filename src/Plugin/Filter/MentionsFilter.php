@@ -28,7 +28,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * id = "filter_mentions",
  * title = @Translation("Mentions Filter"),
  * description = @Translation("Configure via the <a href='/admin/structure/mentions'>Mention types</a> page."),
- * type = Drupal\filter\Plugin\FilterInterface::TYPE_HTML_RESTRICTOR,
+ * type = Drupal\filter\Plugin\FilterInterface::TYPE_MARKUP_LANGUAGE,
  * settings = {
  *   "mentions_filter" = {}
  * },
@@ -46,6 +46,7 @@ class MentionsFilter extends FilterBase implements ContainerFactoryPluginInterfa
   private $inputSettings;
   private $outputSettings;
   private $textFormat;
+  private $mentionFilters = array();
 
   public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityManagerInterface $entity_manager, RendererInterface $render, ConfigFactory $config, MentionsPluginManager $mentions_manager, Token $token, QueryFactory $query_factory) {
     $this->entityManager = $entity_manager;
@@ -117,7 +118,8 @@ class MentionsFilter extends FilterBase implements ContainerFactoryPluginInterfa
 
   public function process($text, $langcode) {
     if ($this->shouldApplyFilter()) {
-      return new FilterProcessResult($this->_filter_mentions($text));
+      return new FilterProcessResult($this->_filter_mentions_apply_each_filter($text));
+      //return new FilterProcessResult($this->_filter_mentions($text));
     }
 
     else {
@@ -137,36 +139,35 @@ class MentionsFilter extends FilterBase implements ContainerFactoryPluginInterfa
 
     if (isset($settings['mentions_filter'])) {
     $allconfigs = $this->config->listAll('mentions.mentions_type');
-
-    foreach ($allconfigs as $config) {
-      $this->mentionType = str_replace('mentions.mentions_type.', '', $config);
-      return TRUE;        
-    }
-
-    }
+    $this->mentionFilters = array();
+    $flag = FALSE;
     
-    $filter_format = FilterFormat::load($this->textFormat); 
-    if ($filter_format == null) {
-        return FALSE;
-    }
-    $filters = $filter_format->get('filters');  
-    if (!$filters['filter_mentions']['status']) {
-      return FALSE; 
-    }
+    foreach ($allconfigs as $configname) {
+      $mention_config = str_replace('mentions.mentions_type.', '', $configname);
+      $this->mentionType = $mention_config;
+      if ($settings['mentions_filter'][$mention_config] == $mention_config) {
+      array_push($this->mentionFilters,  $mention_config);
+         $flag = TRUE;
+      }
+     
+    }  
     
-    $allconfigs = $this->config->listAll('mentions.mentions_type');
-
-    foreach ($allconfigs as $config) {
-      $this->mentionType = str_replace('mentions.mentions_type.', '', $config);
-      return TRUE;        
-    }
-
+    return $flag;        
     
-    return FALSE;
+    }
   }
 
-  public function _filter_mentions($text) {
-    $all_mentions = $this->mentions_get_mentions($text);
+  public function _filter_mentions_apply_each_filter($text) {
+      $resulttext = $text;
+      foreach($this->mentionFilters as $filter) {
+         $resulttext = $this->_filter_mentions($resulttext, $filter);
+      }
+      
+      return $resulttext;
+  }
+  
+  public function _filter_mentions($text, $filter) {
+    $all_mentions = $this->mentions_get_mentions($text, $filter);
     if ($all_mentions !== FALSE && $all_mentions != NULL && !empty($all_mentions)) {
       foreach ($all_mentions as $match) {
         $mention = $this->mentionsManager->createInstance($match['type']);
@@ -192,10 +193,9 @@ class MentionsFilter extends FilterBase implements ContainerFactoryPluginInterfa
 
   }
 
-  public function mentions_get_mentions($text) {
+  public function mentions_get_mentions($text, $filter) {
     $mentions = array();
-    $config_name = $this->mentionType;
-    $settings = $this->config->get('mentions.mentions_type.' . $config_name);
+    $settings = $this->config->get('mentions.mentions_type.' . $filter);
     $input_settings = array(
       'prefix' => $settings->get('input.prefix'),
       'suffix' => $settings->get('input.suffix'),
