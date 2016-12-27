@@ -36,11 +36,6 @@ use Drupal\mentions\Entity\MentionsTypeInterface;
  *     "collection" = "/admin/structure/mentions",
  *     "edit_form" = "/admin/structure/mentions/{mentions_type}/edit",
  *     "delete_form" = "/admin/structure/mentions/{mentions_type}/delete"
- *   },
- *  
- *   config_export = {
- *     "id",
- *     "name"
  *   }
  * 
  * )
