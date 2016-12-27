@@ -50,10 +50,12 @@ class MentionsFilterTest extends UnitTestCase {
       ->getMock();
     $this->mentionsManager = $mentions_manager;
     
-    
-    
     $mentions_plugin = $this->getMock('Drupal\mentions\MentionsPluginInterface');
     $this->mentionsPlugin = $mentions_plugin;
+    
+    $mentions_entityquery = $this->getMock('Drupal\Core\Entity\Query\QueryFactory');
+    $this->mentionsEntityQuery = $mentions_entityquery;
+    
   }
 
   public function testFilterMentionByUsername() {
@@ -161,13 +163,28 @@ class MentionsFilterTest extends UnitTestCase {
     
     $this->configFactory->expects($this->once())
       ->method('get')
-      ->with('mentions.mentions_type.')
+      ->with('mentions.mentions_type.UserMention')
       ->will($this->returnValue($this->config));
   
     $this->mentionsPlugin->expects($this->any())
       ->method('targetCallback')
       ->with($node_entity_id, $settings)
       ->will($this->returnValue($target));
+    
+    $this->mentionsPlugin->expects($this->any())
+         ->method('setEntityManager')
+         ->with($this->entityManager);
+    
+    $this->mentionsPlugin->expects($this->any())
+         ->method('setEntityQuery')
+         ->with($this->mentionsEntityQuery);   
+    
+    /*
+    $this->mentionsEntityQuery->expects($this->any())
+         ->method('get')
+         ->with()
+    */
+    
     
     $this->mentionsManager->expects($this->once())
          ->method('getPluginNames')
@@ -183,7 +200,7 @@ class MentionsFilterTest extends UnitTestCase {
     $mentions_filter->setStringTranslation($this->getStringTranslationStub());
 
     $test = function($input) use ($mentions_filter) {
-      return $mentions_filter->mentions_get_mentions($input);
+      return $mentions_filter->mentions_get_mentions($input, 'UserMention');
     };
 
     $this->assertSame($expected, $test($input));

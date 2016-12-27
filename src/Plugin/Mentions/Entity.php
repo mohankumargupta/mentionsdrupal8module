@@ -36,6 +36,14 @@ class Entity implements MentionsPluginInterface {
     );
   }
 
+  public function setEntityManager($entity_manager) {
+      $this->entity_manager = $entity_manager;
+  }
+  
+  public function setEntityQuery($entityquery) {
+      $this->entityQuery_service = $entityquery;
+  }
+  
   public function outputCallback($mention, $settings) {
     $entity = $this->entity_manager->getStorage($mention['target']['entity_type'])->load($mention['target']['entity_id']);
     $output['value'] = $this->token_service->replace($settings['value'], array($mention['target']['entity_type'] => $entity));

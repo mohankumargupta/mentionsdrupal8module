@@ -47,6 +47,7 @@ class MentionsFilter extends FilterBase implements ContainerFactoryPluginInterfa
   private $outputSettings;
   private $textFormat;
   private $mentionFilters = array();
+  private $mentions;
 
   public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityManagerInterface $entity_manager, RendererInterface $render, ConfigFactory $config, MentionsPluginManager $mentions_manager, Token $token, QueryFactory $query_factory) {
     $this->entityManager = $entity_manager;
@@ -136,25 +137,34 @@ class MentionsFilter extends FilterBase implements ContainerFactoryPluginInterfa
   public function shouldApplyFilter() {
    
     $settings = $this->settings;
+    $flag = FALSE;
 
-    if (isset($settings['mentions_filter'])) {
     $allconfigs = $this->config->listAll('mentions.mentions_type');
     $this->mentionFilters = array();
-    $flag = FALSE;
-    
+        
     foreach ($allconfigs as $configname) {
       $mention_config = str_replace('mentions.mentions_type.', '', $configname);
       $this->mentionType = $mention_config;
-      if ($settings['mentions_filter'][$mention_config] == $mention_config) {
-      array_push($this->mentionFilters,  $mention_config);
-         $flag = TRUE;
+      
+      if (isset($settings['mentions_filter'])) { 
+        $mentions_settings = $settings['mentions_filter'][$mention_config];
       }
-     
-    }  
-    
-    return $flag;        
-    
+      
+      else if (isset($this->textFormat)) {
+        $textformat = "filter.format.{$this->textFormat}";
+        $textformat_config = $this->config->get($textformat);
+        $mentions_settings = $textformat_config->get('filters');
+        $filter_mentions = $mentions_settings['filter_mentions']['settings']['mentions_filter'];
+      
+      
+      }      
+      
+      if ($filter_mentions[$mention_config] == $mention_config) {
+          array_push($this->mentionFilters,  $mention_config);
+           $flag = TRUE;
+      }      
     }
+    return $flag;    
   }
 
   public function _filter_mentions_apply_each_filter($text) {
@@ -164,6 +174,15 @@ class MentionsFilter extends FilterBase implements ContainerFactoryPluginInterfa
       }
       
       return $resulttext;
+  }
+
+  public function filter_mentions_structure($text) {
+      $results = array();
+      foreach($this->mentionFilters as $filter) {
+        $results[] = $this->mentions_get_mentions($text, $filter);
+      }
+      
+      return $results;
   }
   
   public function _filter_mentions($text, $filter) {
@@ -184,6 +203,7 @@ class MentionsFilter extends FilterBase implements ContainerFactoryPluginInterfa
             '#renderlink' => $shouldrenderlink,
             '#rendervalue' => $rendervalue,
           );
+          $this->mentions = $mentions;
           $mentions2 = $this->renderer->render($mentions);
           $text = str_replace($match['source']['string'], $mentions2, $text);
         }

@@ -115,11 +115,11 @@ function mentions_insert_or_update(Drupal\Core\Entity\EntityInterface $entity, $
   foreach ($fields_with_text as $textfield) {
     $boo = $entity->get($textfield);
     $value = $boo->value;
-    $format = $boo->format;
+    $text_format = $boo->format;
     
-    //$container = \Drupal::getContainer();
-    //$filter_mentions = MentionsFilter::create($container, array(), 'filter_mentions', array());
-    //$filter_mentions->setTextFormat($format);
+    $container = \Drupal::getContainer();
+    $filter_mentions = MentionsFilter::create($container, array(), 'filter_mentions', array());
+    $filter_mentions->setTextFormat($text_format);
     //if ($filter_mentions->shouldApplyFilter()) {
     //  $mentions = $filter_mentions->mentions_get_mentions($value);
     //  $auid = \Drupal::currentUser()->id();
@@ -127,13 +127,17 @@ function mentions_insert_or_update(Drupal\Core\Entity\EntityInterface $entity, $
     //}
     //$value = $filter_mentions->process($value, 'en');
     //$value = $value->getProcessedText();
-    /*
+    
     if ($filter_mentions->shouldApplyFilter()) {
-      $mentions = $filter_mentions->mentions_get_mentions($value);  
+      $mentions = $filter_mentions->filter_mentions_structure($value);  
       $auid = \Drupal::currentUser()->id();
-      mentions_crud_update($type, $mentions, $entity->id(), $auid);
+      
+      foreach($mentions as $mention) {
+        $loo = empty($mention);
+        if (!$loo)
+          mentions_crud_update($type, $mention, $entity->id(), $auid);
+      }
     }
-    */
   }
 }
 
