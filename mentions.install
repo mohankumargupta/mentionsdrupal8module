@@ -10,7 +10,8 @@ function defaultenablementionsfilter($config) {
           "weight" => -40,
           "settings" => array(
             "mentions_filter" => array(
-              "UserMention" => "UserMention"      
+              "UserMention" => "UserMention",
+              "UserMentionByID" => "UserMentionByID"
             )
           )
         );
