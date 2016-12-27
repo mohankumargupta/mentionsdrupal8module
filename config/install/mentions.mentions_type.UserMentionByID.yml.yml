@@ -7,7 +7,7 @@ name: UserMentionByID
 description: ''
 mention_type: entity
 input:
-  prefix: '#@'
+  prefix: '@#'
   suffix: ''
   entity_type: user
   inputvalue: uid

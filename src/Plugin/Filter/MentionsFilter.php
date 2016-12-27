@@ -147,7 +147,7 @@ class MentionsFilter extends FilterBase implements ContainerFactoryPluginInterfa
       $this->mentionType = $mention_config;
       
       if (isset($settings['mentions_filter'])) { 
-        $mentions_settings = $settings['mentions_filter'][$mention_config];
+        $filter_mentions = $settings['mentions_filter'];
       }
       
       else if (isset($this->textFormat)) {
@@ -155,9 +155,9 @@ class MentionsFilter extends FilterBase implements ContainerFactoryPluginInterfa
         $textformat_config = $this->config->get($textformat);
         $mentions_settings = $textformat_config->get('filters');
         $filter_mentions = $mentions_settings['filter_mentions']['settings']['mentions_filter'];
-      
-      
       }      
+      
+      
       
       if ($filter_mentions[$mention_config] == $mention_config) {
           array_push($this->mentionFilters,  $mention_config);
