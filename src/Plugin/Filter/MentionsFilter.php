@@ -56,11 +56,12 @@ class MentionsFilter extends FilterBase implements ContainerFactoryPluginInterfa
     $this->config = $config;
     $this->tokenService = $token;
     $this->entityQueryService = $query_factory;
-    if (!isset($plugin_definition->provider)) {
+    /*if (!isset($plugin_definition->provider)) {
     $plugin_definition = array(
         'provider' => 'MentionsFilter'
     );
     }
+    */
     parent::__construct($configuration, $plugin_id, $plugin_definition);
   }
 
