@@ -37,9 +37,6 @@ entity.mentions_type.delete_form:
     parameters:
       mentions_type:
         type: entity:mentions_type
-          
- 
-          
 
 mentions.mentions_type_form:
   path: '/admin/structure/mentions/mentionstype'
@@ -49,25 +46,24 @@ mentions.mentions_type_form:
   requirements:
     _permission: 'access administration pages'
 
-
 mentions.usermentions:
-    path: '/user/{user}/mentions'
-    defaults:
-      _controller: '\Drupal\mentions\Controller\MentionsUserTab::mentionsView'
+  path: '/user/{user}/mentions'
+  defaults:
+    _controller: '\Drupal\mentions\Controller\MentionsUserTab::mentionsView'
     requirements:
-      _access_contact_personal_tab: 'TRUE'    
+      _access_contact_personal_tab: 'TRUE'   
 
 mentions.prefixesandsuffixes:
     path: '/mentions/prefixesandsuffixes'
     defaults:
       _controller: '\Drupal\mentions\Controller\MentionsUserList::userPrefixesAndSuffixes'
-    requirements:
-      _access_contact_personal_tab: 'TRUE'  
+    requirements:  
+      _permission: 'View content'
 
 mentions.userlist:
     path: '/mentions/userlist'
     defaults:
-        _controller: '\Drupal\mentions\Controller\MentionsUserList::userList'
+      _controller: '\Drupal\mentions\Controller\MentionsUserList::userList'
     requirements:
       _permission: 'View content'   
       

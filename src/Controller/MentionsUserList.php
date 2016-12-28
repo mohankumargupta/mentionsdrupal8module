@@ -46,8 +46,10 @@ class MentionsUserList extends ControllerBase {
     return $response;
   }
   
-  public function userPrefixesAndSuffixes() {
-      
+  public function userPrefixesAndSuffixes(Request $request) {
+           $ps = array('data'=>'');
+	  $response = new JsonResponse($ps);
+	  return $response;
   }
 
 }
