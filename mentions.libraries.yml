@@ -1,0 +1,15 @@
+mentions:
+  version: 2.x
+  css:
+    base:
+      'https://cdn.jsdelivr.net/at.js/0.5.0/css/jquery.atwho.min.css': { type: external, minified: true}  
+  js:
+    'https://cdn.jsdelivr.net/caret.js/0.3.1/jquery.caret.min.js': { type: external, minified: true }
+    'https://cdn.jsdelivr.net/at.js/0.5.0/js/jquery.atwho.min.js': { type: external, minified: true }
+  
+  dependencies:
+    - core/jquery
+    - core/drupalSettings
+
+    
+    

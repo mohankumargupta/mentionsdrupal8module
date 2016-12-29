@@ -205,3 +205,7 @@ function mentions_crud_update($type, $mentions, $id, $author) {
     $event_dispatcher->dispatch('mentions.delete', new Event());
   }
 }
+
+function mentions_page_attachments_alter(&$build) {
+  $build['#attached']['library'][] = 'mentions/mentions'; 
+}
