@@ -9,7 +9,7 @@ namespace Drupal\mentions\Controller;
 
 use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\Core\Entity\Query\QueryInterface;
+use Drupal\Core\Entity\Query\QueryFactory;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,47 +19,60 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class MentionsUserList extends ControllerBase {
 
-  protected $queryInterface;
+  protected $entityQuery;
   protected $config;
+  protected $allconfigs;
   
-  public function __construct(QueryInterface $queryinterface, ConfigFactory $config ) {
-    $this->queryInterface = $queryinterface;
+  public function __construct(QueryFactory $queryfactory, ConfigFactory $config ) {
+    $this->entityQuery = $queryfactory;
     $this->config = $config;
+    $this->allconfigs = $this->config->loadMultiple($this->config->listAll('mentions.mentions_type'));
   }
 
   public static function create(ContainerInterface $container) {
     $config = $container->get('config.factory');  
     return new static(
-      $container->get('entity.query')->get('user'),
+      $container->get('entity.query'),
       $config
     );
   }
 
   public function userList(Request $request) {
-    $usernids = $this->queryInterface
-                         ->condition('status', 1)
-                         ->sort('name')
-                         ->execute();
-    $users = entity_load_multiple('user', $usernids);
-    $userlist = array();
 
-    foreach ($users as $user) {
-    
-      $userlist['data'][] = array(
+    $entitylist = array();
+      
+    foreach ($this->allconfigs as $config) {  
+      $entity_type = $config->get('input.entity_type');
+      $query = $this->entityQuery->get($entity_type);
+      $usernids = $query
+                  ->condition('status', 1)
+                  ->sort('name')
+                  ->execute();
+      $users = entity_load_multiple('user', $usernids);
+
+
+      foreach ($users as $user) {
+        $newuserarray = array(
           'username' => $user->getAccountName(),
           'uid' => $user->id() 
-      );
+        );  
+        if (isset($entitylist['data']) && in_array($newuserarray,$entitylist['data'])) {
+            continue;
+        }  
+          
+        $entitylist['data'][] = $newuserarray;
     }
-
-    $response = new JsonResponse($userlist);
+    
+    }
+    $response = new JsonResponse($entitylist);
     return $response;
   }
   
   public function userPrefixesAndSuffixes(Request $request) {
-    $allconfigs = $this->config->listAll('mentions.mentions_type');
-           $ps = array('data'=>'');
+
+    $ps = array('data'=>'');
     
-      foreach($allconfigs as $configname) {     
+      foreach($this->allconfigs as $configname) {     
       $config = $this->config->get($configname);
       
       $ps['data'][] = array(
