@@ -7,11 +7,12 @@
 
 namespace Drupal\mentions\Controller;
 
+use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Controller\ControllerBase;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Entity\Query\QueryInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Returns json for user names that are enabled.
@@ -19,14 +20,18 @@ use Drupal\Core\Entity\Query\QueryInterface;
 class MentionsUserList extends ControllerBase {
 
   protected $queryInterface;
-
-  public function __construct(QueryInterface $queryinterface) {
+  protected $config;
+  
+  public function __construct(QueryInterface $queryinterface, ConfigFactory $config ) {
     $this->queryInterface = $queryinterface;
+    $this->config = $config;
   }
 
   public static function create(ContainerInterface $container) {
+    $config = $container->get('config.factory');  
     return new static(
-    $container->get('entity.query')->get('user')
+      $container->get('entity.query')->get('user'),
+      $config
     );
   }
 
@@ -47,7 +52,18 @@ class MentionsUserList extends ControllerBase {
   }
   
   public function userPrefixesAndSuffixes(Request $request) {
+    $allconfigs = $this->config->listAll('mentions.mentions_type');
            $ps = array('data'=>'');
+    
+      foreach($allconfigs as $configname) {     
+      $config = $this->config->get($configname);
+      
+      $ps['data'][] = array(
+          'prefix' => $config->get('input')['prefix'],
+          'suffix' => $config->get('input')['suffix']
+       );
+    
+      }
 	  $response = new JsonResponse($ps);
 	  return $response;
   }
