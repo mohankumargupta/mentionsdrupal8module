@@ -2,10 +2,10 @@ mentions:
   version: 2.x
   css:
     base:
-      'https://cdn.jsdelivr.net/at.js/0.5.0/css/jquery.atwho.min.css': { type: external, minified: true}  
+      'https://cdnjs.cloudflare.com/ajax/libs/at.js/1.5.2/css/jquery.atwho.css': { type: external}  
   js:
-    'https://cdn.jsdelivr.net/caret.js/0.3.1/jquery.caret.min.js': { type: external, minified: true }
-    'https://cdn.jsdelivr.net/at.js/0.5.0/js/jquery.atwho.min.js': { type: external, minified: true }
+    'https://cdnjs.cloudflare.com/ajax/libs/Caret.js/0.3.1/jquery.caret.js': { type: external}
+    'https://cdnjs.cloudflare.com/ajax/libs/at.js/1.5.2/js/jquery.atwho.js': { type: external}
   
   dependencies:
     - core/jquery

@@ -44,7 +44,11 @@ class MentionsUserList extends ControllerBase {
     $userlist = array();
 
     foreach ($users as $user) {
-      $userlist['userlist'][] = $user->getUsername();
+    
+      $userlist['data'][] = array(
+          'username' => $user->getAccountName(),
+          'uid' => $user->id() 
+      );
     }
 
     $response = new JsonResponse($userlist);
@@ -64,8 +68,8 @@ class MentionsUserList extends ControllerBase {
        );
     
       }
-	  $response = new JsonResponse($ps);
-	  return $response;
+     $response = new JsonResponse($ps);
+     return $response;
   }
 
 }
