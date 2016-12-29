@@ -43,24 +43,26 @@ class MentionsUserList extends ControllerBase {
       
     foreach ($this->allconfigs as $config) {  
       $entity_type = $config->get('input.entity_type');
+      $input_prefix = $config->get('input.prefix');
+      $input_suffix = $config->get('input.suffix');
       $query = $this->entityQuery->get($entity_type);
-      $usernids = $query
+      $entityids = $query
                   ->condition('status', 1)
                   ->sort('name')
                   ->execute();
-      $users = entity_load_multiple('user', $usernids);
+      
+      $entitys = entity_load_multiple($entity_type, $entityids);
 
-
-      foreach ($users as $user) {
-        $newuserarray = array(
-          'username' => $user->getAccountName(),
-          'uid' => $user->id() 
+      foreach ($entitys as $entity) {
+        $newentityarray = array(
+          'name' => $entity->get('name')->value,
+          'id' => $entity->id() 
         );  
-        if (isset($entitylist['data']) && in_array($newuserarray,$entitylist['data'])) {
+        if (isset($entitylist['data']['entitydata']) && in_array($newentityarray,$entitylist['data']['entitydata'])) {
             continue;
         }  
           
-        $entitylist['data'][] = $newuserarray;
+        $entitylist['data']['entitydata'][] = $newentityarray;
     }
     
     }

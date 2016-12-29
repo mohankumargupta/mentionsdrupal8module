@@ -10,12 +10,31 @@ var response = $.ajax({
     url: '/mentions/userlist',
     async: false
 }).responseJSON;
-var mentions = [{'longname': 'Fred Flinstone' ,'username' : 'fred'}, {'longname': 'Barney Rubbles', 'username' : 'barney'}];
+
 var at_config = {
     at: "@",
-    data: response['data'],
-    displayTpl: '<li data-value=${username}>${username}</li>',
-    insertTpl: '@${username}'
+    data: response['data']['entitydata'],
+    displayTpl: '<li data-value=${name}>${name}</li>',
+    insertTpl: '@${name}',
+    callbacks: {
+      tplEval: function(query, map, event) {
+    var error, template;
+    if (event === 'onDisplay')
+      template = this.setting.displayTpl;
+    else
+      template = this.setting.insertTpl;  
+    try {
+ 
+      return template.replace(/\$\{([^\}]*)\}/g, function(tag, key, pos) {
+        return map[key];
+      });
+    } catch (error1) {
+      error = error1;
+      return "";
+    }          
+    }
+    
+  }
     };
 
 
