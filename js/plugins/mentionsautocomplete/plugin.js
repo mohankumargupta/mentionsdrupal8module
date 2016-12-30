@@ -43,7 +43,35 @@ var at_config = {
 
 
 CKEDITOR.plugins.add('mentionsautocomplete', {
+  requires: 'richcombo',
   init: function(editor) {
+
+    editor.ui.addRichCombo('mentionsautocomplete', {
+        label: 'Mentions',
+        title: 'Mentions',
+        voiceLabel: 'Mentions',
+        className: 'cke_format',
+        multiSelect: false,
+        panel: {
+            css: [ editor.config.contentsCss, CKEDITOR.skin.getPath('editor') ],
+	    voiceLabel: editor.lang.panelVoiceLabel
+        },
+        init: function()
+        {
+           this.startGroup( "Mentions" );
+           this.add("@", "usermentions", "usermentions");
+                
+        },
+
+        onClick: function( value )
+        {
+                editor.focus();
+                editor.fire( 'saveSnapshot' );
+                editor.insertHtml(value);
+                
+                editor.fire( 'saveSnapshot' );
+        }
+    });
 
     function load_atwho(editor, at_config) {
     // WYSIWYG mode when switching from source mode
@@ -78,7 +106,11 @@ CKEDITOR.plugins.add('mentionsautocomplete', {
     
       
   }
-});       
+});    
+
+
+
+
 })(jQuery, Drupal, CKEDITOR);
 
 

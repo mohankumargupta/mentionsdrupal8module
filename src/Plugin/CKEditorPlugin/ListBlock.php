@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\mentions\Plugin\CKEditorPlugin\MentionsAutocomplete.
- */
-
 namespace Drupal\mentions\Plugin\CKEditorPlugin;
 
 use Drupal\ckeditor\CKEditorPluginBase;
@@ -15,14 +10,14 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Config\ConfigFactory;
 
 /**
- * Defines the "Mentions Autocomplete" plugin.
+ * CKEditor plugin from ckeditor.com .
  *
  * @CKEditorPlugin(
- *   id = "mentionsautocomplete",
- *   label = @Translation("Mentions Autocomplete")
+ *   id = "listblock",
+ *   label = @Translation("List Block")
  * )
  */
-class MentionsAutocomplete extends CKEditorPluginBase implements CKEditorPluginContextualInterface, ContainerFactoryPluginInterface {
+class ListBlock extends CKEditorPluginBase implements CKEditorPluginContextualInterface, ContainerFactoryPluginInterface {
 
   protected $config;
 
@@ -42,12 +37,7 @@ class MentionsAutocomplete extends CKEditorPluginBase implements CKEditorPluginC
   }
 
   public function getButtons() {
-    return array(
-      'mentionsautocomplete' => array(
-        'label' => t('Mentions'),
-        'image' => base_path() . 'fake.png',
-      ),
-    );
+    return array();
   }
 
   public function getConfig(Editor $editor) {
@@ -61,7 +51,7 @@ class MentionsAutocomplete extends CKEditorPluginBase implements CKEditorPluginC
   }  
   
   public function getFile() {
-    $mentionspathfilename = drupal_get_path('module', 'mentions') . '/js/plugins/mentionsautocomplete/plugin.js';
+    $mentionspathfilename = drupal_get_path('module', 'mentions') . '/js/plugins/listblock/plugin.js';
     return $mentionspathfilename ;
   }
 
@@ -74,3 +64,5 @@ class MentionsAutocomplete extends CKEditorPluginBase implements CKEditorPluginC
   }
 
 }
+
+
