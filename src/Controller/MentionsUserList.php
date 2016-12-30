@@ -54,16 +54,35 @@ class MentionsUserList extends ControllerBase {
       $entitys = entity_load_multiple($entity_type, $entityids);
 
       foreach ($entitys as $entity) {
+        $entityid = $entity->id();  
+        $entitytypeid = $entity->getEntityTypeId();
+        $entityuuid = $entity->uuid();
         $newentityarray = array(
           'name' => $entity->get('name')->value,
-          'id' => $entity->id() 
-        );  
-        if (isset($entitylist['data']['entitydata']) && in_array($newentityarray,$entitylist['data']['entitydata'])) {
+          'id' => $entityid
+        );
+        
+        $configentity = array(
+            'prefix' => $input_prefix,
+            'suffix' => $input_suffix,
+            'entitytypeid' => $entitytypeid
+        );
+        
+        if (isset($entitylist['data']['config']) && in_array($configentity, $entitylist['data']['config'])) {
+            continue;
+        }
+        
+        $entitylist['data']['config'][] = $configentity;
+        
+        if (isset($entitylist['data']['entitydata'][$entitytypeid]) && in_array($newentityarray,$entitylist['data']['entitydata'][$entitytypeid])) {
             continue;
         }  
-          
-        $entitylist['data']['entitydata'][] = $newentityarray;
+        
+                  
+        $entitylist['data']['entitydata'][$entitytypeid][] = $newentityarray;
     }
+    
+    
     
     }
     $response = new JsonResponse($entitylist);

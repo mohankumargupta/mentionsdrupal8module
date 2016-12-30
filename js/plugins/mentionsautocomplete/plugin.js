@@ -11,9 +11,11 @@ var response = $.ajax({
     async: false
 }).responseJSON;
 
+var entitytypeid = response["data"]["config"][0].entitytypeid;
+
 var at_config = {
-    at: "@",
-    data: response['data']['entitydata'],
+    at: response['data']['config'][0]['prefix'],
+    data: response['data']['entitydata'][entitytypeid],
     displayTpl: '<li data-value=${name}>${name}</li>',
     insertTpl: '@${name}',
     callbacks: {
@@ -39,6 +41,19 @@ var at_config = {
 
 
 
+    var load_atwho = function(editor, at_config) {
+    // WYSIWYG mode when switching from source mode
+      if (editor.mode !== 'source') {
+        editor.document.getBody().$.contentEditable = true;
+        $(editor.document.getBody().$)
+        .atwho('setIframe', editor.window.getFrame().$)
+        .atwho(at_config);
+       }
+    // Source mode when switching from WYSIWYG
+       else {
+          $(editor.container.$).find(".cke_source").atwho(at_config);
+        }
+    };
 
 
 
@@ -59,7 +74,12 @@ CKEDITOR.plugins.add('mentionsautocomplete', {
         init: function()
         {
            this.startGroup( "Mentions" );
-           this.add("@", "usermentions", "usermentions");
+           var that = this;
+           
+           response.data.config.forEach( function(config) {
+              that.add(config.prefix, config.prefix, config.prefix); 
+           });
+           //this.add("@", "usermentions", "usermentions");
                 
         },
 
@@ -67,29 +87,28 @@ CKEDITOR.plugins.add('mentionsautocomplete', {
         {
                 editor.focus();
                 editor.fire( 'saveSnapshot' );
+              
                 editor.insertHtml(value);
-                
+                         
+
                 editor.fire( 'saveSnapshot' );
+                
+                editor.document.getBody().$.contentEditable = true;
+                $(editor.document.getBody().$)
+                 .atwho('setIframe', editor.window.getFrame().$)
+                 .atwho('destroy');
+                
+                
+                CKEDITOR.plugins.registered.mentionsautocomplete.at_config.at = value;
+                CKEDITOR.plugins.registered.mentionsautocomplete.load_atwho(editor,  CKEDITOR.plugins.registered.mentionsautocomplete.at_config);
         }
     });
 
-    function load_atwho(editor, at_config) {
-    // WYSIWYG mode when switching from source mode
-      if (editor.mode !== 'source') {
-        editor.document.getBody().$.contentEditable = true;
-        $(editor.document.getBody().$)
-        .atwho('setIframe', editor.window.getFrame().$)
-        .atwho(at_config);
-       }
-    // Source mode when switching from WYSIWYG
-       else {
-          $(editor.container.$).find(".cke_source").atwho(at_config);
-        }
-    }
     
     CKEDITOR.on('instanceReady', function(event) {
       var editor = event.editor;
-
+      CKEDITOR.plugins.registered.mentionsautocomplete.load_atwho = load_atwho;
+      CKEDITOR.plugins.registered.mentionsautocomplete.at_config = at_config;
       if (!editor) return;
       // Switching from and to source mode
       editor.on('mode', function(e) {
