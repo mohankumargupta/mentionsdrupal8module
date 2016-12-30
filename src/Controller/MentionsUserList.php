@@ -63,9 +63,13 @@ class MentionsUserList extends ControllerBase {
         );
         
         $configentity = array(
-            'prefix' => $input_prefix,
-            'suffix' => $input_suffix,
-            'entitytypeid' => $entitytypeid
+            $input_prefix => array(
+                'suffix' => $input_suffix,
+                'entitytypeid' => $entitytypeid
+            )
+            //'prefix' => $input_prefix,
+            //'suffix' => $input_suffix,
+            //'entitytypeid' => $entitytypeid
         );
         
         if (isset($entitylist['data']['config']) && in_array($configentity, $entitylist['data']['config'])) {

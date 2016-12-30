@@ -11,10 +11,15 @@ var response = $.ajax({
     async: false
 }).responseJSON;
 
-var entitytypeid = response["data"]["config"][0].entitytypeid;
+var prefixes = []; 
+response['data']['config'].forEach(function(element) {
+  prefixes.push(Object.keys(element)[0]);
+});
+
+var entitytypeid = response["data"]["config"][0]["@"].entitytypeid;
 
 var at_config = {
-    at: response['data']['config'][0]['prefix'],
+    at: prefixes[0],
     data: response['data']['entitydata'][entitytypeid],
     displayTpl: '<li data-value=${name}>${name}</li>',
     insertTpl: '@${name}',
@@ -76,9 +81,16 @@ CKEDITOR.plugins.add('mentionsautocomplete', {
            this.startGroup( "Mentions" );
            var that = this;
            
+           CKEDITOR.plugins.registered.mentionsautocomplete.prefixes.forEach(function(element){
+             that.add(element, element, element);
+           });
+           
+           /*
            response.data.config.forEach( function(config) {
+              var prefix = 
               that.add(config.prefix, config.prefix, config.prefix); 
            });
+           */
            //this.add("@", "usermentions", "usermentions");
                 
         },
@@ -101,6 +113,7 @@ CKEDITOR.plugins.add('mentionsautocomplete', {
                 
                 CKEDITOR.plugins.registered.mentionsautocomplete.at_config.at = value;
                 CKEDITOR.plugins.registered.mentionsautocomplete.load_atwho(editor,  CKEDITOR.plugins.registered.mentionsautocomplete.at_config);
+                $(editor.document.getBody().$).trigger("click");
         }
     });
 
@@ -109,6 +122,7 @@ CKEDITOR.plugins.add('mentionsautocomplete', {
       var editor = event.editor;
       CKEDITOR.plugins.registered.mentionsautocomplete.load_atwho = load_atwho;
       CKEDITOR.plugins.registered.mentionsautocomplete.at_config = at_config;
+      CKEDITOR.plugins.registered.mentionsautocomplete.prefixes = prefixes;
       if (!editor) return;
       // Switching from and to source mode
       editor.on('mode', function(e) {
