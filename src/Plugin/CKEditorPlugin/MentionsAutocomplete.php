@@ -45,7 +45,7 @@ class MentionsAutocomplete extends CKEditorPluginBase implements CKEditorPluginC
     return array(
       'mentionsautocomplete' => array(
         'label' => t('Mentions'),
-        'image' => base_path() . 'fake.png',
+        'image' => drupal_get_path('module', 'mentions') . '/mentions.png',
       ),
     );
   }
