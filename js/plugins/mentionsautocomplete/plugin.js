@@ -96,7 +96,7 @@ CKEDITOR.plugins.add('mentionsautocomplete', {
         {
                 editor.focus();
                 editor.fire( 'saveSnapshot' );
-              
+                editor.insertHtml('&nbsp;');
                 editor.insertHtml(value);
                          
 
