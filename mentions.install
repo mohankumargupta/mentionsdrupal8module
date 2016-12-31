@@ -21,10 +21,20 @@ function defaultenablementionsfilter($config) {
     
 }
 
+function defaultenablementionsckeditortoolbar($config) {
+  $config = \Drupal::service('config.factory')->getEditable($config);
+  $toolbaritems = $config->get('settings');
+  
+  //$config->set('settings', $toolbaritems);
+  //$config->save();
+}
+
 function mentions_install() {
     if (!\Drupal::service('config.installer')->isSyncing()) {
       defaultenablementionsfilter('filter.format.basic_html');
       defaultenablementionsfilter('filter.format.full_html');
+      defaultenablementionsfilter('editor.editor.basic_html');
+      defaultenablementionsfilter('editor.editor.full_html');      
     }
 }
 
