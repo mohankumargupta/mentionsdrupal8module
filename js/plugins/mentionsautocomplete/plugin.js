@@ -11,12 +11,9 @@ var response = $.ajax({
     async: false
 }).responseJSON;
 
-var prefixes = []; 
-response['data']['config'].forEach(function(element) {
-  prefixes.push(Object.keys(element)[0]);
-});
-
-var entitytypeid = response["data"]["config"][0]["@"].entitytypeid;
+//Default values
+var prefixes = Object.keys(response.data.config);
+var entitytypeid = response.data.config[prefixes[0]].entitytypeid;
 
 var at_config = {
     at: prefixes[0],
@@ -44,7 +41,7 @@ var at_config = {
   }
     };
 
-
+var boo =2;
 
     var load_atwho = function(editor, at_config) {
     // WYSIWYG mode when switching from source mode
@@ -110,9 +107,27 @@ CKEDITOR.plugins.add('mentionsautocomplete', {
                  .atwho('setIframe', editor.window.getFrame().$)
                  .atwho('destroy');
                 
+                var input_entitytype = CKEDITOR.plugins.registered.mentionsautocomplete.responsedata.data.config[value].entitytypeid;
+                var input_inputvalue = CKEDITOR.plugins.registered.mentionsautocomplete.responsedata.data.config[value].inputvalue;
+                var entityfield = CKEDITOR.plugins.registered.mentionsautocomplete.responsedata.data.entitydata[input_entitytype];
+                var data = [];
+                entityfield.forEach(function(element){
+                   var f = {};
+                   f['name'] = element.name;
+                   f[input_inputvalue] = element[input_inputvalue]
+                   data.push(f);
+                });
+            
+                var suffix = CKEDITOR.plugins.registered.mentionsautocomplete.responsedata.data.config[value].suffix;
+                var displayTpl = '<li data-value=${' + input_inputvalue + '}>${name}</li>';
+                var insertTpl = value + '${' + input_inputvalue + '}' + suffix;
+                //var insertTpl = '@${name}';
                 
                 CKEDITOR.plugins.registered.mentionsautocomplete.at_config.at = value;
-                CKEDITOR.plugins.registered.mentionsautocomplete.load_atwho(editor,  CKEDITOR.plugins.registered.mentionsautocomplete.at_config);
+                //CKEDITOR.plugins.registered.mentionsautocomplete.at_config.insertTpl = insertTpl;
+                //CKEDITOR.plugins.registered.mentionsautocomplete.at_config.displayTpl = displayTpl;
+                //CKEDITOR.plugins.registered.mentionsautocomplete.at_config.data = data;                
+                //CKEDITOR.plugins.registered.mentionsautocomplete.load_atwho(editor,  data);
                 $(editor.document.getBody().$).trigger("click");
         }
     });
@@ -123,6 +138,7 @@ CKEDITOR.plugins.add('mentionsautocomplete', {
       CKEDITOR.plugins.registered.mentionsautocomplete.load_atwho = load_atwho;
       CKEDITOR.plugins.registered.mentionsautocomplete.at_config = at_config;
       CKEDITOR.plugins.registered.mentionsautocomplete.prefixes = prefixes;
+      CKEDITOR.plugins.registered.mentionsautocomplete.responsedata = response;
       if (!editor) return;
       // Switching from and to source mode
       editor.on('mode', function(e) {

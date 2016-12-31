@@ -39,12 +39,32 @@ class MentionsUserList extends ControllerBase {
 
   public function userList(Request $request) {
 
-    $entitylist = array();
+    $entitylist = array(
+      'data' => array(
+      'config' => '',
+      'entitydata' => ''
+     )
+    );
+
+    $entityfields = array(); 
+     
+    foreach ($this->allconfigs as $config) {
+      $entity_type = $config->get('input.entity_type');
+      $input_value = $config->get('input.inputvalue');     
       
+      if (!isset($entityfields[$entity_type]) || !in_array($input_value, $entityfields[$entity_type])){
+        if ($input_value != 'name' && $input_value != 'id') {
+          $entityfields[$entity_type][]  = $input_value;
+        }
+      }
+        
+    }
+    
     foreach ($this->allconfigs as $config) {  
       $entity_type = $config->get('input.entity_type');
       $input_prefix = $config->get('input.prefix');
       $input_suffix = $config->get('input.suffix');
+      $input_value = $config->get('input.inputvalue');
       $query = $this->entityQuery->get($entity_type);
       $entityids = $query
                   ->condition('status', 1)
@@ -53,36 +73,59 @@ class MentionsUserList extends ControllerBase {
       
       $entitys = entity_load_multiple($entity_type, $entityids);
 
+      
       foreach ($entitys as $entity) {
         $entityid = $entity->id();  
         $entitytypeid = $entity->getEntityTypeId();
-        $entityuuid = $entity->uuid();
+        
         $newentityarray = array(
           'name' => $entity->get('name')->value,
           'id' => $entityid
         );
         
+
+        
         $configentity = array(
-            $input_prefix => array(
+
                 'suffix' => $input_suffix,
-                'entitytypeid' => $entitytypeid
-            )
+                'entitytypeid' => $entitytypeid,
+                'inputvalue' => $input_value
+            
             //'prefix' => $input_prefix,
             //'suffix' => $input_suffix,
             //'entitytypeid' => $entitytypeid
         );
         
-        if (isset($entitylist['data']['config']) && in_array($configentity, $entitylist['data']['config'])) {
-            continue;
+        
+        
+        if (isset($entitylist['data']['config']) && isset($entitylist['data']['config'][$input_prefix])) {
+            
         }
         
-        $entitylist['data']['config'][] = $configentity;
+        else{
+          $entitylist['data']['config'][$input_prefix] = $configentity;
+        }
+        
+        foreach ($entityfields[$entity_type] as $field) {
+           $newentityarray[$field] = $entity->get($field)->value; 
+        }         
+
         
         if (isset($entitylist['data']['entitydata'][$entitytypeid]) && in_array($newentityarray,$entitylist['data']['entitydata'][$entitytypeid])) {
             continue;
         }  
+
+
+        /*
+         if ($input_value != "name" && $input_value != "id") {
+          $newentityarray[$input_value] = $entity->get($input_value)->value;   
+        }        
+        */
+       
+       
         
-                  
+        
+        
         $entitylist['data']['entitydata'][$entitytypeid][] = $newentityarray;
     }
     
