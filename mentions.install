@@ -23,13 +23,21 @@ function defaultenablementionsfilter($config) {
 
 function defaultenablementionsckeditortoolbar($config) {
   $config = \Drupal::service('config.factory')->getEditable($config);
-  $settings = $config->get('settings');
+  //$settings = $config->get('settings');
+  $toolbaritems = $config->get('settings.toolbar.rows');
+  $mentionitemcount = count($toolbaritems[0]) - 1;
+  if (!isset($toolbaritems[0][$mentionitemcount]['items']['mentionautocomplete'] )) {
+    $toolbaritems[0][$mentionitemcount]['items'][] = 'mentionsautocomplete';  
+  }
+  /*
   $toolbaritems  = array_values(array_slice($settings['toolbar']['rows'][0], -1))[0];
   if (!isset($toolbaritems['items']['mentionsautocomplete'])) {
     $toolbaritems['items'][] = 'mentionsautocomplete';
-  }  
+  } 
+   */ 
   //drupal_set_message(print_r($toolbaritems, TRUE));
-  $config->set('settings', $settings);
+  //$config->set('settings', $settings);
+  $config->set('settings.toolbar.rows');
   $config->save();
 }
 
