@@ -29,7 +29,7 @@ function defaultenablementionsckeditortoolbar($config) {
     $toolbaritems['items'][] = 'mentionsautocomplete';
   }  
   //drupal_set_message(print_r($toolbaritems, TRUE));
-  $config->set('settings', $toolbaritems);
+  $config->set('settings', $settings);
   $config->save();
 }
 
