@@ -124,10 +124,10 @@ CKEDITOR.plugins.add('mentionsautocomplete', {
                 //var insertTpl = '@${name}';
                 
                 CKEDITOR.plugins.registered.mentionsautocomplete.at_config.at = value;
-                //CKEDITOR.plugins.registered.mentionsautocomplete.at_config.insertTpl = insertTpl;
-                //CKEDITOR.plugins.registered.mentionsautocomplete.at_config.displayTpl = displayTpl;
-                //CKEDITOR.plugins.registered.mentionsautocomplete.at_config.data = data;                
-                //CKEDITOR.plugins.registered.mentionsautocomplete.load_atwho(editor,  data);
+                CKEDITOR.plugins.registered.mentionsautocomplete.at_config.insertTpl = insertTpl;
+                CKEDITOR.plugins.registered.mentionsautocomplete.at_config.displayTpl = displayTpl;
+                CKEDITOR.plugins.registered.mentionsautocomplete.at_config.data = data;                
+                CKEDITOR.plugins.registered.mentionsautocomplete.load_atwho(editor,  CKEDITOR.plugins.registered.mentionsautocomplete.at_config);
                 $(editor.document.getBody().$).trigger("click");
         }
     });
