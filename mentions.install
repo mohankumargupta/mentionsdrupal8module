@@ -11,7 +11,8 @@ function defaultenablementionsfilter($config) {
           "settings" => array(
             "mentions_filter" => array(
               "UserMention" => "UserMention",
-              "UserMentionByID" => "UserMentionByID"
+              "UserMentionByID" => "UserMentionByID",
+              "UserMentionSpacesInUsername" => "UserMentionSpacesInUsername"
             )
           )
         );
