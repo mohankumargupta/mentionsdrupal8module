@@ -10,12 +10,14 @@ function defaultenablementionsfilter($config) {
           "weight" => -40,
           "settings" => array(
             "mentions_filter" => array(
+              "UserMentionSpacesInUsername" => "UserMentionSpacesInUsername",                
               "UserMention" => "UserMention",
               "UserMentionByID" => "UserMentionByID",
-              "UserMentionSpacesInUsername" => "UserMentionSpacesInUsername"
+
             )
           )
         );
+        drupal_set_message($filter);
         $config->set('filters',$filters);
         $config->save();    
   
@@ -31,10 +33,10 @@ function defaultenablementionsckeditortoolbar($config) {
   }
  
   
-  $toolbaritems  = array_values(array_slice($settings['toolbar']['rows'][0], -1))[0];
-  if (!isset($toolbaritems['items']['mentionsautocomplete'])) {
-    $toolbaritems['items'][] = 'mentionsautocomplete';
-  } 
+  //$toolbaritems  = array_values(array_slice($settings['toolbar']['rows'][0], -1))[0];
+  //if (!isset($toolbaritems['items']['mentionsautocomplete'])) {
+  //  $toolbaritems['items'][] = 'mentionsautocomplete';
+  //} 
     
   //drupal_set_message(print_r($toolbaritems, TRUE));
   //$config->set('settings', $settings);
