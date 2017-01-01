@@ -29,10 +29,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * title = @Translation("Mentions Filter"),
  * description = @Translation("Configure via the <a href='/admin/structure/mentions'>Mention types</a> page."),
  * type = Drupal\filter\Plugin\FilterInterface::TYPE_MARKUP_LANGUAGE,
+ * provider = "mentions",
  * settings = {
  *   "mentions_filter" = {}
  * },
- * weight = -10
+ * weight = -40
  * )
  */
 class MentionsFilter extends FilterBase implements ContainerFactoryPluginInterface {
