@@ -14,7 +14,7 @@ Based on work of Drupal 7 Mentions module version 7.x-2.x [https://drupal.org/pr
    - **\[@Barney Rubble\]**  (mention by username with spaces)
 
 3. CKEditor autocomplete functionality is implemented. Please see the video below for a walkthrough. By default,
-   the @username is used. Look for the @ toolbar button, use it to change the mention format.
+   the @username is used. Look for the Mentions toolbar button, use it to change the mention format. 
 
 # Configuration
 1. Configuration->Text Formats -> Basic/Full HTML
@@ -26,14 +26,14 @@ Based on work of Drupal 7 Mentions module version 7.x-2.x [https://drupal.org/pr
 
 - [x] @username will be rendered as hyperlink to username page 
 - [x] @#userid will be rendered as hyperlink to username page 
-- [] [@Barney Rubble] will be rendered as hyperlink to username page
+- [ ] [@Barney Rubble] will be rendered as hyperlink to username page
 - [x] CKEditor autocomplete 
 - [x] Manage Mention Formats
-- [] Specify order of precedence for Mention formats
+- [ ] Specify order of precedence for Mention formats
 - [x] When module enabled, Mentions filter enable automatically in Basic and Full HTML text formats
 - [x] When module enabled, CKEditor autocomplete functionality enabled 
 - [x] When module enabled, CKEditor Change Mentions Format dropdown available
-- [] Give user ability to disable CKEditor autocomplete
+- [ ] Give user ability to disable CKEditor autocomplete
 
 # Video
 
