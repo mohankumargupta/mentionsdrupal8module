@@ -51,6 +51,8 @@ class MentionsAutocomplete extends CKEditorPluginBase implements CKEditorPluginC
   }
 
   public function getConfig(Editor $editor) {
+    $settings = $editor->getSettings();
+    $format = $editor->getFilterFormat();
     return array();
   }
 

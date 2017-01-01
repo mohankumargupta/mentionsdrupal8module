@@ -44,6 +44,10 @@ var at_config = {
 var boo =2;
 
     var load_atwho = function(editor, at_config) {
+     if (editor.window.getFrame() === null) {
+       return;  
+     }   
+        
     // WYSIWYG mode when switching from source mode
       if (editor.mode !== 'source') {
         editor.document.getBody().$.contentEditable = true;
@@ -147,10 +151,11 @@ CKEDITOR.plugins.add('mentionsautocomplete', {
 
       // First load
       load_atwho(editor, at_config);
+      /*
       editor.setMode('source', function() {
 	editor.setMode('wysiwyg');    	
       });      
-
+      */
     });
     
       
