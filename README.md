@@ -9,9 +9,9 @@ Based on work of Drupal 7 Mentions module version 7.x-2.x [https://drupal.org/pr
 1. Download to modules folder of your Drupal 8 installation, then enable it through backend(Extend) or drush/drupal console
 
 2. By default, the following mention formats are supported (for Basic and Full HTML formats):
-   - @username           (mention by username)
-   - @#1                 (mention by user id)
-   - \[@Barney Rubble\]  (mention by username with spaces)
+   - **@username**           (mention by username)
+   - **@#1**                 (mention by user id)
+   - **\[@Barney Rubble\]**  (mention by username with spaces)
 
 3. CKEditor autocomplete functionality is implemented. Please see the video below for a walkthrough. By default,
    the @username is used. Look for the @ toolbar button, use it to change the mention format.
