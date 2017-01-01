@@ -118,7 +118,7 @@ function mentions_insert_or_update(Drupal\Core\Entity\EntityInterface $entity, $
     $text_format = $boo->format;
     
     $container = \Drupal::getContainer();
-    $filter_mentions = MentionsFilter::create($container, array(), 'filter_mentions', array());
+    $filter_mentions = MentionsFilter::create($container, array(), 'filter_mentions', array('provider'=>'mentions'));
     $filter_mentions->setTextFormat($text_format);
     //if ($filter_mentions->shouldApplyFilter()) {
     //  $mentions = $filter_mentions->mentions_get_mentions($value);
