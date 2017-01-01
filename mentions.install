@@ -1,6 +1,7 @@
 <?php
 
 function defaultenablementionsfilter($config) {
+/*    
         $config = \Drupal::service('config.factory')->getEditable($config);
         $filters = $config->get('filters');
         $filters['filter_mentions'] = array(
@@ -18,10 +19,11 @@ function defaultenablementionsfilter($config) {
         );
         $config->set('filters',$filters);
         $config->save();    
-    
+*/    
 }
 
 function defaultenablementionsckeditortoolbar($config) {
+/*  
   $config = \Drupal::service('config.factory')->getEditable($config);
   //$settings = $config->get('settings');
   $toolbaritems = $config->get('settings.toolbar.rows');
@@ -29,6 +31,8 @@ function defaultenablementionsckeditortoolbar($config) {
   if (!isset($toolbaritems[0][$mentionitemcount]['items']['mentionautocomplete'] )) {
     $toolbaritems[0][$mentionitemcount]['items'][] = 'mentionsautocomplete';  
   }
+ * 
+ */
   /*
   $toolbaritems  = array_values(array_slice($settings['toolbar']['rows'][0], -1))[0];
   if (!isset($toolbaritems['items']['mentionsautocomplete'])) {
@@ -37,8 +41,11 @@ function defaultenablementionsckeditortoolbar($config) {
    */ 
   //drupal_set_message(print_r($toolbaritems, TRUE));
   //$config->set('settings', $settings);
+  /*
   $config->set('settings.toolbar.rows');
   $config->save();
+   * 
+   */
 }
 
 function mentions_install() {
