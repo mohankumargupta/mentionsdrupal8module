@@ -35,6 +35,11 @@ Based on work of Drupal 7 Mentions module version 7.x-2.x [https://drupal.org/pr
 - [x] When module enabled, CKEditor Change Mentions Format dropdown available
 - [ ] Give user ability to disable CKEditor autocomplete
 
+# Development TODO List
+- [ ] Conform to Coding standards
+- [ ] Passing PHP unit tests
+- [ ] Passing Behat tests 
+
 # Video
 
 
