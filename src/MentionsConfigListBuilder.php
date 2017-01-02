@@ -14,11 +14,6 @@ use Drupal\Core\Entity\EntityInterface;
  * Provides a listing of Mentions Type entities.
  */
 class MentionsConfigListBuilder extends DraggableListBuilder {
-  /**
-   * {@inheritdoc}
-   */
-  protected $entitiesKey = 'mentions';
-
 
   /**
    * {@inheritdoc}
