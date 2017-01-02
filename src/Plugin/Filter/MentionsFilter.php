@@ -167,16 +167,32 @@ class MentionsFilter extends FilterBase implements ContainerFactoryPluginInterfa
       
       
       if ($filter_mentions[$mention_config] == $mention_config) {
-          array_push($this->mentionFilters,  $mention_config);
+          $this->mentionFilters[$mention_config] = $this->config->get($configname)->get('weight');
            $flag = TRUE;
       }      
     }
     return $flag;    
   }
 
+  private function sort_mentions_filters($a, $b) {
+    if ($a->weight < $b->weight) {
+      return 1;
+    }
+    
+    else if ($a->weight > $b->weight) {
+      return -1;
+    }
+    
+    return 0;
+
+  }
+  
   public function _filter_mentions_apply_each_filter($text) {
       $resulttext = $text;
-      foreach($this->mentionFilters as $filter) {
+      asort($this->mentionFilters);
+      $sortedmentionsfilter = array_keys($this->mentionFilters);
+      
+      foreach($sortedmentionsfilter as $filter) {
          $resulttext = $this->_filter_mentions($resulttext, $filter);
       }
       
