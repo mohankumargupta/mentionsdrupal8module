@@ -30,10 +30,10 @@ Based on work of Drupal 7 Mentions module version 7.x-2.x [https://drupal.org/pr
 
 - [x] @username will be rendered as hyperlink to username page 
 - [x] @#userid will be rendered as hyperlink to username page 
-- [ ] [@Barney Rubble] will be rendered as hyperlink to username page
+- [x] [@Barney Rubble] will be rendered as hyperlink to username page
 - [x] CKEditor autocomplete 
 - [x] Manage Mention Formats
-- [ ] Specify order of precedence for Mention formats
+- [x] Specify order of precedence for Mention formats
 - [x] When module enabled, Mentions filter enable automatically in Basic and Full HTML text formats
 - [x] When module enabled, CKEditor autocomplete functionality enabled 
 - [x] When module enabled, CKEditor Change Mentions Format dropdown available
