@@ -30,12 +30,20 @@ use Drupal\mentions\Entity\MentionsTypeInterface;
  *   admin_permission = "administer site configuration",
  *   entity_keys = {
  *     "id" = "id",
- *     "name" = "name"
+ *     "name" = "name",
+ *     "weight" = "weight"
  *   },
  *   links = {
  *     "collection" = "/admin/structure/mentions",
  *     "edit_form" = "/admin/structure/mentions/{mentions_type}/edit",
  *     "delete_form" = "/admin/structure/mentions/{mentions_type}/delete"
+ *   },
+ *   config_export = {
+ *     name,
+ *     description,
+ *     mention_type,
+ *     input,
+ *     output
  *   }
  * 
  * )
