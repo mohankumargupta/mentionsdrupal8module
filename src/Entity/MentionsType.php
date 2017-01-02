@@ -30,8 +30,7 @@ use Drupal\mentions\Entity\MentionsTypeInterface;
  *   admin_permission = "administer site configuration",
  *   entity_keys = {
  *     "id" = "id",
- *     "name" = "name",
- *     "weight" = "weight"
+ *     "name" = "name"
  *   },
  *   links = {
  *     "collection" = "/admin/structure/mentions",
@@ -62,6 +61,13 @@ class MentionsType extends ConfigEntityBase implements MentionsTypeInterface {
    * @var string
    */  
   protected $description;
+
+  /**
+   * Order of precedence for mention formats.
+   *
+   * @var string
+   */  
+  protected $weight;
   
   /**
    * Where mention type appears.
