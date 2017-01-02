@@ -11,6 +11,9 @@ mentions.mentions_type.*:
     description:
       type: string
       label: 'Description'
+    weight:
+      type: integer
+      label: 'Weight'
     mention_type:
       type: string
       label: 'Mention Type'

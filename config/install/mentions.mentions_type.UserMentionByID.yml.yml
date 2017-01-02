@@ -5,6 +5,7 @@ dependencies: {  }
 id: UserMentionByID
 name: UserMentionByID
 description: ''
+weight: 1
 mention_type: entity
 input:
   prefix: '@#'

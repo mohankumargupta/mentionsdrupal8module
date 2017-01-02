@@ -5,6 +5,7 @@ dependencies: {  }
 id: UserMentionSpacesInUsername
 name: UserMentionSpacesInUsername
 description: ''
+weight: 0
 mention_type: entity
 input:
   prefix: '[@'
