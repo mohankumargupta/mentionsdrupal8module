@@ -16,7 +16,7 @@ function defaultenablementionsfilter($config) {
             )
           )
         );
-        drupal_set_message($filter);
+
         $config->set('filters',$filters);
         $config->save();    
   

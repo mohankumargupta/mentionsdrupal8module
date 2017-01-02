@@ -41,7 +41,6 @@ var at_config = {
   }
     };
 
-var boo =2;
 
     var load_atwho = function(editor, at_config) {
      if (editor.window.getFrame() === null) {
