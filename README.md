@@ -40,6 +40,7 @@ Based on work of Drupal 7 Mentions module version 7.x-2.x [https://drupal.org/pr
 - [ ] Give user ability to disable CKEditor autocomplete
 - [x] View Support for Mentions
 - [ ] Actions for Mentions 
+- [ ] Settings Admin Page
 
 # Development TODO List
 - [ ] Conform to Coding standards
