@@ -10,7 +10,7 @@ Still in alpha but usable.
 Based on work of Drupal 7 Mentions module version 7.x-2.x [https://drupal.org/project/mentions](https://drupal.org/project/mentions)
 
 #Installation
-1. Download zip and extract to modules folder of your Drupal 8 installation, then enable it through backend(Extend) or drush/drupal console
+1. Go to Releases, download zip and extract to modules folder of your Drupal 8 installation, then enable it through backend(Extend) or drush/drupal console
 
 2. By default, the following mention formats are supported (for Basic and Full HTML formats):
    - **@username**           (mention by username)
