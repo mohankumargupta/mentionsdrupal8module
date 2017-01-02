@@ -30,7 +30,8 @@ use Drupal\mentions\Entity\MentionsTypeInterface;
  *   admin_permission = "administer site configuration",
  *   entity_keys = {
  *     "id" = "id",
- *     "name" = "name"
+ *     "name" = "name",
+ *     "weight" = "weight"
  *   },
  *   links = {
  *     "collection" = "/admin/structure/mentions",
