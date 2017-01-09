@@ -3,5 +3,10 @@ entity.mentions_type.list:
     parent: system.admin_structure   
     description: 'Manage Mention Types'    
     route_name: entity.mentions_type.list
-
     
+mentions.settings:
+  title: Mentions
+  route_name: mentions.admin
+  parent: system.admin_config_content
+  description: Configure Mentions Filter
+  weight: 20

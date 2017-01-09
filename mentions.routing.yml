@@ -67,7 +67,11 @@ mentions.userlist:
     requirements:
       _permission: 'View content'   
       
-      
-
-
-
+mentions.settings:
+  path: '/admin/config/mentions'
+  defaults:
+    _form: '\Drupal\mentions\Form\MentionsConfigForm'
+    _title: 'Mentions Configuration'
+  requirements:
+    _permission: 'access administration pages'
+    

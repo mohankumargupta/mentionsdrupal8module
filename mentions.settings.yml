@@ -1,0 +1,6 @@
+actions:
+  insert: ''
+  update: ''
+  delete: ''
+ckeditor:
+    autocomplete: TRUE

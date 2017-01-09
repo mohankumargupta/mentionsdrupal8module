@@ -58,4 +58,3 @@ filter_settings.filter_mentions:
         type: string
         label: 'Mention'
 
-      
