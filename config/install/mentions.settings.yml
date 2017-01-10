@@ -3,4 +3,4 @@ actions:
   update: ''
   delete: ''
 ckeditor:
-    autocomplete: TRUE
+  autocomplete: TRUE

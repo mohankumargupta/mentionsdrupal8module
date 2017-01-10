@@ -103,7 +103,7 @@ class MentionsConfigForm extends ConfigFormBase {
         }
       }
 
-      $config_mentions_events = $this->config->get('mentions_events');
+      $config_mentions_events = $config->get('actions');
 
       $form['mentions']['mentions_events']['insert'] = array(
         '#type' => 'select',
@@ -145,10 +145,13 @@ class MentionsConfigForm extends ConfigFormBase {
       '#open' => TRUE,
     );
 
+    
+
+    
     $form['mentions']['ckeditor']['autocomplete'] = array(
       '#type' => 'checkbox',
       '#title' => $this->t('Autocomplete'),
-      '#default_value' => $this->config->get('ckeditor.autocomplete'),
+      '#default_value' => $config->get('ckeditor.autocomplete') ,
     );  
     
     return parent::buildForm($form, $form_state);
