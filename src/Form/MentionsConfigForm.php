@@ -63,7 +63,7 @@ class MentionsConfigForm extends ConfigFormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
 
-     $config = $this->config('example.settings');
+     $config = $this->config('mentions.settings');
     
 
     //$userid = $this->token->replace('[user:uid]', array('user' => user_load_by_name('admin')));
