@@ -74,4 +74,3 @@ mentions.settings:
     _title: 'Mentions Configuration'
   requirements:
     _permission: 'access administration pages'
-    
