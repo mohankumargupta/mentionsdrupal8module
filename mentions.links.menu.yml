@@ -6,7 +6,7 @@ entity.mentions_type.list:
     
 mentions.settings:
   title: Mentions
-  route_name: mentions.admin
+  route_name: mentions.settings
   parent: system.admin_config_content
   description: Configure Mentions Filter
   weight: 20
