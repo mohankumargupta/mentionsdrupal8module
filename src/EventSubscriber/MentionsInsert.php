@@ -25,8 +25,8 @@ class MentionsInsert implements EventSubscriberInterface {
    * Event Handler.
    */
   public function onMentionsInsert($event) {
-    $config = \Drupal::config('mentions.mentions');
-    $config_mentions_events = $config->get('mentions_events');
+    $config = \Drupal::config('mentions.settings');
+    $config_mentions_events = $config->get('actions');
     $action_id = $config_mentions_events['insert'];
     if (empty($action_id)) {
       return;

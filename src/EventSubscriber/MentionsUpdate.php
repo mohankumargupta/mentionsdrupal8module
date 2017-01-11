@@ -23,8 +23,8 @@ class MentionsUpdate implements EventSubscriberInterface {
   }
 
   public function onMentionsUpdate($event) {
-    $config = \Drupal::config('mentions.mentions');
-    $config_mentions_events = $config->get('mentions_events');
+    $config = \Drupal::config('mentions.settings');
+    $config_mentions_events = $config->get('actions');
     $action_id = $config_mentions_events['update'];
     if (empty($action_id)) {
       return;

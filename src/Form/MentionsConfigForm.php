@@ -84,7 +84,7 @@ class MentionsConfigForm extends ConfigFormBase {
       '#markup' => "Hail Mary!"  
     );    
     
-    $form['mentions']['mentions_events'] = array(
+    $form['mentions']['actions'] = array(
       '#type' => 'details',
       '#title' => t('Mentions Actions'),
       '#open' => TRUE,
@@ -105,7 +105,7 @@ class MentionsConfigForm extends ConfigFormBase {
 
       $config_mentions_events = $config->get('actions');
 
-      $form['mentions']['mentions_events']['insert'] = array(
+      $form['mentions']['actions']['insert'] = array(
         '#type' => 'select',
         '#title' => $this->t('When a mention is inserted'),
         '#default_value' => $config_mentions_events['insert'],
@@ -113,7 +113,7 @@ class MentionsConfigForm extends ConfigFormBase {
         '#description' => $this->t('When a mention is inserted, the following action is executed.'),
       );
 
-      $form['mentions']['mentions_events']['update'] = array(
+      $form['mentions']['actions']['update'] = array(
         '#type' => 'select',
         '#title' => $this->t('When a mention is updated'),
         '#empty_value' => '',
@@ -122,7 +122,7 @@ class MentionsConfigForm extends ConfigFormBase {
         '#description' => $this->t('When a mention is updated, the following action is executed.'),
       );
 
-      $form['mentions']['mentions_events']['delete'] = array(
+      $form['mentions']['actions']['delete'] = array(
         '#type' => 'select',
         '#title' => $this->t('When a mention is deleted'),
         '#empty_value' => '',
@@ -133,7 +133,7 @@ class MentionsConfigForm extends ConfigFormBase {
     }
 
     else {
-      $form['mentions']['mentions_events']['action_module_not_enabled'] = array(
+      $form['mentions']['actions']['action_module_not_enabled'] = array(
         '#type' => 'label',
         '#title' => t('When the actions module is enabled, actions can be performed when mentions are inserted, updated or deleted.'),
       );
@@ -163,14 +163,14 @@ class MentionsConfigForm extends ConfigFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
 
     parent::submitForm($form, $form_state);
-    //$updated_config = $this->configFactory()->getEditable('mentions.mentions')->merge($form_state->getValue('mentions'));
-    //$updated_config->save();
+    $updated_config = $this->configFactory()->getEditable('mentions.mentions')->merge($form_state->getValue('mentions'));
+    $updated_config->save();
   }
 
   public function validateForm(array &$form, FormStateInterface $form_state) {
 
     // Validation is optional.
-    // parent::validateForm($form,$form_state);
+    //parent::validateForm($form,$form_state);
   }
 
 }
