@@ -79,9 +79,15 @@ class MentionsConfigForm extends ConfigFormBase {
       '#open' => TRUE  
     );
     
+    $mentiontypesurl = base_path() . 'admin/structure/mentions';
+    $textformatsurl = base_path() . 'admin/config/content/formats';
+    
     $form['mentions']['info']['configure'] = array(
       '#type' => 'markup',
-      '#markup' => "Hail Mary!"  
+      '#markup' => "<ul style=\"margin:0;\">"
+        . "<li>To manage Mention Types, <a href=\"$mentiontypesurl\">click here</a></li>"
+        . "<li>To configure text filter, <a href=\"$textformatsurl\">click here</a></li>"
+        . "</ul>"  
     );    
     
     $form['mentions']['actions'] = array(
