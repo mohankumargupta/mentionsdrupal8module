@@ -163,7 +163,7 @@ class MentionsConfigForm extends ConfigFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
 
     parent::submitForm($form, $form_state);
-    $updated_config = $this->configFactory()->getEditable('mentions.mentions')->merge($form_state->getValue('mentions'));
+    $updated_config = $this->configFactory()->getEditable('mentions.settings')->merge($form_state->getValue('mentions'));
     $updated_config->save();
   }
 
