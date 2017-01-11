@@ -27,7 +27,7 @@ class MentionsAutocomplete extends CKEditorPluginBase implements CKEditorPluginC
   protected $config;
 
   public function __construct(array $configuration, $plugin_id, $plugin_definition, ConfigFactory $config) {
-    $this->config = $config->get('mentions.mentions');
+    $this->config = $config->get('mentions.settings');
     parent::__construct($configuration, $plugin_id, $plugin_definition);
   }
 
@@ -72,7 +72,8 @@ class MentionsAutocomplete extends CKEditorPluginBase implements CKEditorPluginC
   }
 
   public function isEnabled(Editor $editor) {
-   return TRUE;
+   $enabled = $this->config->get('ckeditor.autocomplete');
+   return $enabled != TRUE;   
   }
 
 }
