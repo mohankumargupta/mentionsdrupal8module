@@ -73,7 +73,8 @@ class MentionsAutocomplete extends CKEditorPluginBase implements CKEditorPluginC
 
   public function isEnabled(Editor $editor) {
    $enabled = $this->config->get('ckeditor.autocomplete');
-   return $enabled != TRUE;   
+   $enabled = $enabled != 0; 
+   return $enabled;  
   }
 
 }
