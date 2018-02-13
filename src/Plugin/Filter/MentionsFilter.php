@@ -201,7 +201,7 @@ class MentionsFilter extends FilterBase implements ContainerFactoryPluginInterfa
 
   public function filter_mentions_structure($text) {
       $results = array();
-      foreach($this->mentionFilters as $filter) {
+      foreach($this->mentionFilters as $filter => $filter_index) {
         $results[] = $this->mentions_get_mentions($text, $filter);
       }
       
